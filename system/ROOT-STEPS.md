@@ -427,3 +427,28 @@ Undo: `sudo gpasswd -d "$USER" gamemode`.
 Everything else (Steam settings, launch options, controller, MangoHud) is in
 `system/GAMING.md`; no other root steps.
 
+---
+
+## 14. Laptop lid: lock when plugged in, suspend on battery
+
+| Lid closes… | Before | After |
+|-------------|--------|-------|
+| plugged in | suspend (downloads stop) | **lock only**, everything keeps running |
+| on battery | suspend | suspend (lock screen first) |
+| external monitor connected | nothing | nothing |
+
+The laptop screen itself turns off as soon as the lid closes and back on when it
+opens (Hyprland does that, no root needed; already active).
+
+```sh
+sudo install -Dm644 system/etc/logind.conf.d/10-lid.conf /etc/systemd/logind.conf.d/10-lid.conf
+sudo systemctl kill -s HUP systemd-logind      # reload logind's settings (no logout needed)
+busctl get-property org.freedesktop.login1 /org/freedesktop/login1 \
+  org.freedesktop.login1.Manager HandleLidSwitchExternalPower   # must print: s "lock"
+```
+If you unplug the charger while the lid is closed, the laptop doesn't suspend at
+that moment; it suspends after 20 minutes idle on battery (hypridle, section 2.6
+of MAINTENANCE.md).
+
+Undo: `sudo rm /etc/systemd/logind.conf.d/10-lid.conf && sudo systemctl kill -s HUP systemd-logind`.
+

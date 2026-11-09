@@ -104,6 +104,14 @@ bind("SUPER + L", exec(os.getenv("HOME") .. "/dotfiles/scripts/lock.sh"), "Syste
 
 -- ---------------------------------------------------------------------------
 -- Media keys (work on the lock screen too)
+-- Laptop lid: panel off when it closes, on when it opens (also on the lock
+-- screen). Only eDP-1, so an external monitor stays on. Whether the laptop
+-- then locks (plugged in) or suspends (battery) is logind's job:
+-- system/etc/logind.conf.d/10-lid.conf. (No "Category: " in the description,
+-- so the cheat sheet / README skip these: they aren't keys.)
+hl.bind("switch:on:Lid Switch",  hl.dsp.dpms({ action = "off", monitor = "eDP-1" }), { locked = true, description = "Lid closed -> laptop screen off" })
+hl.bind("switch:off:Lid Switch", hl.dsp.dpms({ action = "on",  monitor = "eDP-1" }), { locked = true, description = "Lid opened -> laptop screen on" })
+
 local locked_repeat = { locked = true, repeating = true }
 bind("XF86AudioRaiseVolume", exec("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"), "Media: Volume up",   locked_repeat)
 bind("XF86AudioLowerVolume", exec("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),        "Media: Volume down", locked_repeat)

@@ -26,7 +26,8 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
   cheat sheet, idle screen.
 - **Lock + login**: [qylock](https://github.com/Darkkal44/qylock) "winter" for
   SDDM and the lock screen; hypridle dims → idle screen → locks → screen off,
-  and suspends after 20 min **on battery only**.
+  and suspends after 20 min **on battery only**. Closing the lid locks when
+  plugged in and suspends on battery.
 - **Rofi** launcher, clipboard history with image thumbnails, emoji picker.
 - **Capture**: screenshots (frozen screen, annotate with satty), color picker,
   OCR, screen recording with a 60 s instant-replay buffer.

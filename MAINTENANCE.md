@@ -93,7 +93,7 @@ AUR helper: **yay** (not paru).
 | `quickshell/…/{osd,panel,powermenu,wallpaper,idle,cheatsheet}/` | one overlay each |
 | `scripts/` | shell helpers (update, wifi-enterprise, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, wallpaper, record, notify-file, theme-picker, theme-colors.sh (generated)) |
 | `theme/` | palettes, style, templates, `render.sh`, `apply.sh`, README |
-| `system/` | ROOT-STEPS.md, root-steps scripts, units (platform profile, paccache), etc (reflector.conf) |
+| `system/` | ROOT-STEPS.md, root-steps scripts, units (platform profile, paccache), etc (reflector.conf, logind.conf.d/10-lid.conf) |
 | `systemd/.config/environment.d/` | env for D-Bus/systemd-started apps (`GSK_RENDERER`) |
 | `zsh/`, `kitty/`, `starship/`, `fastfetch/`, `lazygit/`, `bat/`, `rofi/`, `gtk/` | app configs (stowed) |
 | `nvim/` | Neovim (Nord): `init.lua`, `lua/{options,keymaps,autocmds}.lua`, `lua/plugins/*.lua` (one file per topic), `lazy-lock.json`; `CHEATSHEET.md` (not stowed) |
@@ -146,6 +146,9 @@ never twice; hides the IdleScreen 2 s later) → 360 s DPMS off → 1200 s
 `Discharging` (USB-C PD charging counts as AC), re-checking every 30 s while
 idle; `stop` on input. `inhibit_sleep = 3`: logind waits until the session is
 really locked before sleeping (hypridle's default only does that for hyprlock).
+Lid (logind, `system/etc/logind.conf.d/10-lid.conf`, ROOT-STEPS §14): plugged
+in → lock only; battery → suspend; external monitor → nothing. Hyprland's
+`switch:on/off:Lid Switch` binds (keybinds.lua) turn eDP-1 off/on with the lid.
 Inhibited by: coffee cup (IdleInhibitor on the bar surface), fullscreen
 (`idle_inhibit = "fullscreen"` window rule), D-Bus/systemd inhibitors (calls).
 
@@ -498,6 +501,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Qt via Kvantum | qt5ct/qt6ct Fusion + generated palette (Kvantum installed, unused) | follows theme switches; Kvantum needs SVG themes per palette |
 | Default apps in `mimeapps.list` | `hyprland-mimeapps.list` | apps rewrite mimeapps.list (breaks stow) |
 | Touchpad natural scroll | normal (traditional) scrolling | user's choice, 2026-11-09 |
+| Lid close → lock + suspend | plugged in: lock only; battery: suspend | user's choice, 2026-11-09 (downloads keep running) |
 
 ---
 
@@ -556,6 +560,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-09** — Lid: lock only when plugged in, suspend on battery (user
+  request; a Steam download stopped on lid close). logind drop-in
+  `system/etc/logind.conf.d/10-lid.conf` (ROOT-STEPS §14, user installs) +
+  Hyprland lid binds turning eDP-1 off/on (`hypr/conf/keybinds.lua`; switch
+  names from 0.57.1 source: `switch:on:Lid Switch` = closed).
 
 - **2026-11-09** — Touchpad switched from natural to normal scrolling (user
   request). File: `hypr/conf/input.lua`; §5 table.
