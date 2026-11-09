@@ -13,4 +13,10 @@ hl.on("hyprland.start", function()
     -- Bar, widgets and (later) notifications: ~/.config/quickshell/shell.qml.
     -- Quickshell reloads itself when a .qml file changes.
     hl.exec_cmd("qs")
+
+    -- Clipboard history (ALT + C): record text and images, keep 200 entries,
+    -- and keep copied content alive after the source app closes
+    hl.exec_cmd("wl-paste --type text --watch cliphist -max-items 200 store")
+    hl.exec_cmd("wl-paste --type image --watch cliphist -max-items 200 store")
+    hl.exec_cmd("wl-clip-persist --clipboard regular")
 end)

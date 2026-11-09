@@ -11,4 +11,7 @@
     muted:     #9fb3c8;
     warn:      #f2c66d;
     critical:  #ef6f7a;
+    soft:      #2b3a5599;   /* cards, input field */
+    edge:      #cfe8ff1f;       /* 1px window border */
+    font-ui:   "JetBrainsMono Nerd Font 11.25";
 }

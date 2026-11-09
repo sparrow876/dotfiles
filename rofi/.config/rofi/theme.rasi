@@ -1,0 +1,94 @@
+/* Shared look for the launcher, clipboard and emoji pickers.
+ * Centered, ~35% wide, ~10 rows, frosted (Hyprland blurs the "rofi" layer),
+ * rounded window and search field, light-blue rounded selection.
+ * Colors: colors.rasi (generated from the palette). */
+@import "colors.rasi"
+
+* {
+    font: @font-ui;
+    background-color: transparent;
+    text-color: @text;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    location: center;
+    anchor: center;
+    width: 35%;
+    border: 1px;
+    border-color: @edge;
+    border-radius: 16px;
+    background-color: @glass;
+    padding: 14px;
+}
+
+mainbox {
+    spacing: 12px;
+    children: [ inputbar, message, listview ];
+}
+
+inputbar {
+    background-color: @soft;
+    border-radius: 12px;
+    padding: 10px 14px;
+    spacing: 10px;
+    children: [ textbox-search, entry ];
+}
+textbox-search {
+    expand: false;
+    str: "󰍉";
+    text-color: @lightblue;
+    vertical-align: 0.5;
+}
+entry {
+    placeholder: "Search";
+    placeholder-color: @muted;
+    cursor-color: @lightblue;
+    vertical-align: 0.5;
+}
+
+message {
+    background-color: @soft;
+    border-radius: 10px;
+    padding: 8px 14px;
+}
+textbox {
+    text-color: @muted;
+    vertical-align: 0.5;
+}
+
+listview {
+    lines: 10;
+    columns: 1;
+    fixed-height: true;
+    dynamic: true;
+    scrollbar: false;
+    spacing: 4px;
+    cycle: true;
+}
+
+element {
+    padding: 8px 12px;
+    border-radius: 10px;
+    spacing: 12px;
+}
+element normal.normal, element alternate.normal {
+    background-color: transparent;
+}
+element selected.normal, element selected.active, element selected.urgent {
+    background-color: @lightblue;
+    text-color: @base;
+}
+element normal.active, element alternate.active {
+    text-color: @lightblue;
+}
+element-icon {
+    size: 24px;
+    vertical-align: 0.5;
+}
+element-text {
+    vertical-align: 0.5;
+    text-color: inherit;
+}

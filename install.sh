@@ -31,6 +31,7 @@ STOW_PACKAGES=(
   quickshell  # step 4
   gtk         # step 5 (Nautilus text size; Nord theme in step 16)
   systemd     # user environment (GSK_RENDERER), user units later
+  rofi        # step 11
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.
