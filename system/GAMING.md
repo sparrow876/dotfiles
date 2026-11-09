@@ -89,7 +89,35 @@ D-pad, View/Menu, Home, rumble. It also works in the browser
 In Steam: **Settings → Controller**: it should be listed. Steam Input (Steam's
 remapping layer) can then remap any of those buttons per game.
 
-<!-- L4/R4 section filled in below -->
+### The extra L4 / R4 buttons (next to LB / RB)
+
+In this (Xbox) mode the controller **doesn't send L4/R4 as their own buttons**:
+the kernel driver, Steam and games can't see them (the Xbox 360 protocol has no
+extra buttons). Instead you map them **on the controller itself** to copy
+another button. From 8BitDo's manual:
+
+1. **Hold L4 (or R4) + the button it should copy** (e.g. A, LB, a stick click),
+2. **press the Mapping button** (small button on the front, left side).
+3. The Mapping light blinks whenever the mapped button is pressed.
+4. **To undo: repeat the same steps.** The mapping is saved in the controller.
+
+Then Steam and every game see an ordinary button, and you can bind it per game.
+Handy for racing: L4/R4 → shift down / shift up (map them to buttons you bind
+to gear changes in the game).
+
+(8BitDo's Ultimate Software, which can also remap and update the firmware, runs
+only on Windows/macOS. Latest firmware v1.09 fixes a "ghost Home button" in
+Xbox mode; only matters if you ever see that.)
+
+**Other mode (not recommended):** holding **B while plugging in** starts
+"Android" mode (USB id `2dc8:301d`). There L4/R4 *are* separate buttons, but
+users report **rumble stops working** and the triggers may become on/off instead
+of analog, bad for racing. Holding **X while plugging in** returns to the
+normal Xbox mode (`2dc8:310a`), which is what this setup expects.
+
+Sources: 8BitDo manual (download.8bitdo.com/Manual/Controller/Ultimate/Ultimate-2C-Wired-Controller.pdf),
+product page (8bitdo.com/ultimate-2c-wired-controller), Linux `xpad.c` (no extra
+buttons for 0x310a), SDL GameControllerDB.
 
 Test again any time: `evtest` (pick "8BitDo Ultimate 2C", press buttons; Ctrl+C
 quits) or gamepadtester.com.
