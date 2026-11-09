@@ -36,6 +36,8 @@ STOW_PACKAGES=(
   xdg         # step 16: default apps (hyprland-mimeapps.list)
   applications  # step 16: nvim-kitty.desktop, step 17: Outlook web app
   vesktop     # step 17: palette theme for Discord (Vencord themes folder)
+  nvim        # step 18: Neovim (lazy.nvim installs plugins on first start)
+  zathura     # step 18: PDF viewer, Nord colours, SyncTeX
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.

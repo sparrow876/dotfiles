@@ -20,7 +20,7 @@ Contents:
 
 ## 1. Snapshot
 
-Recorded 2026-11-09 (build steps 1–17 done).
+Recorded 2026-11-09 (build steps 1–18 done).
 
 | Component | Version |
 |-----------|---------|
@@ -36,6 +36,9 @@ Recorded 2026-11-09 (build steps 1–17 done).
 | kitty | 0.49.2 |
 | gpu-screen-recorder | 6.1.7 |
 | SDDM | 0.21.0 (X11 greeter) |
+| Neovim | 0.12.6 (plugins pinned in `nvim/.config/nvim/lazy-lock.json`) |
+| zathura | 2026.10.23 (+ pdf-mupdf) |
+| TeX Live | 2026 (basic, latexextra, fontsrecommended, binextra) |
 
 Hardware: HP Victus 15 (fa0xxx), i5-12450H, Intel Alder Lake iGPU (`i915`,
 drives eDP-1, `boot_vga=1`) + RTX 3050 Laptop (GA107, drives HDMI, sleeps in
@@ -90,6 +93,8 @@ AUR helper: **yay** (not paru).
 | `system/` | ROOT-STEPS.md, root-steps scripts, units (platform profile, paccache), etc (reflector.conf) |
 | `systemd/.config/environment.d/` | env for D-Bus/systemd-started apps (`GSK_RENDERER`) |
 | `zsh/`, `kitty/`, `starship/`, `fastfetch/`, `lazygit/`, `bat/`, `rofi/`, `gtk/` | app configs (stowed) |
+| `nvim/` | Neovim (Nord): `init.lua`, `lua/{options,keymaps,autocmds}.lua`, `lua/plugins/*.lua` (one file per topic), `lazy-lock.json`; `CHEATSHEET.md` (not stowed) |
+| `zathura/` | zathurarc (Nord, SyncTeX, recolor on Ctrl+R) |
 
 ### 2.3 Quickshell IPC targets (`qs ipc call <target> <fn>`)
 
@@ -272,6 +277,30 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - PopupWindow / IconImage / tray: `QsMenuOpener` + `entry.triggered()` to
   build themed tray menus; `SystemTrayItem.display()` exists for native ones.
 
+### 4.2b Neovim / LaTeX
+
+- Headless Neovim reads stdin: always `nvim --headless … </dev/null` or it
+  hangs. Install/update from a shell: `nvim --headless "+Lazy! sync" +qa </dev/null`;
+  parsers: `require('nvim-treesitter').install({...}):wait(300000)`; servers:
+  `nvim --headless -c "Lazy! load mason.nvim" -c "MasonInstall <pkgs>" -c qa`
+  (blocks until done). `+qa` right after `Lazy! sync` cuts treesitter's async
+  compiles short (re-run the install line).
+- nvim-treesitter is the `main` branch (new API: `install()`, FileType autocmd
+  + `vim.treesitter.start`); not lazy-loadable. LaTeX uses vimtex's own syntax.
+- vimtex `view_method = "zathura_simple"`: plain `zathura` needs xdotool (X11).
+  Forward search goes over zathura's D-Bus; inverse search (Ctrl+click) runs
+  `nvim --headless -c VimtexInverseSearch …`, which finds the editor through
+  vimtex's server-name cache. Test without clicking: start
+  `nvim --headless --listen sock file.tex`, run that command, query
+  `line(".")` with `nvim --server sock --remote-expr`.
+- vimtex opens zathura automatically after the first successful compile.
+- Kitty opacity: autocmds call `kitty @ --to $KITTY_LISTEN_ON set-background-opacity`
+  (1 in Neovim, 0.80 after) and paint kitty's padding with the colorscheme
+  background via OSC 11 (`vim.api.nvim_ui_send`), reset with OSC 111 on exit.
+  Verify by sampling pixels with grim (padding = exactly `#2E3440` in nvim).
+- blink.cmp uses the Lua fuzzy matcher (no prebuilt binary download);
+  `:checkhealth` warns about that, expected.
+
 ### 4.3 GPU / NVIDIA
 
 - Open modules 595+: `nvidia-suspend/resume/hibernate` services are NOT needed
@@ -452,6 +481,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-09** — Step 18: Neovim (lazy.nvim, Nord, which-key, Telescope,
+  Treesitter main, mason + lspconfig + blink.cmp, neo-tree, lualine,
+  bufferline, gitsigns, lazygit, toggleterm, vimtex) + zathura. Verified:
+  startup ~40 ms with a file, LSP attaches (lua_ls, bashls), LaTeX compile →
+  PDF + SyncTeX, inverse search, kitty opacity + padding colour by pixel
+  sampling. `nvim` and `zathura` added to STOW_PACKAGES.
 
 - **2026-11-09** — Bug sweep (two review passes over all scripts + QML, each
   finding verified before fixing). Shell: hypridle `inhibit_sleep = 3` (suspend

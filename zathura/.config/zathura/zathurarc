@@ -1,0 +1,62 @@
+# zathura: PDF viewer used for LaTeX (Neovim + vimtex) and as the default PDF app.
+# Colours: Nord (like Neovim and Nautilus), on purpose not the rice palette.
+# Options reference: `man zathurarc`.
+#
+# Handy keys: j/k scroll, J/K next/prev page, / search, Ctrl+R recolor
+# (dark mode for the page itself), R reload, d two-page view, Tab outline,
+# + / - zoom, a fit page, s fit width, q quit.
+# Ctrl + left click on the PDF jumps to that line in Neovim (SyncTeX).
+
+# Nord palette
+#   nord0 #2E3440  nord1 #3B4252  nord2 #434C5E  nord3 #4C566A
+#   nord4 #D8DEE9  nord5 #E5E9F0  nord6 #ECEFF4
+#   nord8 #88C0D0  nord9 #81A1C1  nord10 #5E81AC
+#   nord11 #BF616A nord13 #EBCB8B nord14 #A3BE8C
+
+set font                    "JetBrainsMono Nerd Font 11"
+set guioptions              "s"        # status bar only, no scrollbars
+set adjust-open             "best-fit"
+set pages-per-row           1
+set scroll-page-aware       true
+set selection-clipboard     clipboard  # selecting text copies it (Ctrl+V pastes)
+set window-title-basename   true
+
+# SyncTeX: vimtex starts zathura with the right inverse-search command itself.
+set synctex                 true
+set synctex-edit-modifier   ctrl
+
+# Recolor (Ctrl+R): page becomes Nord dark, images keep their colours.
+set recolor                 false
+set recolor-keephue         true
+set recolor-reverse-video   true
+set recolor-lightcolor      "#2E3440"
+set recolor-darkcolor       "#ECEFF4"
+
+# Interface colours
+set default-bg              "#2E3440"
+set default-fg              "#D8DEE9"
+set statusbar-bg            "#3B4252"
+set statusbar-fg            "#D8DEE9"
+set inputbar-bg             "#2E3440"
+set inputbar-fg             "#ECEFF4"
+set notification-bg         "#3B4252"
+set notification-fg         "#ECEFF4"
+set notification-error-bg   "#BF616A"
+set notification-error-fg   "#2E3440"
+set notification-warning-bg "#EBCB8B"
+set notification-warning-fg "#2E3440"
+set completion-bg           "#3B4252"
+set completion-fg           "#D8DEE9"
+set completion-group-bg     "#2E3440"
+set completion-group-fg     "#81A1C1"
+set completion-highlight-bg "#5E81AC"
+set completion-highlight-fg "#ECEFF4"
+set index-bg                "#2E3440"
+set index-fg                "#D8DEE9"
+set index-active-bg         "#434C5E"
+set index-active-fg         "#88C0D0"
+set render-loading-bg       "#2E3440"
+set render-loading-fg       "#4C566A"
+set highlight-color         "rgba(136,192,208,0.35)"
+set highlight-active-color  "rgba(235,203,139,0.5)"
+set highlight-fg            "#2E3440"

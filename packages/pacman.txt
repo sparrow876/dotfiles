@@ -158,6 +158,7 @@ texlive-basic
 texlive-latexextra
 texlive-fontsrecommended
 texlive-binextra     # includes latexmk
+# biber              # only for biblatex bibliographies (\usepackage{biblatex}); pulls ~30 perl deps
 
 ## Media
 mpv
