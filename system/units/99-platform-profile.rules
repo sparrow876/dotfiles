@@ -1,0 +1,2 @@
+# Re-apply the performance profile when AC power changes (installed to /etc/udev/rules.d).
+SUBSYSTEM=="power_supply", ACTION=="change", ATTR{type}=="Mains", RUN+="/usr/bin/systemctl --no-block start platform-profile-performance.service"

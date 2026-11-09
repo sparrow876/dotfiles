@@ -1,0 +1,29 @@
+# Single source of truth for colors. Edit here, then run `theme/render.sh`.
+# Format is deliberately simple: one `name = "#rrggbb"` (or number) per line,
+# so render.sh can parse it with plain shell tools.
+
+[colors]
+base      = "#0d1b2a"   # deepest background
+surface   = "#1b263b"   # bar, panels, popups, rofi, kitty bg
+overlay   = "#2b3a55"   # cards, hover, inactive borders
+blue      = "#415a77"   # secondary accent
+lightblue = "#7fb3ff"   # primary accent, active states
+ice       = "#cfe8ff"   # wave, graphs, highlights
+text      = "#f4f8ff"   # main text
+muted     = "#9fb3c8"   # secondary text
+warn      = "#f2c66d"   # battery < 20%, high temps
+critical  = "#ef6f7a"   # battery < 10%, recording dot
+
+# Extra hues for terminal ANSI slots only (the UI never uses these directly).
+green     = "#93d8b4"
+magenta   = "#b9a7ff"
+cyan      = "#7fd6e8"
+
+[style]
+glass_alpha = "0.75"     # frosted surfaces
+rounding    = "14"
+gaps_in     = "6"
+gaps_out    = "12"
+border_size = "2"
+font_ui     = "JetBrainsMono Nerd Font"
+font_cjk    = "Noto Sans CJK JP"

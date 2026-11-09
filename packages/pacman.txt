@@ -1,0 +1,190 @@
+# Official repo packages. One per line; `#` starts a comment.
+# Names checked with `pacman -Si` on 2026-11-09 (lib32-*/steam need multilib first).
+# install.sh --packages installs these with `sudo pacman -S --needed`.
+
+## Base tools used by install.sh and scripts
+base-devel
+git
+stow
+jq
+socat
+inotify-tools
+unzip
+python
+libnotify
+xdg-utils
+xdg-user-dirs
+usbutils
+pciutils
+evtest
+
+## Snapshots (btrfs): snapper + automatic pre/post pacman snapshots
+btrfs-progs
+snapper
+snap-pac
+
+## Hyprland core
+hyprland
+hypridle
+hyprpicker
+hyprpolkitagent
+xdg-desktop-portal
+xdg-desktop-portal-hyprland
+xdg-desktop-portal-gtk
+qt5-wayland
+qt6-wayland
+xorg-xwayland
+awww                 # wallpaper daemon (swww was renamed to awww; provides swww)
+
+## GPU: Intel iGPU (drives Hyprland)
+mesa
+vulkan-intel
+intel-media-driver
+vulkan-icd-loader
+mesa-utils
+vulkan-tools
+
+## GPU: NVIDIA RTX 3050 (Ampere, open kernel modules, used via prime-run)
+nvidia-open          # prebuilt modules for the `linux` kernel
+nvidia-utils
+egl-wayland
+libva-nvidia-driver
+nvidia-prime         # provides prime-run
+nvtop
+
+## Quickshell (bar, widgets, notifications) + Qt6 modules
+quickshell
+qt6-declarative
+qt6-5compat
+qt6-svg
+qt6-multimedia
+qt6-multimedia-ffmpeg
+
+## Login screen (SDDM) + qylock dependencies (per its README)
+sddm
+gst-plugins-base
+gst-plugins-good
+gst-plugins-bad
+gst-plugins-ugly
+fzf
+
+## Network, Bluetooth, audio, power info
+networkmanager
+nm-connection-editor
+bluez
+bluez-utils
+blueman
+pipewire
+pipewire-pulse
+pipewire-alsa
+pipewire-jack
+pipewire-libcamera
+wireplumber
+pavucontrol
+sof-firmware
+upower
+lm_sensors
+brightnessctl
+playerctl
+
+## Tray, keyring, polkit
+libappindicator      # replaces libappindicator-gtk3 (provides it)
+libayatana-appindicator
+gnome-keyring
+libsecret
+seahorse             # GUI to inspect the keyring
+
+## Capture tools
+grim
+slurp
+satty
+tesseract
+tesseract-data-eng
+gpu-screen-recorder
+imagemagick
+
+## Launcher, clipboard, emoji
+rofi                 # 2.x has native Wayland (replaces rofi-wayland)
+cliphist
+wl-clipboard
+wl-clip-persist
+wtype
+rofimoji             # emoji picker with recents, copies + types via wtype
+
+## Files
+nautilus
+gvfs
+gvfs-mtp
+file-roller
+loupe
+ffmpegthumbnailer
+udiskie
+
+## Look: themes, icons, fonts
+papirus-icon-theme
+gnome-themes-extra
+qt5ct
+qt6ct
+kvantum
+kvantum-qt5
+ttf-jetbrains-mono-nerd
+noto-fonts
+noto-fonts-cjk
+noto-fonts-emoji
+
+## Terminal + shell + CLI tools
+kitty
+zsh
+starship
+eza
+bat
+ripgrep
+fd
+zoxide
+fastfetch
+lazygit
+
+## Neovim + LaTeX
+neovim
+tree-sitter-cli
+nodejs               # some LSP servers installed by mason need it
+npm
+zathura
+zathura-pdf-mupdf
+texlive-basic
+texlive-latexextra
+texlive-fontsrecommended
+texlive-binextra     # includes latexmk
+
+## Media
+mpv
+mpv-mpris
+cava
+cmatrix
+
+## Apps
+chromium             # only for web apps (Outlook, Teams fallback)
+proton-vpn-gtk-app
+rclone
+fuse3
+# discord            # step 17: official client OR vesktop (AUR), you choose
+
+## Gaming (non-multilib part)
+gamemode
+mangohud
+gamescope            # optional
+
+## Maintenance + security
+pacman-contrib
+reflector
+fwupd
+ufw
+
+## [multilib] (enable multilib first, see system/ROOT-STEPS.md)
+steam
+lib32-nvidia-utils
+lib32-mesa
+lib32-vulkan-intel
+lib32-vulkan-icd-loader
+lib32-gamemode
+lib32-mangohud

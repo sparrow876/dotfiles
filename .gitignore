@@ -1,0 +1,40 @@
+# --- Secrets: must never be committed ---
+rclone.conf
+**/rclone/
+*.token
+*token*.json
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+.env
+.env.*
+*credentials*
+*secret*
+!**/libsecret*
+
+# --- App runtime state that may land in stowed dirs ---
+.cache/
+**/__pycache__/
+node_modules/
+*.log
+*.swp
+*~
+.qmlls.ini
+fastfetch/**/cache/
+kitty/.config/kitty/*.socket
+nvim/.config/nvim/.netrwhist
+lazygit/.config/lazygit/state.yml
+**/Steam/
+**/BeamNG*/
+
+# --- Never commit wallpapers or captures ---
+*.jpg
+*.jpeg
+*.webp
+*.mp4
+*.mkv
+# PNGs are only allowed where explicitly needed (icons, README screenshots)
+*.png
+!applications/**/*.png
+!docs/screenshots/*.png

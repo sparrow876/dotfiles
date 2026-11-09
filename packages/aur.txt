@@ -1,0 +1,22 @@
+# AUR packages, installed with `yay -S --needed` by install.sh --packages.
+# One per line; `#` starts a comment. A package is only uncommented after its
+# PKGBUILD has been read and summarized (see notes). Re-check the PKGBUILD diff
+# yay shows you on every update.
+#
+# Reviewed 2026-11-09 (AUR commit in brackets). All of them only download the
+# upstream release from the project's own GitHub and copy files into /usr or
+# /opt. No .install scripts, no root actions beyond normal package install.
+
+zen-browser-bin              # [1e13640] official Zen release tarball -> /opt; adds a policy that disables Zen's self-updater (pacman updates it)
+localsend-bin                # [f35ec0d] official LocalSend .deb from GitHub -> /opt/localsend
+nautilus-open-any-terminal   # [b4bcde8] upstream tag tarball, `make install`; Nautilus "Open in Terminal" -> kitty
+papirus-folders              # [db13c53] signed upstream git tag; ships a pacman hook that re-applies your folder color after papirus updates
+bibata-cursor-theme-bin      # [5d418e2] upstream release tarball -> /usr/share/icons
+protonup-qt                  # [bf73d8f] builds the upstream Python release; installs GE-Proton for Steam
+
+## Pending review in later steps (left commented on purpose)
+# teams-for-linux            # step 17: read PKGBUILD first
+# claude-desktop             # step 17: confirm it repackages Anthropic's official .deb
+# vesktop-bin                # step 17: only if you pick Vesktop over official Discord
+# game-devices-udev          # step 19: only if Steam doesn't see the 8BitDo controller
+# nordic-theme               # step 16: Nord GTK3 theme (last updated 2022; may pick another)

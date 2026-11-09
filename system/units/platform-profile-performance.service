@@ -1,0 +1,15 @@
+# Pins the HP firmware power profile to "performance" (full tilt, always).
+# Runs at boot, after resume, and whenever the charger is plugged/unplugged
+# (via 99-platform-profile.rules), because the firmware may reset it.
+# Installed by system/ROOT-STEPS.md section 3.
+[Unit]
+Description=Pin ACPI platform_profile to performance
+ConditionPathExists=/sys/firmware/acpi/platform_profile
+After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'echo performance > /sys/firmware/acpi/platform_profile'
+
+[Install]
+WantedBy=multi-user.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
