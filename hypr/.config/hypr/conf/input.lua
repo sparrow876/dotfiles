@@ -7,7 +7,7 @@ hl.config({
 
         touchpad = {
             tap_to_click         = true,
-            natural_scroll       = true,
+            natural_scroll       = false,   -- "normal" scrolling (user choice, 2026-11-09)
             disable_while_typing = true,
         },
     },

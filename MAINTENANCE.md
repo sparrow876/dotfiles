@@ -497,6 +497,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Nord GTK3 theme (e.g. Nordic) | not installed; Nautilus (GTK4) is Nord via scoped CSS, GTK3 dialogs use Adwaita-dark | Nordic AUR last updated 2022; a global GTK3 theme would fight the theme switcher |
 | Qt via Kvantum | qt5ct/qt6ct Fusion + generated palette (Kvantum installed, unused) | follows theme switches; Kvantum needs SVG themes per palette |
 | Default apps in `mimeapps.list` | `hyprland-mimeapps.list` | apps rewrite mimeapps.list (breaks stow) |
+| Touchpad natural scroll | normal (traditional) scrolling | user's choice, 2026-11-09 |
 
 ---
 
@@ -555,6 +556,9 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-09** — Touchpad switched from natural to normal scrolling (user
+  request). File: `hypr/conf/input.lua`; §5 table.
 
 - **2026-11-09** — Firefox (uninstalled) still showed in the rofi launcher, and
   Teams/Vesktop/Claude (installed later) were missing from it. Cause:
