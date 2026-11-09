@@ -96,13 +96,14 @@ step_dirs() {
   local bm="$HOME/.config/gtk-3.0/bookmarks"
   mkdir -p "$(dirname "$bm")"
   grep -qs "file://$HOME/GoogleDrive " "$bm" || echo "file://$HOME/GoogleDrive Google Drive" >> "$bm"
-  command -v gio >/dev/null && gio set -t string "$HOME/GoogleDrive" metadata::custom-icon-name folder-google-drive 2>/dev/null || true
   # Some of these may already exist as btrfs subvolumes (ROOT-STEPS section 1);
   # mkdir -p leaves existing ones alone.
   mkdir -p "$HOME"/{Music,Documents,Downloads,Pictures,Videos,Desktop,Templates,Public} \
            "$HOME/Pictures/Screenshots" "$HOME/Pictures/Wallpapers" \
            "$HOME/Videos/Recordings" "$HOME/GoogleDrive" \
            "$HOME/.local/src" "$HOME/.local/bin" "$HOME/.cache/wallpaper-thumbs"
+  # Drive-style icon for the Google Drive folder (after it exists)
+  command -v gio >/dev/null && gio set -t string "$HOME/GoogleDrive" metadata::custom-icon-name folder-google-drive 2>/dev/null || true
 }
 
 clone_pinned() {
@@ -222,7 +223,7 @@ step_stow() {
   done
   # bat reads custom themes from a cache; rebuild it so the generated "rice" theme is found
   if command -v bat >/dev/null && [[ -d $HOME/.config/bat/themes ]]; then
-    bat cache --build >/dev/null && info "rebuilt bat theme cache"
+    if bat cache --build >/dev/null; then info "rebuilt bat theme cache"; else warn "bat cache --build failed (bat falls back to its default theme)"; fi
   fi
 }
 

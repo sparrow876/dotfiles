@@ -51,8 +51,9 @@ for d in /sys/bus/pci/devices/*; do
                    --format=csv,noheader,nounits 2>/dev/null | head -1)
     if [[ -n $q ]]; then
       IFS=',' read -r name util t mu mt pw clk <<<"$q"
-      nv="{\"state\":\"active\",\"name\":$(json_str "${name# }"),\"util\":${util// /},\"temp\":${t// /},\"memUsed\":${mu// /},\"memTotal\":${mt// /},\"power\":${pw// /},\"clock\":${clk// /}}"
-      nv=${nv//\[N\/A\]/null}
+      # nvidia-smi prints [N/A], [Not Supported], ... for missing values
+      num() { local v=${1// /}; [[ $v =~ ^-?[0-9]+(\.[0-9]+)?$ ]] && printf '%s' "$v" || printf null; }
+      nv="{\"state\":\"active\",\"name\":$(json_str "${name# }"),\"util\":$(num "$util"),\"temp\":$(num "$t"),\"memUsed\":$(num "$mu"),\"memTotal\":$(num "$mt"),\"power\":$(num "$pw"),\"clock\":$(num "$clk")}"
     fi
   fi
   [[ $nv == null ]] && nv="{\"state\":$(json_str "$state")}"
@@ -61,9 +62,14 @@ done
 
 # Disks: one entry per real filesystem (btrfs subvolumes collapse into one),
 # skipping FUSE (Google Drive), tmpfs and friends
-disks=$(findmnt -rn -b -o TARGET,SOURCE,FSTYPE,SIZE,USED -t btrfs,ext4,xfs,vfat,exfat,ntfs3,f2fs |
-        awk '{ dev=$2; sub(/\[.*/, "", dev); if (seen[dev]++) next;
-               printf "%s{\"mount\":\"%s\",\"dev\":\"%s\",\"fs\":\"%s\",\"size\":%s,\"used\":%s}", (n++ ? "," : ""), $1, dev, $3, $4, $5 }')
+# (findmnt's JSON mode: mount points with spaces / non-ASCII names, e.g. a USB
+# stick labelled "NO NAME", stay valid JSON; -r would print \x20 escapes)
+disks=$(LC_ALL=C.UTF-8 findmnt -J -l -b -o TARGET,SOURCE,FSTYPE,SIZE,USED -t btrfs,ext4,xfs,vfat,exfat,ntfs3,f2fs 2>/dev/null |
+        jq -r 'reduce (.filesystems // [])[] as $f ({seen: {}, out: []};
+                 ($f.source | sub("\\[.*"; "")) as $dev
+                 | if .seen[$dev] then . else .seen[$dev] = true
+                   | .out += [{mount: $f.target, dev: $dev, fs: $f.fstype, size: $f.size, used: $f.used}] end)
+               | .out | map(tojson) | join(",")' 2>/dev/null)
 
 # Disk I/O of the disk holding / (sectors read, written)
 rootsrc=$(findmnt -rn -o SOURCE / | sed 's/\[.*//')
@@ -88,7 +94,7 @@ toplist=$(top -b -n 2 -d 0.6 -w 512 2>/dev/null | awk '
     gsub(/\\/, "\\\\", cmd); gsub(/"/, "\\\"", cmd)
     print $1 "\t" $9 "\t" $10 "\t" cmd
   }')
-tojson() { awk -F'\t' '{ printf "%s{\"pid\":%d,\"cpu\":%s,\"mem\":%s,\"name\":\"%s\"}", (n++ ? "," : ""), $1, $2, $3, $4 }'; }
+tojson() { awk -F'\t' 'NF >= 4 && $1 != "" { printf "%s{\"pid\":%d,\"cpu\":%s,\"mem\":%s,\"name\":\"%s\"}", (n++ ? "," : ""), $1, $2, $3, $4 }'; }
 procs_cpu=$(printf '%s\n' "$toplist" | sort -t$'\t' -k2,2nr | head -n 10 | tojson)
 procs_mem=$(printf '%s\n' "$toplist" | sort -t$'\t' -k3,3nr | head -n 10 | tojson)
 

@@ -27,7 +27,15 @@ mode=$(sed -n 's/^mode *= *"\(.*\)".*/\1/p' "palettes/$name.toml")
 title=$(sed -n 's/^name *= *"\(.*\)".*/\1/p' "palettes/$name.toml")
 
 echo "$name" > current
-./render.sh >/dev/null
+if ! ./render.sh >/dev/null; then
+  # Don't leave the desktop half-switched: go back to the previous theme
+  echo "$current" > current
+  ./render.sh >/dev/null || true
+  command -v notify-send >/dev/null && notify-send -u critical -a Theme -i dialog-error \
+    "Theme '$title' could not be applied" "Kept $current. Run theme/apply.sh $name in a terminal to see why." || true
+  echo "render.sh failed for '$name'; went back to '$current'." >&2
+  exit 1
+fi
 
 # Reload running apps (each step is optional: skipped if the app isn't running)
 if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then

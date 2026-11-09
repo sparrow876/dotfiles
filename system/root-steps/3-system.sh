@@ -53,8 +53,8 @@ d3="$(grep -h 'Runtime D3 status' /proc/driver/nvidia/gpus/*/power 2>/dev/null |
 [[ $d3 == *Enabled* ]] && ok "dGPU sleeps when idle: ${d3##*: }" || bad "runtime D3: '${d3##*: }'"
 if nvidia-smi -L >/dev/null 2>&1; then ok "nvidia-smi: $(nvidia-smi -L | head -1)"; else bad "nvidia-smi failed"; fi
 if [[ -n ${WAYLAND_DISPLAY:-}${DISPLAY:-} ]]; then
-  r1="$(prime-run glxinfo -B 2>/dev/null | awk -F': ' '/OpenGL renderer/{print $2}')"
-  r2="$(glxinfo -B 2>/dev/null | awk -F': ' '/OpenGL renderer/{print $2}')"
+  r1="$(prime-run glxinfo -B 2>/dev/null | awk -F': ' '/OpenGL renderer/{print $2}' || true)"
+  r2="$(glxinfo -B 2>/dev/null | awk -F': ' '/OpenGL renderer/{print $2}' || true)"
   [[ $r1 == *NVIDIA* ]] && ok "prime-run renders on: $r1" || bad "prime-run renderer: '$r1'"
   [[ $r2 == *Intel* || $r2 == *Mesa* ]] && ok "default renders on: $r2" || bad "default renderer: '$r2'"
 else

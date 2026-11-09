@@ -13,10 +13,15 @@ mkdir -p "$thumbs"
 
 # Build the rofi list: "<id>\t<label>\0icon\x1f<thumbnail>" for images
 build_list() {
-  cliphist list | while IFS=$'\t' read -r id content; do
+  local -A live=()
+  local id content size fmt dims thumb f name
+  while IFS=$'\t' read -r id content; do
     if [[ $content =~ ^\[\[\ binary\ data\ ([0-9.]+\ [KMG]?i?B)\ ([a-z]+)\ ([0-9]+x[0-9]+)\ \]\] ]]; then
       size="${BASH_REMATCH[1]}"; fmt="${BASH_REMATCH[2]}"; dims="${BASH_REMATCH[3]}"
-      thumb="$thumbs/$id.png"
+      # id + size + dimensions: a reused id (history wiped elsewhere) never
+      # shows an old picture
+      thumb="$thumbs/${id}_${dims}_${size// /}.png"
+      live[${thumb##*/}]=1
       if [[ ! -s $thumb ]]; then
         # cliphist needs the whole "id<TAB>content" line, not just the id
         printf '%s\t%s\n' "$id" "$content" | cliphist decode | magick - -thumbnail 96x96 "$thumb" 2>/dev/null
@@ -25,24 +30,31 @@ build_list() {
     else
       printf '%s\t%s\n' "$id" "$content"
     fi
+  done < <(cliphist list)
+  # Drop thumbnails of entries that no longer exist (trimmed past 200 items,
+  # deleted, or wiped outside this script)
+  for f in "$thumbs"/*.png; do
+    [[ -e $f ]] || continue
+    name=${f##*/}
+    [[ -n ${live[$name]:-} ]] || rm -f "$f"
   done
 }
 
 while true; do
   choice=$(build_list | rofi -dmenu -i -p "" \
       -display-columns 2 -display-column-separator $'\t' \
-      -show-icons -theme-str 'element-icon { size: 40px; } entry { placeholder: "Search clipboard"; }' \
+      -no-custom -show-icons -theme-str 'element-icon { size: 40px; } entry { placeholder: "Search clipboard"; }' \
       -mesg "Enter copy · Shift+Del delete · Ctrl+Shift+Del clear all" \
       -kb-delete-entry "" -kb-custom-1 "Shift+Delete" -kb-custom-2 "Control+Shift+Delete")
   code=$?
 
   case $code in
-    0)   # copy
-      [[ -n $choice ]] && cliphist decode <<<"$choice" | wl-copy
+    0)   # copy (only a real entry "<id>\t...": never typed text)
+      [[ $choice == *$'\t'* ]] && cliphist decode <<<"$choice" | wl-copy
       exit 0 ;;
-    10)  # delete this entry, then show the list again
-      [[ -n $choice ]] && cliphist delete <<<"$choice"
-      rm -f "$thumbs/${choice%%$'\t'*}.png"
+    10)  # delete this entry, then show the list again (its thumbnail is
+         # pruned when the list is rebuilt)
+      [[ $choice == *$'\t'* ]] && cliphist delete <<<"$choice"
       continue ;;
     11)  # clear everything (confirm)
       answer=$(printf 'No, keep it\nYes, clear all clipboard history\n' |

@@ -4,7 +4,9 @@
 # installed by running ~/.local/src/qylock/quickshell.sh (system/ROOT-STEPS.md 10).
 lock="$HOME/.local/share/quickshell-lockscreen/lock.sh"
 # Already locked? Don't start a second lock screen.
-pgrep -f 'quickshell-lockscreen/lock_shell.qml' >/dev/null && exit 0
+# (anchored to the start of the command line, so e.g. `nvim .../lock_shell.qml`
+# doesn't count as "locked")
+pgrep -f '^([^ ]*/)?(quickshell|qs) .*quickshell-lockscreen/lock_shell\.qml' >/dev/null && exit 0
 if [[ -x $lock ]]; then
   exec "$lock" "$@"
 fi
