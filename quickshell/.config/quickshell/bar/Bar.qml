@@ -5,12 +5,13 @@
 //   left:   workspaces 一 二 三 四 五 六
 //   center: music + cava wave (step 8)
 //   right:  tray · recording · idle · Wi-Fi · Bluetooth · audio · battery · bell · clock
-//           (recording/idle arrive in step 6, bell in step 7)
+//           (recording arrives in step 12, bell in step 7)
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import qs
+import qs.services
 import qs.components
 
 PanelWindow {
@@ -25,6 +26,12 @@ PanelWindow {
     margins { top: 8; left: 12; right: 12 }
     implicitHeight: 44
     color: "transparent"
+
+    // The Wayland idle inhibitor, attached to this bar's surface (hypridle obeys it)
+    IdleInhibitor {
+        window: bar
+        enabled: IdleInhibit.enabled
+    }
 
     Rectangle {
         id: background
@@ -49,6 +56,8 @@ PanelWindow {
 
             Tray { id: tray; barWindow: bar }
             Separator { visible: tray.visible }
+            IdleInhibitIcon {}
+            Separator {}
             NetworkIcon { barWindow: bar }
             Separator {}
             BluetoothIcon { id: bt; barWindow: bar }

@@ -7,6 +7,7 @@ import Quickshell.Io
 import Quickshell.Hyprland
 import qs.bar
 import qs.notifications
+import qs.osd
 import qs.services
 
 ShellRoot {
@@ -14,6 +15,12 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         delegate: Bar {}
+    }
+
+    // Volume / brightness / mic / idle-inhibitor indicator (bottom-center)
+    Variants {
+        model: Quickshell.screens
+        delegate: Osd {}
     }
 
     // Notification popups (top-right)

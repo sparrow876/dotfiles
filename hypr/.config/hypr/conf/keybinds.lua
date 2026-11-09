@@ -75,6 +75,10 @@ for i = 1, 6 do
 end
 
 -- ---------------------------------------------------------------------------
+-- System
+bind(mod .. " + I", exec("qs ipc call idle toggle"), "System: Toggle idle inhibitor (stay awake)")
+
+-- ---------------------------------------------------------------------------
 -- Media keys (work on the lock screen too)
 local locked_repeat = { locked = true, repeating = true }
 bind("XF86AudioRaiseVolume", exec("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"), "Media: Volume up",   locked_repeat)

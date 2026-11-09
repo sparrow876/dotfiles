@@ -35,4 +35,8 @@ Singleton {
     readonly property string unlink: "󰌸"
     readonly property string trash: "󰆴"
     readonly property string calendar: "󰃰"
+    readonly property string coffee: "󰅶"          // idle inhibitor on
+    readonly property string coffeeOutline: "󰛊"   // idle inhibitor off
+    readonly property var brightnessLevels: ["󰃞", "󰃟", "󰃠"]   // low, mid, high
+    readonly property string bell: "󰂚"
 }
