@@ -5,7 +5,7 @@ import qs
 Text {
     color: Theme.text
     font.family: Theme.fontFamily
-    font.pixelSize: 13
+    font.pixelSize: Theme.fontSize
     verticalAlignment: Text.AlignVCenter
     renderType: Text.NativeRendering
 }

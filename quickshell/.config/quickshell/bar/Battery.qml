@@ -33,14 +33,14 @@ MouseArea {
         Icon {
             text: root.levelIcons[Math.max(0, Math.min(10, Math.round(root.percent / 10)))]
             color: root.levelColor
-            size: 17
+            size: 19
             anchors.verticalCenter: parent.verticalCenter
         }
         Icon {
             visible: root.onAC
             text: "󱐋"   // nf-md-lightning_bolt
             color: Theme.lightBlue
-            size: 13
+            size: 15
             anchors.verticalCenter: parent.verticalCenter
         }
         StyledText {

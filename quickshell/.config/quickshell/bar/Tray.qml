@@ -26,8 +26,8 @@ Row {
         delegate: MouseArea {
             id: slot
             required property SystemTrayItem modelData
-            width: 18
-            height: 18
+            width: 20
+            height: 20
             anchors.verticalCenter: parent.verticalCenter
             hoverEnabled: true
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
@@ -36,7 +36,7 @@ Row {
             IconImage {
                 anchors.fill: parent
                 source: slot.modelData.icon
-                implicitSize: 18
+                implicitSize: 20
                 mipmap: true
                 opacity: slot.containsMouse ? 1 : 0.9
             }

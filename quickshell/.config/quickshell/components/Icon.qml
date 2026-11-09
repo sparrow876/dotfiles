@@ -4,7 +4,7 @@ import QtQuick
 import qs
 
 StyledText {
-    property real size: 16
+    property real size: 18
     font.pixelSize: size
     horizontalAlignment: Text.AlignHCenter
     Behavior on color { ColorAnimation { duration: 180 } }

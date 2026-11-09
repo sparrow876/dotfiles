@@ -27,3 +27,9 @@ gaps_out    = "12"
 border_size = "2"
 font_ui     = "JetBrainsMono Nerd Font"
 font_cjk    = "Noto Sans CJK JP"
+
+# Text sizes, matched to Windows at 125% scaling on a 1080p laptop
+# (Segoe UI 9pt x 1.25 = 15px). The screen itself stays at 1x.
+font_px      = "15"      # Quickshell + rofi body text (pixels)
+font_px_small = "13"     # secondary text, tooltips
+font_pt      = "11.25"   # GTK/Qt apps (points; 11.25pt = 15px at 96 dpi)

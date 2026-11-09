@@ -22,7 +22,7 @@ PanelWindow {
 
     anchors { top: true; left: true; right: true }
     margins { top: 8; left: 12; right: 12 }
-    implicitHeight: 38
+    implicitHeight: 44
     color: "transparent"
 
     Rectangle {
@@ -44,7 +44,7 @@ PanelWindow {
             anchors.right: parent.right
             anchors.rightMargin: 14
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 14
+            spacing: 16
 
             Tray { barWindow: bar }
             Battery {}

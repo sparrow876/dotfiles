@@ -29,4 +29,6 @@ Singleton {
     // Fonts
     readonly property string fontFamily: "JetBrainsMono Nerd Font"
     readonly property string fontCjk: "Noto Sans CJK JP"
+    readonly property int fontSize: 15
+    readonly property int fontSizeSmall: 13
 }

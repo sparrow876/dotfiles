@@ -39,7 +39,7 @@ PopupWindow {
             id: label
             anchors.centerIn: parent
             text: tip.text
-            font.pixelSize: 12
+            font.pixelSize: Theme.fontSizeSmall
         }
     }
 }

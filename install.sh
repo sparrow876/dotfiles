@@ -191,8 +191,10 @@ step_gsettings() {
   gsettings set $s icon-theme 'Papirus-Dark'
   gsettings set $s cursor-theme 'Bibata-Modern-Ice'
   gsettings set $s cursor-size 24
-  gsettings set $s font-name 'Noto Sans 11'
-  gsettings set $s monospace-font-name 'JetBrainsMono Nerd Font 11'
+  # Text sizes match Windows at 125% (see theme/palette.toml font_pt)
+  gsettings set $s font-name 'Noto Sans 11.25'
+  gsettings set $s document-font-name 'Noto Sans 12'
+  gsettings set $s monospace-font-name 'JetBrainsMono Nerd Font 11.25'
 }
 
 user_setup() {

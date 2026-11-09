@@ -66,14 +66,14 @@ hl.window_rule({
 
 -- ---------------------------------------------------------------------------
 -- Dropdown terminal (ALT + `): top-center under the bar, 60% x 45%.
--- The bar is ~40px tall, 8px from the top -> window starts 60px down.
+-- The bar is 44px tall, 8px from the top, + 12px gap -> window starts 64px down.
 hl.window_rule({
     name      = "dropterm",
     match     = { class = "^dropterm$" },
     workspace = "special:dropterm",
     float     = true,
     size      = { "monitor_w*0.6", "monitor_h*0.45" },
-    move      = { "(monitor_w-window_w)/2", "60" },
+    move      = { "(monitor_w-window_w)/2", "64" },
 })
 
 -- ---------------------------------------------------------------------------

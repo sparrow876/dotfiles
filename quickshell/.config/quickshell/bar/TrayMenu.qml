@@ -36,7 +36,7 @@ PopupWindow {
     anchor.edges: Edges.Bottom
     anchor.gravity: Edges.Bottom
     anchor.margins.top: 14
-    implicitWidth: 240
+    implicitWidth: 270
     implicitHeight: Math.min(column.implicitHeight + 12, 520)
     color: "transparent"
     visible: false
@@ -148,7 +148,7 @@ PopupWindow {
         signal activated()
 
         Layout.fillWidth: true
-        implicitHeight: 30
+        implicitHeight: 34
         hoverEnabled: true
         cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
         onClicked: if (enabled) activated()
