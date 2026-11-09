@@ -35,7 +35,9 @@ PanelWindow {
         spacing: 10
 
         Repeater {
-            model: Notifications.popups.slice(0, Notifications.maxPopups)
+            // ScriptModel keeps existing cards when the list changes (no restarted
+            // animations), only adding/removing what changed.
+            model: ScriptModel { values: Notifications.popups.slice(0, Notifications.maxPopups) }
             delegate: Card {}
         }
     }
@@ -45,19 +47,8 @@ PanelWindow {
         required property var modelData
         readonly property var n: modelData
         readonly property bool critical: n.urgency === NotificationUrgency.Critical
-        // Picture sent with the notification. "image://icon/<name>" is an icon
-        // name: only use it if the icon theme really has it.
-        readonly property string imageSource: {
-            const img = n.image || ""
-            if (img.startsWith("image://icon/"))
-                return Quickshell.iconPath(img.substring(13), true) !== "" ? img : ""
-            return img
-        }
-        readonly property string iconSource: {
-            const i = n.appIcon || ""
-            if (i.startsWith("/") || i.startsWith("file:") || i.startsWith("image:")) return i
-            return i ? Quickshell.iconPath(i, true) : ""
-        }
+        readonly property string imageSource: Notifications.imageSource(n)
+        readonly property string iconSource: Notifications.iconSource(n)
 
         width: column.width
         height: body.implicitHeight + 28
@@ -71,12 +62,9 @@ PanelWindow {
             NumberAnimation { target: card; property: "x"; to: 0; duration: 260; easing.type: Easing.OutQuint }
         }
 
-        // Auto-hide (not for critical); hovering pauses it
-        Timer {
-            running: !card.critical && !hover.containsMouse && !hover.drag.active
-            interval: Notifications.popupTimeout
-            onTriggered: Notifications.hidePopup(card.n)
-        }
+        // Auto-hide is handled by the service; hovering (or dragging) pauses it
+        readonly property bool paused: hover.containsMouse || hover.drag.active
+        onPausedChanged: Notifications.setHovered(n, paused)
 
         MouseArea {
             id: hover

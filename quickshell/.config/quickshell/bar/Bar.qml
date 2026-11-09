@@ -5,7 +5,7 @@
 //   left:   workspaces 一 二 三 四 五 六
 //   center: music + cava wave (step 8)
 //   right:  tray · recording · idle · Wi-Fi · Bluetooth · audio · battery · bell · clock
-//           (recording arrives in step 12, bell in step 7)
+//           (recording arrives in step 12)
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -66,6 +66,8 @@ PanelWindow {
             Separator {}
             Battery { id: battery }
             Separator { visible: battery.visible }
+            Bell { barWindow: bar }
+            Separator {}
             Clock { barWindow: bar }
         }
     }

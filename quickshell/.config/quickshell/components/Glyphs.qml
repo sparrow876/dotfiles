@@ -39,4 +39,5 @@ Singleton {
     readonly property string coffeeOutline: "󰛊"   // idle inhibitor off
     readonly property var brightnessLevels: ["󰃞", "󰃟", "󰃠"]   // low, mid, high
     readonly property string bell: "󰂚"
+    readonly property string bellOff: "󰂛"
 }
