@@ -3,7 +3,7 @@
 // "quickshell" namespace in hypr/conf/rules.lua).
 //
 //   left:   workspaces 一 二 三 四 五 六
-//   center: music + cava wave (step 8)
+//   center: music (artist — title, play/pause)
 //   right:  tray · recording · idle · Wi-Fi · Bluetooth · audio · battery · bell · clock
 //           (recording arrives in step 12)
 import QtQuick
@@ -46,6 +46,10 @@ PanelWindow {
             anchors.leftMargin: 6
             anchors.verticalCenter: parent.verticalCenter
             screen: bar.screen
+        }
+
+        MediaModule {
+            anchors.centerIn: parent
         }
 
         RowLayout {

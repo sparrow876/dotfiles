@@ -40,4 +40,9 @@ Singleton {
     readonly property var brightnessLevels: ["󰃞", "󰃟", "󰃠"]   // low, mid, high
     readonly property string bell: "󰂚"
     readonly property string bellOff: "󰂛"
+    readonly property string play: "󰐊"
+    readonly property string pause: "󰏤"
+    readonly property string music: "󰝚"
+    readonly property string next: "󰒭"
+    readonly property string previous: "󰒮"
 }
