@@ -5,6 +5,7 @@
 ## Base tools used by install.sh and scripts
 base-devel
 git
+github-cli           # `gh`: GitHub login + pushes
 stow
 jq
 socat
