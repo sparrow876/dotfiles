@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Switch the whole desktop to another theme and reload what's running.
+#   theme/apply.sh                 list themes (* = active)
+#   theme/apply.sh <name>          e.g. catppuccin-mocha, blue-ice
+# What changes: Hyprland borders, the bar/popups/panels (Quickshell), rofi,
+# kitty, starship, fzf, bat, lazygit, fastfetch, slurp selections, and the
+# GTK/Qt dark/light preference. Neovim, Nautilus and zathura stay Nord, the
+# lock/login screen keeps its qylock theme.
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT/theme"
+
+current=$(tr -d '[:space:]' < current)
+if [[ $# -eq 0 ]]; then
+  for f in palettes/*.toml; do
+    n=$(basename "$f" .toml)
+    title=$(sed -n 's/^name *= *"\(.*\)".*/\1/p' "$f")
+    mode=$(sed -n 's/^mode *= *"\(.*\)".*/\1/p' "$f")
+    printf '%s %-24s %s (%s)\n' "$([[ $n == "$current" ]] && echo '*' || echo ' ')" "$n" "$title" "$mode"
+  done
+  exit 0
+fi
+
+name=$1
+[[ -f palettes/$name.toml ]] || { echo "No theme '$name'. Run $0 to list them." >&2; exit 1; }
+mode=$(sed -n 's/^mode *= *"\(.*\)".*/\1/p' "palettes/$name.toml")
+title=$(sed -n 's/^name *= *"\(.*\)".*/\1/p' "palettes/$name.toml")
+
+echo "$name" > current
+./render.sh >/dev/null
+
+# Reload running apps (each step is optional: skipped if the app isn't running)
+if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
+  hyprctl reload >/dev/null || true                    # borders, shadows
+fi
+pkill -USR1 -x kitty 2>/dev/null || true               # kitty re-reads colors.conf
+command -v bat >/dev/null && bat cache --build >/dev/null 2>&1 || true
+touch "$ROOT/quickshell/.config/quickshell/Theme.qml"  # Quickshell hot-reloads
+if command -v gsettings >/dev/null && [[ -n ${DBUS_SESSION_BUS_ADDRESS:-} ]]; then
+  if [[ $mode == light ]]; then
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Light'
+  else
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
+  fi
+fi
+command -v notify-send >/dev/null && notify-send -a Theme -i preferences-desktop-theme \
+  "Theme: $title" "New terminals and shells pick it up when opened." || true
+echo "Applied $name ($title, $mode)."

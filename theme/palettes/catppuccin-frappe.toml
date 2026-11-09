@@ -1,0 +1,21 @@
+# Catppuccin Frappé — official palette (github.com/catppuccin/palette); crust/base/surface0/surface2/blue/lavender/text/subtext0/yellow/red/green/mauve/teal
+# Role names are the same for every theme (see theme/README.md).
+
+[meta]
+name = "Catppuccin Frappé"
+mode = "dark"        # dark | light (sets the GTK/Qt preference)
+
+[colors]
+base      = "#232634"   # deepest background
+surface   = "#303446"   # bar, panels, popups, rofi, kitty bg
+overlay   = "#414559"   # cards, hover, inactive borders
+blue      = "#626880"   # secondary / dim accent (terminal "bright black")
+lightblue = "#8caaee"   # primary accent, active states
+ice       = "#babbf1"   # highlights, graphs
+text      = "#c6d0f5"   # main text
+muted     = "#a5adce"   # secondary text
+warn      = "#e5c890"   # battery < 20%, high temps
+critical  = "#e78284"   # battery < 10%, recording dot
+green     = "#a6d189"   # terminal ANSI green
+magenta   = "#ca9ee6"   # terminal ANSI magenta
+cyan      = "#81c8be"   # terminal ANSI cyan

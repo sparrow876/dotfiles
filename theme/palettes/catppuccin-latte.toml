@@ -1,0 +1,21 @@
+# Catppuccin Latte — official palette (github.com/catppuccin/palette); crust/base/surface0/surface2/blue/lavender/text/subtext0/yellow/red/green/mauve/teal
+# Role names are the same for every theme (see theme/README.md).
+
+[meta]
+name = "Catppuccin Latte"
+mode = "light"        # dark | light (sets the GTK/Qt preference)
+
+[colors]
+base      = "#dce0e8"   # deepest background
+surface   = "#eff1f5"   # bar, panels, popups, rofi, kitty bg
+overlay   = "#ccd0da"   # cards, hover, inactive borders
+blue      = "#acb0be"   # secondary / dim accent (terminal "bright black")
+lightblue = "#1e66f5"   # primary accent, active states
+ice       = "#7287fd"   # highlights, graphs
+text      = "#4c4f69"   # main text
+muted     = "#6c6f85"   # secondary text
+warn      = "#df8e1d"   # battery < 20%, high temps
+critical  = "#d20f39"   # battery < 10%, recording dot
+green     = "#40a02b"   # terminal ANSI green
+magenta   = "#8839ef"   # terminal ANSI magenta
+cyan      = "#179299"   # terminal ANSI cyan

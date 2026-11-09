@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
-# Render every color/theme file in the repo from theme/palette.toml.
+# Render every color/theme file in the repo from the active theme:
+#   theme/style.toml              fonts, sizes, shape (shared by all themes)
+#   theme/palettes/<current>.toml  colors (+ [meta] name/mode)
+#   theme/current                  name of the active palette (e.g. blue-ice)
+# To switch themes and reload the running apps, use theme/apply.sh instead.
 #
 # How it works:
 #   theme/templates/<path>.tmpl  ->  <repo>/<path>
 # e.g. theme/templates/kitty/.config/kitty/colors.conf.tmpl
 #      becomes kitty/.config/kitty/colors.conf
 #
-# Placeholders available in templates (for every palette key):
+# Placeholders available in templates (every key of style.toml + the palette,
+# plus {{theme}} = palette file name, {{name}} = display name, {{mode}} = dark|light):
 #   {{name}}        value as written, e.g. #7fb3ff  or  JetBrainsMono Nerd Font
 #   {{name.hex}}    color without '#', e.g. 7fb3ff
 #   {{name.rgb}}    decimal triple, e.g. 127, 179, 255
@@ -17,7 +22,10 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PALETTE="$ROOT/theme/palette.toml"
+CURRENT="$(tr -d '[:space:]' < "$ROOT/theme/current" 2>/dev/null || echo blue-ice)"
+PALETTE="$ROOT/theme/palettes/$CURRENT.toml"
+STYLE="$ROOT/theme/style.toml"
+[[ -f $PALETTE ]] || { echo "render.sh: no palette '$CURRENT' in theme/palettes/" >&2; exit 1; }
 TEMPLATES="$ROOT/theme/templates"
 
 sedscript="$(mktemp)"
@@ -40,7 +48,7 @@ while IFS= read -r line; do
     alpha="$(awk -v a="$val" 'BEGIN { printf "%02x", int(a * 255 + 0.5) }')"
     printf 's|{{%s.alpha}}|%s|g\n' "$key" "$alpha" >>"$sedscript"
   fi
-done <"$PALETTE"
+done < <(cat "$STYLE" "$PALETTE"; printf 'theme = "%s"\n' "$CURRENT")
 
 count=0
 while IFS= read -r -d '' tmpl; do
@@ -58,4 +66,4 @@ while IFS= read -r -d '' tmpl; do
   count=$((count + 1))
 done < <(find "$TEMPLATES" -type f -name '*.tmpl' -print0 | sort -z)
 
-echo "render.sh: $count file(s) written."
+echo "render.sh: $count file(s) written for theme '$CURRENT'."

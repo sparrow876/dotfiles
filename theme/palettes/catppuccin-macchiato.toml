@@ -1,0 +1,21 @@
+# Catppuccin Macchiato — official palette (github.com/catppuccin/palette); crust/base/surface0/surface2/blue/lavender/text/subtext0/yellow/red/green/mauve/teal
+# Role names are the same for every theme (see theme/README.md).
+
+[meta]
+name = "Catppuccin Macchiato"
+mode = "dark"        # dark | light (sets the GTK/Qt preference)
+
+[colors]
+base      = "#181926"   # deepest background
+surface   = "#24273a"   # bar, panels, popups, rofi, kitty bg
+overlay   = "#363a4f"   # cards, hover, inactive borders
+blue      = "#5b6078"   # secondary / dim accent (terminal "bright black")
+lightblue = "#8aadf4"   # primary accent, active states
+ice       = "#b7bdf8"   # highlights, graphs
+text      = "#cad3f5"   # main text
+muted     = "#a5adcb"   # secondary text
+warn      = "#eed49f"   # battery < 20%, high temps
+critical  = "#ed8796"   # battery < 10%, recording dot
+green     = "#a6da95"   # terminal ANSI green
+magenta   = "#c6a0f6"   # terminal ANSI magenta
+cyan      = "#8bd5ca"   # terminal ANSI cyan

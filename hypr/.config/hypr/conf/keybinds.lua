@@ -96,6 +96,7 @@ bind(mod .. " + I", exec("qs ipc call idle toggle"), "System: Toggle idle inhibi
 bind(mod .. " + N", exec("qs ipc call popups toggle notifications"), "System: Notification center")
 bind(mod .. " + S", exec("qs ipc call panel toggle"), "System: System stats panel")
 bind(mod .. " + W", exec("qs ipc call wallpaper toggle"), "System: Wallpaper selector")
+bind(mod .. " + T", exec(os.getenv("HOME") .. "/dotfiles/scripts/theme-picker.sh"), "System: Theme selector")
 bind(mod .. " + Escape", exec("qs ipc call powermenu toggle"), "System: Power menu")
 -- SUPER is used only for locking
 bind("SUPER + L", exec(os.getenv("HOME") .. "/dotfiles/scripts/lock.sh"), "System: Lock screen")

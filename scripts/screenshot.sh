@@ -6,6 +6,7 @@
 #   screenshot.sh full     SHIFT + Print            (the focused monitor)
 #   screenshot.sh window   ALT + Print              (the active window)
 set -u
+source "$(dirname "$0")/theme-colors.sh"   # generated: theme colors for slurp
 dir="$HOME/Pictures/Screenshots"
 mkdir -p "$dir"
 file="$dir/$(date +%Y-%m-%d_%H-%M-%S).png"
@@ -17,7 +18,7 @@ case "${1:-region}" in
     # Freeze the screen (hyprpicker draws a still frame) while slurp selects
     hyprpicker -r -z >/dev/null 2>&1 & freeze=$!
     sleep 0.15
-    geom=$(slurp -d -b '0d1b2a66' -c '7fb3ffff' -s '7fb3ff22' -w 2)
+    geom=$(slurp -d "${SLURP_ARGS[@]}")
     kill $freeze 2>/dev/null
     [[ -z $geom ]] && exit 0          # cancelled with Esc
     sleep 0.05

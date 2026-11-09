@@ -51,7 +51,6 @@ bindkey '^[[F'    end-of-line          # End
 bindkey '^[[3~'   delete-char          # Delete
 
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#9fb3c8'
 
 # --- Tools ---------------------------------------------------------------------
 export EDITOR=nvim

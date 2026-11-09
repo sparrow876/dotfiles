@@ -14,6 +14,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
+import qs
 
 Singleton {
     id: root
@@ -31,6 +32,7 @@ Singleton {
 
     readonly property string audio: mic ? "default_output|default_input" : "default_output"
     function monitor() { return Hyprland.focusedMonitor?.name ?? "screen" }
+    function hex(c) { return c.toString().substring(1, 7) }   // "#rrggbb" -> "rrggbb"
     function stamp() { return Qt.formatDateTime(new Date(), "yyyy-MM-dd_HH-mm-ss") }   // local time
 
     // --- normal recording ------------------------------------------------------
@@ -50,7 +52,9 @@ Singleton {
 
     Process {
         id: selector
-        command: ["slurp", "-f", "%wx%h+%x+%y", "-d", "-b", "0d1b2a66", "-c", "7fb3ffff", "-s", "7fb3ff22", "-w", "2"]
+        command: ["slurp", "-f", "%wx%h+%x+%y", "-d",
+                  "-b", root.hex(Theme.base) + "66", "-c", root.hex(Theme.lightBlue) + "ff",
+                  "-s", root.hex(Theme.lightBlue) + "22", "-w", "2"]
         stdout: StdioCollector {
             onStreamFinished: {
                 const g = text.trim()
