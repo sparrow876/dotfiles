@@ -10,6 +10,10 @@ hl.on("hyprland.start", function()
     -- Password prompts for apps that need admin rights (polkit agent)
     hl.exec_cmd("systemctl --user start hyprpolkitagent.service")
 
+    -- Wallpaper daemon (awww), then the remembered wallpaper
+    hl.exec_cmd("awww-daemon")
+    hl.exec_cmd(os.getenv("HOME") .. "/dotfiles/scripts/wallpaper.sh restore")
+
     -- Bar, widgets and (later) notifications: ~/.config/quickshell/shell.qml.
     -- Quickshell reloads itself when a .qml file changes.
     hl.exec_cmd("qs")

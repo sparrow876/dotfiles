@@ -10,6 +10,7 @@ import qs.notifications
 import qs.osd
 import qs.panel
 import qs.powermenu
+import qs.wallpaper
 import qs.services
 
 ShellRoot {
@@ -35,6 +36,12 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         delegate: PowerMenu {}
+    }
+
+    // Wallpaper reel (ALT + W): qs ipc call wallpaper toggle
+    Variants {
+        model: Quickshell.screens
+        delegate: WallpaperReel {}
     }
 
     // Notification popups (top-right)

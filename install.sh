@@ -6,7 +6,7 @@
 #   ./install.sh --packages    install packages/pacman.txt + packages/aur.txt
 #                                (asks for your sudo password via pacman/yay)
 #   ./install.sh --all         --packages, then the user-level setup
-#   ./install.sh --only <step> run one step: dirs | clones | render | stow | gsettings
+#   ./install.sh --only <step> run one step: dirs | wallpaper | clones | render | stow | gsettings
 #
 # It never enables services, edits /etc or runs third-party scripts.
 # Root-level steps live in system/ROOT-STEPS.md and are run by hand.
@@ -114,6 +114,21 @@ clone_pinned() {
   info "$name pinned at ${commit:0:10}"
 }
 
+# A default wallpaper made from the palette, only if the folder is empty (your
+# own wallpapers are never touched or committed).
+step_wallpaper() {
+  local dir="$HOME/Pictures/Wallpapers"
+  mkdir -p "$dir"
+  if [[ -z $(find "$dir" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) | head -1) ]]; then
+    command -v magick >/dev/null || { warn "imagemagick missing: no default wallpaper"; return; }
+    info "Creating a default wallpaper (rice-blue.jpg)"
+    magick -size 1920x1080 radial-gradient:'#415a77'-'#0d1b2a' \
+      \( -size 1920x1080 gradient:'#7fb3ff40'-'#0d1b2a00' -rotate 90 -resize 1920x1080! \) -compose over -composite \
+      -attenuate 0.04 +noise Gaussian -quality 92 "$dir/rice-blue.jpg"
+    [[ -e $dir/current ]] || ln -sfn "$dir/rice-blue.jpg" "$dir/current"
+  fi
+}
+
 step_clones() {
   local entry
   for entry in "${CLONES[@]}"; do
@@ -211,6 +226,7 @@ step_gsettings() {
 
 user_setup() {
   step_dirs
+  step_wallpaper
   step_clones
   step_render
   step_stow
