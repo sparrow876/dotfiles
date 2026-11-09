@@ -21,6 +21,7 @@ BACKUP_DIR="$HOME/.local/state/dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 # package here once it is complete, so a half-built config never replaces a
 # working one (e.g. `hypr` is only added once step 2 is done).
 STOW_PACKAGES=(
+  hypr        # step 2
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.
