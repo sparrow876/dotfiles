@@ -216,7 +216,9 @@ PopupFrame {
                     label: "Set up…"
                     primary: true
                     onClicked: {
-                        Quickshell.execDetached(["nm-connection-editor", "--create", "--type=802-11-wireless"])
+                        // asks for username/password (+ CA certificate) in a small terminal
+                        Quickshell.execDetached(["kitty", "--class", "wifi-setup", "--title", "Wi-Fi setup",
+                            Quickshell.env("HOME") + "/dotfiles/scripts/wifi-enterprise.sh", entry.net.name])
                         menu.expanded = null
                         Popups.close()
                     }

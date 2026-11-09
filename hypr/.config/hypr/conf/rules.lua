@@ -56,6 +56,15 @@ hl.window_rule({
     center = true,
 })
 
+-- Enterprise Wi-Fi setup (Wi-Fi menu → Set up…, scripts/wifi-enterprise.sh)
+hl.window_rule({
+    name   = "float-center-wifi-setup",
+    match  = { class = "^wifi-setup$" },
+    float  = true,
+    size   = { "monitor_w*0.42", "monitor_h*0.4" },
+    center = true,
+})
+
 hl.window_rule({
     name   = "float-center-steam-dialogs",
     match  = { class = "^steam$", title = "^(Friends List|Steam Settings)$" },

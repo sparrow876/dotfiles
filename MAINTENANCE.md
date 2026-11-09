@@ -91,7 +91,7 @@ AUR helper: **yay** (not paru).
 | `quickshell/…/notifications/` | popups + center |
 | `quickshell/…/components/` | StyledText, Icon, Glyphs (all glyphs), Tooltip, Toggle, Slider, IconButton, TextButton, Card, Spinner, Separator, LevelBar, Graph, RingGauge, WheelSteps (scroll → whole steps) |
 | `quickshell/…/{osd,panel,powermenu,wallpaper,idle,cheatsheet}/` | one overlay each |
-| `scripts/` | shell helpers (update, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, wallpaper, record, notify-file, theme-picker, theme-colors.sh (generated)) |
+| `scripts/` | shell helpers (update, wifi-enterprise, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, wallpaper, record, notify-file, theme-picker, theme-colors.sh (generated)) |
 | `theme/` | palettes, style, templates, `render.sh`, `apply.sh`, README |
 | `system/` | ROOT-STEPS.md, root-steps scripts, units (platform profile, paccache), etc (reflector.conf) |
 | `systemd/.config/environment.d/` | env for D-Bus/systemd-started apps (`GSK_RENDERER`) |
@@ -339,6 +339,25 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - blink.cmp uses the Lua fuzzy matcher (no prebuilt binary download);
   `:checkhealth` warns about that, expected.
 
+### 4.2c Network (NetworkManager)
+
+- Enterprise Wi-Fi (PEAP + MSCHAPv2, e.g. IISc `iiscwlan`, eduroam):
+  `scripts/wifi-enterprise.sh [ssid]`, also opened by the Wi-Fi menu's
+  "Set up…" (kitty class `wifi-setup`, floating rule in rules.lua). Prompts for
+  username/password (hidden) and a CA certificate; stores a system connection
+  with `802-1x.password-flags 0` (no secret agent runs here: there is no
+  nm-applet, so agent-owned secrets would never be supplied). CA copied to
+  `~/.local/share/certs/<ssid>-ca.pem`. The wheel group may add system
+  connections without a password (NetworkManager's polkit rule).
+- iiscwlan (IISc DIGITS Linux guide): PEAP auto, MSCHAPv2, username = IISc
+  email, password = IISc email password. The guide says "No CA certificate is
+  required"; we validate anyway with IISc's Wi-Fi CA
+  (digits.iisc.ac.in/tina/wi-fi-ca, IISc login). Server cert subject shows in
+  `journalctl -u wpa_supplicant | grep "depth=0 subject"` → can be pinned with
+  `nmcli connection modify iiscwlan 802-1x.domain-suffix-match <name>`.
+- Diagnose a failed connection: `journalctl -u NetworkManager -u wpa_supplicant
+  --since -10min` (no passwords in these logs).
+
 ### 4.3 GPU / NVIDIA
 
 - Open modules 595+: `nvidia-suspend/resume/hibernate` services are NOT needed
@@ -534,6 +553,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-09** — Enterprise Wi-Fi (user wants IISc `iiscwlan`, WPA2/WPA3
+  Enterprise): new `scripts/wifi-enterprise.sh`; the Wi-Fi menu's "Set up…" for
+  enterprise networks opens it in a floating kitty instead of
+  nm-connection-editor. Files: `scripts/wifi-enterprise.sh`,
+  `popups/NetworkMenu.qml`, `hypr/conf/rules.lua`. §4.2c.
 
 - **2026-11-09** — Step 21: README (screenshots in `docs/screenshots/*.jpg`,
   generated keybind table, install, recovery, docs, credits), MIT LICENSE,
