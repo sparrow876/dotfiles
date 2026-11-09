@@ -35,14 +35,20 @@ sudo -v
 
 # --- 2.3 -------------------------------------------------------------------
 say "2.3 NVIDIA checks"
-if lsmod | grep -q '^nvidia '; then ok "nvidia module loaded"; else bad "nvidia module NOT loaded"; fi
-if lsmod | grep -q '^nouveau '; then bad "nouveau is still loaded"; else ok "nouveau not loaded"; fi
+if [[ -d /sys/module/nvidia ]]; then ok "nvidia module loaded"; else bad "nvidia module NOT loaded"; fi
+if [[ -d /sys/module/nouveau ]]; then bad "nouveau is still loaded"; else ok "nouveau not loaded"; fi
 p=/sys/module/nvidia_drm/parameters
 [[ $(cat $p/modeset 2>/dev/null) == Y ]] && ok "nvidia_drm modeset=Y" || bad "nvidia_drm modeset is not Y"
 [[ $(cat $p/fbdev 2>/dev/null) == Y ]] && ok "nvidia_drm fbdev=Y" || bad "nvidia_drm fbdev is not Y"
+# PreserveVideoMemoryAllocations: 1 = on, 2 = auto (on when the kernel suspend
+# notifiers are used, the default since driver 595), 0 = off.
 pv="$(awk -F': ' '/PreserveVideoMemoryAllocations/{print $2}' /proc/driver/nvidia/params 2>/dev/null || true)"
-[[ $pv == 1 ]] && ok "PreserveVideoMemoryAllocations=1 (suspend keeps GPU memory)" \
-               || bad "PreserveVideoMemoryAllocations='$pv' (see ROOT-STEPS.md 2.4)"
+kn="$(awk -F': ' '/UseKernelSuspendNotifiers/{print $2}' /proc/driver/nvidia/params 2>/dev/null || true)"
+if [[ $pv == 1 || ( $pv == 2 && $kn == 1 ) ]]; then
+  ok "suspend keeps GPU memory (PreserveVideoMemoryAllocations=$pv, UseKernelSuspendNotifiers=$kn)"
+else
+  bad "PreserveVideoMemoryAllocations=$pv, UseKernelSuspendNotifiers=$kn (see ROOT-STEPS.md 2.4)"
+fi
 d3="$(grep -h 'Runtime D3 status' /proc/driver/nvidia/gpus/*/power 2>/dev/null || true)"
 [[ $d3 == *Enabled* ]] && ok "dGPU sleeps when idle: ${d3##*: }" || bad "runtime D3: '${d3##*: }'"
 if nvidia-smi -L >/dev/null 2>&1; then ok "nvidia-smi: $(nvidia-smi -L | head -1)"; else bad "nvidia-smi failed"; fi
@@ -75,12 +81,12 @@ echo "  platform_profile = $(cat /sys/firmware/acpi/platform_profile)"
 
 # --- 4 ---------------------------------------------------------------------
 say "4 Enabling multilib (32-bit libraries for Steam/Proton)"
-if pacman-conf --repo-list | grep -qx multilib; then
+if grep -qx multilib < <(pacman-conf --repo-list); then
   echo "  multilib already enabled"
 else
   [[ -e /etc/pacman.conf.bak ]] || sudo cp /etc/pacman.conf /etc/pacman.conf.bak
   sudo sed -i '/^#\[multilib\]$/{s/^#//;n;s/^#//}' /etc/pacman.conf
-  pacman-conf --repo-list | grep -qx multilib || { echo "  failed to enable multilib"; exit 1; }
+  grep -qx multilib < <(pacman-conf --repo-list) || { echo "  failed to enable multilib"; exit 1; }
   echo "  enabled (original saved as /etc/pacman.conf.bak)"
 fi
 echo "  Full system upgrade (snap-pac takes a snapshot first). Confirm with Y:"

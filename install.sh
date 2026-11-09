@@ -47,7 +47,7 @@ read_list() { sed -e 's/#.*//' -e 's/[[:space:]]//g' -e '/^$/d' "$1"; }
 step_packages() {
   [[ $EUID -ne 0 ]] || die "run as your normal user, not root"
   local multilib=0
-  pacman-conf --repo-list | grep -qx multilib && multilib=1
+  grep -qx multilib < <(pacman-conf --repo-list) && multilib=1
   mapfile -t pkgs < <(read_list "$REPO/packages/pacman.txt")
   if ((!multilib)); then
     warn "multilib is not enabled: skipping steam and lib32-* (see ROOT-STEPS.md)"

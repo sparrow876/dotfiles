@@ -178,7 +178,7 @@ reboot
 lsmod | grep -E '^(nvidia|nouveau)'              # nvidia*, no nouveau
 cat /sys/module/nvidia_drm/parameters/modeset    # Y  (on by default since driver 560)
 cat /sys/module/nvidia_drm/parameters/fbdev      # Y  (on by default since 570)
-grep PreserveVideoMemoryAllocations /proc/driver/nvidia/params   # should be 1
+grep -E 'PreserveVideoMemoryAllocations|UseKernelSuspendNotifiers' /proc/driver/nvidia/params   # 2 + 1 (or 1 + anything)
 cat /proc/driver/nvidia/gpus/*/power             # "Runtime D3 status: Enabled (fine-grained)" = dGPU sleeps when idle
 nvidia-smi                                       # shows the RTX 3050
 prime-run glxinfo -B | grep -i 'renderer'        # NVIDIA GeForce RTX 3050 ...
@@ -194,9 +194,11 @@ kernel modules, video memory is saved by the kernel's suspend hooks, so the
 `nvidia-suspend/hibernate/resume` services are **no longer needed**. The current
 `nvidia-utils` package disables them itself on upgrade (see its install script).
 Don't enable them.
-Check: `PreserveVideoMemoryAllocations` reads `1` above. Suspend gets tested in step 14.
+Check: `PreserveVideoMemoryAllocations` reads `2` ("auto", the default since 595: on
+whenever `UseKernelSuspendNotifiers` is `1`) or `1` (forced on). Verified on this
+machine 2026-11-09: `2` + `1`, so memory is preserved. Suspend gets tested in step 14.
 
-Only if it reads `0`:
+Only if it reads `0`, or `2` with `UseKernelSuspendNotifiers: 0`:
 ```sh
 echo 'options nvidia NVreg_PreserveVideoMemoryAllocations=1' | sudo tee /etc/modprobe.d/nvidia-power.conf
 sudo mkinitcpio -P && reboot
