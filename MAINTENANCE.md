@@ -330,7 +330,10 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   `qs ipc call notifications clickLatest`.
 - `install.sh` stow backups: dirs in `NO_FOLD_DIRS` are treated as shared
   (per-file backup), otherwise generated real files (qt*ct.conf) made it move
-  the whole dir.
+  the whole dir, after which stow *folded* it into a repo link and
+  `theme/qt.sh` wrote absolute-path configs into the repo (removed, now
+  gitignored). After any stow change: `ls -la ~/.config | grep -- '->'` and
+  check no-fold dirs are real directories.
 
 ### 4.8 qylock
 
@@ -376,8 +379,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   are verified.
 - Step 17 apps need the user's `yay` install + tests (call pop-out titles to
   confirm for the `call-popouts` rule; Vesktop theme to check visually).
-- Remaining build steps: 18–21 (
-  Neovim, gaming, maintenance tooling/update.sh, README + license).
+- Remaining build steps: 18–21 (Neovim, gaming, maintenance tooling/update.sh,
+  README + license).
 
 ---
 

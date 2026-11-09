@@ -16,6 +16,9 @@ id_ed25519*
 # --- App runtime state that may land in stowed dirs ---
 **/gtk-3.0/bookmarks
 **/gtk-*/settings.ini
+# written by theme/qt.sh with absolute paths (never commit)
+qt/.config/qt5ct/qt5ct.conf
+qt/.config/qt6ct/qt6ct.conf
 .cache/
 **/__pycache__/
 node_modules/
