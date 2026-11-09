@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
 import qs.bar
+import qs.idle
 import qs.notifications
 import qs.osd
 import qs.panel
@@ -42,6 +43,12 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         delegate: WallpaperReel {}
+    }
+
+    // Idle screen (hypridle, 4 min): qs ipc call idlescreen enter|leave
+    Variants {
+        model: Quickshell.screens
+        delegate: IdleScreen {}
     }
 
     // Notification popups (top-right)

@@ -10,6 +10,10 @@ hl.on("hyprland.start", function()
     -- Password prompts for apps that need admin rights (polkit agent)
     hl.exec_cmd("systemctl --user start hyprpolkitagent.service")
 
+    -- Idle: dim + idle screen -> lock -> screen off -> (battery) suspend
+    -- (hypr/.config/hypr/hypridle.conf)
+    hl.exec_cmd("hypridle")
+
     -- Wallpaper daemon (awww), then the remembered wallpaper
     hl.exec_cmd("awww-daemon")
     hl.exec_cmd(os.getenv("HOME") .. "/dotfiles/scripts/wallpaper.sh restore")

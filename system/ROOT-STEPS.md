@@ -21,6 +21,7 @@ The sections below explain what each command does and how to undo it.
 | `bash system/root-steps/1.5-home-subvolumes.sh` | 1.5 | from a TTY, desktop logged out (no sudo) |
 | `bash system/root-steps/2-nvidia.sh` | 2.1–2.2 | then **reboot** |
 | `bash system/root-steps/3-system.sh` | 2.3 checks, 3, 4, 5, 6, 7 | after that reboot, inside the desktop |
+| `bash system/root-steps/4-login.sh` | 10 (SDDM) | after running qylock's two scripts |
 
 System facts these steps rely on (checked 2026-11-09): Arch, kernel `linux` 7.2,
 **btrfs** root (`@`, `@home`, `@pkg`, `@log`, mounted with `subvol=` in fstab and the
@@ -334,7 +335,36 @@ Undo: `chsh -s /usr/bin/bash`
 
 ## 9. *(later)* Placeholders filled in by later steps
 
-- **Step 14:** run qylock's `sddm.sh` / `quickshell.sh` (summarized first), enable
-  `sddm.service`, set the theme, Hyprland session entry, `pam_gnome_keyring` for SDDM.
 - **Step 16:** `systemctl --user enable --now rclone-gdrive.service` (no sudo).
 - **Step 19:** ACC LAN firewall rules, controller udev rules if needed.
+
+---
+
+## 10. Lock screen + login screen (qylock "winter", SDDM)
+
+qylock (GPL-3.0, cloned by `install.sh` to `~/.local/src/qylock` at a pinned
+commit). Its two scripts were read before use (2026-11-09, commit c2933f2):
+
+- `quickshell.sh` (no sudo): copies `quickshell-lockscreen/` to
+  `~/.local/share/quickshell-lockscreen`, links the themes folder there, asks for a
+  theme (fzf) and saves it to `~/.config/qylock/theme`. No network, no root.
+  The lock screen uses Quickshell's Wayland session lock + PAM for the password.
+- `sddm.sh` (sudo): copies the chosen theme to `/usr/share/sddm/themes/<name>`
+  and writes `/etc/sddm.conf.d/theme.conf` (`[Theme] Current=<name>`). It does
+  not enable SDDM. No network.
+
+```sh
+~/.local/src/qylock/quickshell.sh            # choose: winter
+~/.local/src/qylock/sddm.sh                  # choose: 1 (Qt6), then winter
+bash ~/dotfiles/system/root-steps/4-login.sh # checks everything, enables sddm.service
+reboot
+```
+At the first SDDM login pick the **Hyprland** session (not "uwsm-managed").
+GNOME Keyring unlocks at login already (`pam_gnome_keyring` is in Arch's
+`/etc/pam.d/sddm`), as long as your keyring password = login password.
+
+**If the login screen breaks:** Ctrl+Alt+F3, log in, then
+`sudo systemctl disable sddm.service && reboot` brings back the text login
+(then `start-hyprland` as before). Logs: `journalctl -b -u sddm`.
+
+Undo: `sudo systemctl disable sddm.service`, `sudo rm -r /usr/share/sddm/themes/winter /etc/sddm.conf.d/theme.conf`, `rm -r ~/.local/share/quickshell-lockscreen ~/.config/qylock`.
