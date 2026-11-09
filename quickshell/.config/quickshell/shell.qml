@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
 import qs.bar
+import qs.cheatsheet
 import qs.idle
 import qs.notifications
 import qs.osd
@@ -49,6 +50,12 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         delegate: IdleScreen {}
+    }
+
+    // Keybind cheat sheet (ALT + /): qs ipc call cheatsheet toggle
+    Variants {
+        model: Quickshell.screens
+        delegate: CheatSheet {}
     }
 
     // Notification popups (top-right)

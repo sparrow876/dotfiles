@@ -20,7 +20,7 @@ Contents:
 
 ## 1. Snapshot
 
-Recorded 2026-11-09 (build steps 1–14 done).
+Recorded 2026-11-09 (build steps 1–15 done).
 
 | Component | Version |
 |-----------|---------|
@@ -79,12 +79,12 @@ AUR helper: **yay** (not paru).
 | `hypr/.config/hypr/hypridle.conf` | idle chain (hyprlang format, not Lua) |
 | `quickshell/.config/quickshell/shell.qml` | entry: one `Variants` per screen for Bar, OSD, StatsPanel, PowerMenu, WallpaperReel, IdleScreen, NotificationPopups; `popups` IPC |
 | `quickshell/…/Theme.qml` | generated singleton: colors, fonts, sizes |
-| `quickshell/…/services/` | singletons: Audio, Bluetooth, Brightness, IdleInhibit, Media, Network, Notifications, Popups, Recorder, SystemStats (+`sysstats.sh`), Wallpapers |
+| `quickshell/…/services/` | singletons: Audio, Bluetooth, Brightness, IdleInhibit, Keybinds, Media, Network, Notifications, Popups, Recorder, SystemStats (+`sysstats.sh`), Wallpapers |
 | `quickshell/…/bar/` | Bar + modules (`*Icon.qml`, Workspaces, MediaModule, Battery, Clock, Tray, TrayMenu, Bell) |
 | `quickshell/…/popups/` | `PopupFrame` (shared) + Network/Bluetooth/Audio menus, Calendar |
 | `quickshell/…/notifications/` | popups + center |
 | `quickshell/…/components/` | StyledText, Icon, Glyphs (all glyphs), Tooltip, Toggle, Slider, IconButton, TextButton, Card, Spinner, Separator, LevelBar, Graph, RingGauge |
-| `quickshell/…/{osd,panel,powermenu,wallpaper,idle}/` | one overlay each |
+| `quickshell/…/{osd,panel,powermenu,wallpaper,idle,cheatsheet}/` | one overlay each |
 | `scripts/` | shell helpers (screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, wallpaper, record, notify-file, theme-picker, theme-colors.sh (generated)) |
 | `theme/` | palettes, style, templates, `render.sh`, `apply.sh`, README |
 | `system/` | ROOT-STEPS.md, root-steps scripts, units (platform profile, paccache), etc (reflector.conf) |
@@ -102,6 +102,7 @@ AUR helper: **yay** (not paru).
 | `wallpapers` | `refresh`, `list` | debugging |
 | `idle` | `toggle`, `status` | ALT+I (coffee cup) |
 | `idlescreen` | `enter`, `leave` | hypridle via `scripts/idle-dim.sh` |
+| `cheatsheet` | `toggle` | ALT+/ |
 | `notifications` | `dnd`, `clear`, `status` | — |
 | `recorder` | `toggleFull`, `toggleRegion`, `replay`, `toggleReplay`, `toggleMic`, `status` | ALT+R, ALT+Shift+R, ALT+Ctrl+R, ALT+Ctrl+Shift+R |
 | `audio` | `devices` | debugging |
@@ -110,7 +111,11 @@ AUR helper: **yay** (not paru).
 
 All in `hypr/.config/hypr/conf/keybinds.lua`, each with a
 `description = "Category: Action"` (this replaces the brief's `bindd`; visible
-in `hyprctl binds -j`, used for the cheat sheet). Modifier ALT; SUPER only for
+in `hyprctl binds -j`). `scripts/keybinds.jq` turns that JSON into grouped,
+readable rows (merges alternatives, collapses `1…6`); it feeds BOTH the cheat
+sheet (ALT+/, `services/Keybinds.qml`) and `scripts/keybinds-to-md.sh README.md`
+(table between `<!-- keybinds:start/end -->`). New binds appear in both
+automatically; only `prettykey` in keybinds.jq may need a new key name. Modifier ALT; SUPER only for
 SUPER+L (lock). Scripts are called as `os.getenv("HOME") .. "/dotfiles/scripts/…"`,
 so **the repo must live at `~/dotfiles`**.
 
@@ -151,7 +156,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   + no-anim layer rule), add a `Variants` in `shell.qml`, an `IpcHandler`,
   and a keybind.
 - **New keybind**: `bind(keys, dispatcher, "Category: Action", opts)` in
-  `keybinds.lua`; run `Hyprland --verify-config`.
+  `keybinds.lua`; run `Hyprland --verify-config`; regenerate the README table
+  (`scripts/keybinds-to-md.sh README.md`). Unusual key names: add to `prettykey`.
 - **New window rule**: `hl.window_rule({ name, match = {…}, effect = … })` in
   `rules.lua`; effect names from §4.1.
 - **New stow package**: create `<pkg>/<path under $HOME>`, add `<pkg>` to
@@ -289,6 +295,10 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   non-trivial edits (and don't chain the next step with `&&` blindly).
 - Notifications: without a server, Firefox draws its own white popups.
 
+- jq: `capture()` with no match yields *nothing* (not null/error), which
+  silently empties a `reduce`; use `[ … | capture(…) ] | .[0]`.
+- Markdown: backticks inside inline code need a double-backtick span.
+
 ### 4.8 qylock
 
 - Pinned at c2933f2 in `~/.local/src/qylock` (GPL-3.0, not copied into this
@@ -328,7 +338,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - Tearing (`immediate`) for games is set but unverified with iGPU-scanout (step 19).
 - Step 14 needs the user's qylock/SDDM runs + reboot before lock/SDDM/suspend
   are verified.
-- Remaining build steps: 15–21 (cheat sheet, Nautilus/GDrive/GTK/Qt, apps,
+- Remaining build steps: 16–21 (Nautilus/GDrive/GTK/Qt, apps,
   Neovim, gaming, maintenance tooling/update.sh, README + license).
 
 ---
@@ -370,6 +380,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-09** — Step 15: keybind cheat sheet (ALT+/) + README table
+  generator, both from `scripts/keybinds.jq`.
 - **2026-11-09** — Build steps 1–14 + theme system done (see `git log`).
   Versions in §1.
 - **2026-11-09** — Replay mode couldn't be turned off from the bar. Cause: long
