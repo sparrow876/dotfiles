@@ -20,7 +20,7 @@ Contents:
 
 ## 1. Snapshot
 
-Recorded 2026-11-09 (build steps 1–18 done).
+Recorded 2026-11-09 (build steps 1–19 done; per-game setup waits for the games).
 
 | Component | Version |
 |-----------|---------|
@@ -35,6 +35,7 @@ Recorded 2026-11-09 (build steps 1–18 done).
 | rofi | 2.0.0 (native Wayland) |
 | kitty | 0.49.2 |
 | gpu-screen-recorder | 6.1.7 |
+| Steam / MangoHud / GameMode | 1.0.0.87 / 0.8.4 / 1.8.2 (gamescope 3.17.0) |
 | SDDM | 0.21.0 (X11 greeter) |
 | Neovim | 0.12.6 (plugins pinned in `nvim/.config/nvim/lazy-lock.json`) |
 | zathura | 2026.10.23 (+ pdf-mupdf) |
@@ -95,6 +96,9 @@ AUR helper: **yay** (not paru).
 | `zsh/`, `kitty/`, `starship/`, `fastfetch/`, `lazygit/`, `bat/`, `rofi/`, `gtk/` | app configs (stowed) |
 | `nvim/` | Neovim (Nord): `init.lua`, `lua/{options,keymaps,autocmds}.lua`, `lua/plugins/*.lua` (one file per topic), `lazy-lock.json`; `CHEATSHEET.md` (not stowed) |
 | `zathura/` | zathurarc (Nord, SyncTeX, recolor on Ctrl+R) |
+| `mangohud/` | MangoHud.conf (generated from `theme/templates/mangohud/…`) |
+| `gamemode/` | `gamemode.ini` (renice, screensaver inhibit) |
+| `system/GAMING.md` | Steam setup, launch options, controller, per-game notes |
 
 ### 2.3 Quickshell IPC targets (`qs ipc call <target> <fn>`)
 
@@ -313,6 +317,25 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   `/sys/module/<name>` instead.
 - Games run on NVIDIA via `prime-run`; frames are shown through the iGPU.
 
+### 4.3b Gaming
+
+- Games run on the RTX 3050 only with `prime-run` in the Steam launch options
+  (`prime-run gamemoderun mangohud %command%`); env vars go before `prime-run`.
+- MangoHud's `gpu_name` line shows the GPU the app really uses; `pci_dev=0000:01:00.0`
+  limits the stat rows to the RTX 3050 (two GPUs otherwise: GPU0/GPU1).
+- Testing: `vkcube` picks the discrete GPU by itself (use `--gpu_number 0` for
+  Intel); under Wayland it has no app id (match it by title "vkcube").
+- Tearing verified with this hybrid setup: fullscreen `immediate` window from
+  `prime-run vkcube --present_mode 0` → `hyprctl monitors -j` activelyTearing true.
+- A temporary rule at runtime: `hyprctl dispatch 'hl.window_rule({...})'` prints
+  "expected a dispatcher" but registers the rule; `hyprctl reload` removes it.
+- GameMode needs the `gamemode` group (polkit rule + `nice -10` limit); without
+  it governor changes ask for a password. Check: `gamemoded -s` while playing.
+- 8BitDo Ultimate 2C wired (`2dc8:310a`): xpad, uaccess ACL on `/dev/input/event*`
+  (no extra udev rules); standard Xbox layout only (see GAMING.md §5).
+- The Steam folder `~/.local/share/Steam` is its own btrfs subvolume (inode 256):
+  outside home snapshots. New library folders need `mksubvol` first.
+
 ### 4.4 Audio
 
 - WirePlumber remembers card profiles. The SOF card once got stuck on
@@ -426,13 +449,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   Possible later: a tiny BlueZ agent forwarding to Quickshell.
 - notify-send with an unknown icon name shows Papirus' grey ✕ instead of the
   bell fallback.
-- Tearing (`immediate`) for games is set but unverified with iGPU-scanout (step 19).
+- Per-game setup (Proton versions, launch options, Content Manager/CSP, ACC LAN
+  ufw rules + serverList.json) waits until the games are installed (GAMING.md §7).
 - Step 14 needs the user's qylock/SDDM runs + reboot before lock/SDDM/suspend
   are verified.
 - Step 17 apps need the user's `yay` install + tests (call pop-out titles to
   confirm for the `call-popouts` rule; Vesktop theme to check visually).
-- Remaining build steps: 19–21 (gaming, maintenance tooling/update.sh,
-  README + license).
+- Remaining build steps: 20–21 (maintenance tooling/update.sh, README + license).
 - The deployed `/etc/xdg/reflector/reflector.conf` is still the old broken one
   (journal: "unrecognized arguments: Lanka") until the user runs
   `sudo install -Dm644 ~/dotfiles/system/etc/reflector.conf /etc/xdg/reflector/reflector.conf && sudo systemctl start reflector.service`.
@@ -477,6 +500,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-09** — Step 19 (general part; the user asked to leave per-game
+  configs until the games are installed): MangoHud config (theme template,
+  compact, RTX 3050 stats, Left Shift+F12), gamemode.ini, ROOT-STEPS §13
+  (gamemode group), GAMING.md. Verified: MangoHud on Intel vs NVIDIA (name
+  line), tearing active through iGPU scanout, controller on xpad.
 
 - **2026-11-09** — Light themes removed at the user's request (Catppuccin
   Latte palette, the palettes' `mode` key, light branches in apply.sh/qt.sh,

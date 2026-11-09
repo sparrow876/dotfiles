@@ -2,8 +2,10 @@
 -- No blur/rounding/animations/shadows, fullscreen, and tearing ("immediate")
 -- for lower latency. Tearing only kicks in while the game is fullscreen and is
 -- the only thing on screen (`hyprctl monitors` shows tearingBlockedBy otherwise).
--- Note: games render on the RTX 3050 but are shown through the Intel iGPU, so
--- whether tearing actually applies is verified in build step 19.
+-- Verified 2026-11-09: tearing works with this hybrid setup (rendered on the
+-- RTX 3050 via prime-run, shown through the Intel iGPU): `hyprctl monitors -j`
+-- showed activelyTearing = true for a fullscreen immediate-mode window.
+-- The laptop panel has no VRR, so there is no VRR rule.
 -- Auto-DND while a game is fullscreen is handled by Quickshell (step 7).
 
 local game = "^(steam_app_.*|gamescope)$"

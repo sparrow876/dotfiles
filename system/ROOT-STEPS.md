@@ -310,9 +310,9 @@ sudo ufw status verbose
 The subnet is whatever network you're on now. On another network (e.g. home Wi-Fi),
 run the same `SUBNET=` + two `allow` lines there; rules for each subnet stay in place.
 
-**ACC LAN rules (later, step 19):** the exact ports come from your server machine's
-`cfg/configuration.json` (`udpPort`, `tcpPort`) plus ACC's LAN discovery port.
-I'll verify them and add the exact commands here.
+**ACC LAN rules (later, once ACC is installed):** the exact ports come from your
+server machine's `cfg/configuration.json` (`udpPort`, `tcpPort`) plus ACC's LAN
+discovery port. I'll verify them and add the exact commands here then.
 
 **ProtonVPN check (after ProtonVPN is installed):** connect the VPN, open a website
 (should work); disconnect, and check the kill switch does what you set in the
@@ -336,7 +336,9 @@ Undo: `chsh -s /usr/bin/bash`
 ## 9. *(later)* Placeholders filled in by later steps
 
 - **Step 16:** `systemctl --user enable --now rclone-gdrive.service` (no sudo).
-- **Step 19:** ACC LAN firewall rules, controller udev rules if needed.
+- **Step 19:** done in §13 (gamemode group). No controller udev rules needed (the
+  8BitDo works through the kernel's xpad driver). ACC LAN firewall rules wait
+  until ACC is installed (§7).
 
 ---
 
@@ -402,4 +404,25 @@ PKGBUILD reviews are in `packages/aur.txt`; app notes in `system/APPS.md`.
 `claude-desktop` pulls QEMU + OVMF (for its Cowork VM). Outlook needs nothing
 extra (Chromium is already installed).
 Undo: `yay -Rns teams-for-linux-bin vesktop-bin claude-desktop`.
+
+---
+
+## 13. Gaming (build step 19)
+
+Steam, the 32-bit NVIDIA libraries, Vulkan, GameMode, MangoHud, gamescope and
+ProtonUp-Qt are already installed (§4, §5). The 8BitDo Ultimate 2C works without
+extra udev rules (kernel `xpad` driver; Steam's `steam-devices` rules are installed).
+
+One step left: GameMode switches the CPU to its performance governor and raises
+the game's priority while a game runs. Both are only allowed for members of the
+`gamemode` group (otherwise it asks for your password or silently skips them).
+
+```sh
+sudo usermod -aG gamemode "$USER"   # takes effect after you log out and back in
+id -nG                              # after logging in again: must list "gamemode"
+```
+Undo: `sudo gpasswd -d "$USER" gamemode`.
+
+Everything else (Steam settings, launch options, controller, MangoHud) is in
+`system/GAMING.md`; no other root steps.
 

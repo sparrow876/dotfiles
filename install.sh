@@ -38,6 +38,8 @@ STOW_PACKAGES=(
   vesktop     # step 17: palette theme for Discord (Vencord themes folder)
   nvim        # step 18: Neovim (lazy.nvim installs plugins on first start)
   zathura     # step 18: PDF viewer, Nord colours, SyncTeX
+  mangohud    # step 19: in-game overlay (generated from the theme)
+  gamemode    # step 19: gamemoderun settings
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.
