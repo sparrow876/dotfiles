@@ -9,6 +9,7 @@ import qs.bar
 import qs.notifications
 import qs.osd
 import qs.panel
+import qs.powermenu
 import qs.services
 
 ShellRoot {
@@ -28,6 +29,12 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         delegate: StatsPanel {}
+    }
+
+    // Power menu (ALT + Escape): qs ipc call powermenu toggle
+    Variants {
+        model: Quickshell.screens
+        delegate: PowerMenu {}
     }
 
     // Notification popups (top-right)

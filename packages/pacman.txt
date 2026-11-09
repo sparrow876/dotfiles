@@ -29,6 +29,7 @@ hyprland
 hypridle
 hyprpicker
 hyprpolkitagent
+hyprshutdown         # graceful logout: closes apps before Hyprland exits
 xdg-desktop-portal
 xdg-desktop-portal-hyprland
 xdg-desktop-portal-gtk
