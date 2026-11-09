@@ -34,7 +34,8 @@ Creates `/etc/snapper/configs/root` and a `/.snapshots` subvolume nested inside 
 
 ### 1.2 Move snapshots to their own top-level subvolume `@snapshots`
 
-Script version (if pasting is awkward): `bash system/root-steps/1.2-snapshots-subvolume.sh`
+**Script version** (if pasting is awkward): `bash system/root-steps/1-snapshots.sh` runs 1.1–1.4;
+`bash system/root-steps/1.5-home-subvolumes.sh` runs 1.5 (from a TTY, desktop logged out).
 
 A rollback replaces `@`. If the snapshots lived inside `@` they'd be swapped out with
 it, so they get their own subvolume next to `@` (standard Arch wiki layout).
