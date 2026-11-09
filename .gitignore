@@ -14,6 +14,8 @@ id_ed25519*
 !**/libsecret*
 
 # --- App runtime state that may land in stowed dirs ---
+**/gtk-3.0/bookmarks
+**/gtk-*/settings.ini
 .cache/
 **/__pycache__/
 node_modules/

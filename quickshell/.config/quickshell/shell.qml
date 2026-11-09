@@ -1,3 +1,4 @@
+//@ pragma IconTheme Papirus-Dark
 // Quickshell entry point. Each feature lives in its own folder and is imported
 // with `import qs.<folder>`. Theme colors/fonts: Theme.qml (generated from the palette).
 import QtQuick
@@ -5,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
 import qs.bar
+import qs.notifications
 import qs.services
 
 ShellRoot {
@@ -12,6 +14,12 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         delegate: Bar {}
+    }
+
+    // Notification popups (top-right)
+    Variants {
+        model: Quickshell.screens
+        delegate: NotificationPopups {}
     }
 
     // Control popups from outside (keybinds, scripts):

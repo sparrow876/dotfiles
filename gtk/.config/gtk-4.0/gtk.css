@@ -1,0 +1,7 @@
+/* User CSS for GTK4 / libadwaita apps. The full Nord theme for Nautilus comes
+ * in build step 16; for now only text size tweaks. */
+
+/* Nautilus: slightly larger text than the system default (11.25pt) */
+.nautilus-window {
+  font-size: 12pt;
+}

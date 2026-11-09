@@ -1,7 +1,9 @@
-// Output volume (low / mid / high / muted). Click -> AudioMenu,
+// Output volume: glyph (low / mid / high / muted) + a small level bar.
+// Click -> AudioMenu,
 // scroll -> ±5% (max 100%), middle-click -> mute.
 import QtQuick
 import qs
+import qs.components
 import qs.popups
 import qs.services
 
@@ -17,6 +19,11 @@ BarIcon {
     // Left click is handled by BarIcon (opens the menu); middle click mutes
     onClicked: event => { if (event.button === Qt.MiddleButton) Audio.toggleMute(Audio.sink) }
     onWheel: event => Audio.setVolume(Audio.sink, Audio.volume + (event.angleDelta.y > 0 ? 0.05 : -0.05))
+
+    LevelBar {
+        value: Audio.volume
+        dimmed: Audio.muted
+    }
 
     AudioMenu { barWindow: icon.barWindow; anchorItem: icon }
 }

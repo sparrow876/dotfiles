@@ -11,6 +11,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import qs
+import qs.components
 
 PanelWindow {
     id: bar
@@ -44,16 +45,18 @@ PanelWindow {
             anchors.right: parent.right
             anchors.rightMargin: 14
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 16
+            spacing: 12
 
-            Tray { barWindow: bar }
-            RowLayout {
-                spacing: 10
-                NetworkIcon { barWindow: bar }
-                BluetoothIcon { barWindow: bar }
-                AudioIcon { barWindow: bar }
-            }
-            Battery {}
+            Tray { id: tray; barWindow: bar }
+            Separator { visible: tray.visible }
+            NetworkIcon { barWindow: bar }
+            Separator {}
+            BluetoothIcon { id: bt; barWindow: bar }
+            Separator { visible: bt.visible }
+            AudioIcon { barWindow: bar }
+            Separator {}
+            Battery { id: battery }
+            Separator { visible: battery.visible }
             Clock { barWindow: bar }
         }
     }
