@@ -14,7 +14,9 @@ configuration {
     drun-match-fields: "name,generic,keywords,categories,exec";
     disable-history: false;
     max-history-size: 50;
-    drun-use-desktop-cache: true;
+    // No desktop-file cache: it never refreshes by itself (uninstalled apps stayed,
+    // new ones were missing). Reading the ~50 .desktop files directly is instant.
+    drun-use-desktop-cache: false;
     display-drun: "";
     kb-cancel: "Escape,Control+g";
 }

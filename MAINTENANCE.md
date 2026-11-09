@@ -425,6 +425,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   gtk-3.0 is a no-fold dir). The Google Drive bookmark (step 16) goes there too.
 - rofi custom widgets need a type prefix (`textbox-search`, `icon-…`).
 - rofi `drun` sorts by usage history automatically when the query is empty.
+- Never set `drun-use-desktop-cache: true`: rofi doesn't refresh it, so removed
+  apps linger and new ones (Teams, Vesktop, Claude) never appear.
 - reflector config: multi-word country names get split; use codes (`IN,SG,BD`).
 - `sed` with `|` inside the pattern as delimiter breaks; use Python for
   non-trivial edits (and don't chain the next step with `&&` blindly).
@@ -553,6 +555,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-09** — Firefox (uninstalled) still showed in the rofi launcher, and
+  Teams/Vesktop/Claude (installed later) were missing from it. Cause:
+  `drun-use-desktop-cache: true` — rofi never rebuilds that cache by itself.
+  Fix: cache off (54 .desktop files parse instantly on NVMe), stale
+  `~/.cache/rofi-drun-desktop.cache` deleted. Files: rofi config template
+  (+ rendered), `packages/base.txt` (firefox removed).
 
 - **2026-11-09** — Enterprise Wi-Fi (user wants IISc `iiscwlan`, WPA2/WPA3
   Enterprise): new `scripts/wifi-enterprise.sh`; the Wi-Fi menu's "Set up…" for

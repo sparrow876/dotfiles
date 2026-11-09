@@ -15,7 +15,6 @@ vim
 wpa_supplicant
 zram-generator
 power-profiles-daemon   # masked on purpose (ROOT-STEPS §3): the platform profile is pinned instead
-firefox
 ttf-dejavu
 ttf-liberation
 xf86-video-vesa
