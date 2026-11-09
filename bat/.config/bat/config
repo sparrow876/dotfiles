@@ -1,0 +1,5 @@
+# bat config. The "rice" theme is generated from the palette by theme/render.sh;
+# after changing it, run: bat cache --build
+--theme=rice
+--style=numbers,changes,header
+--italic-text=always

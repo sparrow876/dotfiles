@@ -22,6 +22,12 @@ BACKUP_DIR="$HOME/.local/state/dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 # working one (e.g. `hypr` is only added once step 2 is done).
 STOW_PACKAGES=(
   hypr        # step 2
+  kitty       # step 3
+  zsh
+  starship
+  fastfetch
+  lazygit
+  bat
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.
@@ -166,6 +172,10 @@ step_stow() {
     stow --dir="$REPO" --target="$HOME" --ignore='\.gitkeep' --restow "$pkg"
     info "linked $pkg"
   done
+  # bat reads custom themes from a cache; rebuild it so the generated "rice" theme is found
+  if command -v bat >/dev/null && [[ -d $HOME/.config/bat/themes ]]; then
+    bat cache --build >/dev/null && info "rebuilt bat theme cache"
+  fi
 }
 
 step_gsettings() {

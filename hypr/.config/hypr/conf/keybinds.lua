@@ -21,6 +21,27 @@ bind(mod .. " + Return", exec("kitty"),               "Apps: Terminal (kitty)")
 bind(mod .. " + D",      exec("rofi -show drun"),     "Apps: App launcher")
 bind(mod .. " + E",      exec("nautilus --new-window"), "Apps: Files (Nautilus)")
 
+-- Dropdown terminal: a kitty (class "dropterm") living on the special workspace
+-- "dropterm". Launched on first use; afterwards ALT + ` just shows/hides it and the
+-- session keeps running. Placement/size: rules.lua. DROPTERM=1 skips fastfetch.
+local function dropterm_exists()
+    for _, w in ipairs(hl.get_windows()) do
+        if w.class == "dropterm" then return true end
+    end
+    return false
+end
+bind(mod .. " + grave", function()
+    if dropterm_exists() then
+        hl.dispatch(hl.dsp.workspace.toggle_special("dropterm"))
+        return
+    end
+    hl.exec_cmd("kitty --class dropterm -o env=DROPTERM=1")
+    local shown = hl.get_active_special_workspace()
+    if not (shown and shown.name == "special:dropterm") then
+        hl.dispatch(hl.dsp.workspace.toggle_special("dropterm"))
+    end
+end, "Apps: Dropdown terminal")
+
 -- ---------------------------------------------------------------------------
 -- Windows
 bind(mod .. " + Q",           hl.dsp.window.close(),                           "Windows: Close window")
