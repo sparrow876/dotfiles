@@ -7,6 +7,17 @@
 # Safe to re-run. Undo: see ROOT-STEPS.md section 2.
 set -euo pipefail
 
+# Record everything this script prints (including prompts) to a log file Claude
+# can read afterwards, so nothing needs to be copy-pasted. Passwords typed at
+# sudo prompts are not echoed, so they never reach the log.
+LOG_DIR="$HOME/.local/state/dotfiles/logs"
+if [[ -z ${ROOTSTEP_LOGGING:-} ]]; then
+  mkdir -p "$LOG_DIR"
+  LOG="$LOG_DIR/$(basename "$0" .sh)-$(date +%Y%m%d-%H%M%S).log"
+  export ROOTSTEP_LOGGING="$LOG"
+  exec script -q -e -f -c "$(printf '%q ' bash "$0" "$@")" "$LOG"
+fi
+
 say() { printf '\n==> %s\n' "$*"; }
 [[ $EUID -ne 0 ]] || { echo "run as your normal user (not with sudo)"; exit 1; }
 sudo -v
@@ -33,3 +44,5 @@ sudo mkinitcpio -P
 say "Done. Now reboot:  reboot"
 echo "After rebooting, run:  bash ~/dotfiles/system/root-steps/3-system.sh"
 echo "If the desktop doesn't come up: Ctrl+Alt+F3, log in, cd ~/dotfiles, claude"
+echo
+echo "Log saved to: ${ROOTSTEP_LOGGING/#$HOME/\~}  (tell Claude you're done; it can read this)"

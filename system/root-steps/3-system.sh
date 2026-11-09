@@ -13,6 +13,17 @@
 # Undo for each section: see ROOT-STEPS.md.
 set -euo pipefail
 
+# Record everything this script prints (including prompts) to a log file Claude
+# can read afterwards, so nothing needs to be copy-pasted. Passwords typed at
+# sudo prompts are not echoed, so they never reach the log.
+LOG_DIR="$HOME/.local/state/dotfiles/logs"
+if [[ -z ${ROOTSTEP_LOGGING:-} ]]; then
+  mkdir -p "$LOG_DIR"
+  LOG="$LOG_DIR/$(basename "$0" .sh)-$(date +%Y%m%d-%H%M%S).log"
+  export ROOTSTEP_LOGGING="$LOG"
+  exec script -q -e -f -c "$(printf '%q ' bash "$0" "$@")" "$LOG"
+fi
+
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 say()  { printf '\n\e[1;38;2;127;179;255m==> %s\e[0m\n' "$*"; }
 ok()   { printf '  \e[32mok\e[0m    %s\n' "$*"; }
@@ -126,3 +137,5 @@ fi
 say "All done."
 echo "Show Claude the output above (especially any 'check' lines)."
 echo "Not done yet on purpose: step 8 (zsh as login shell) comes with build step 3."
+echo
+echo "Log saved to: ${ROOTSTEP_LOGGING/#$HOME/\~}  (tell Claude you're done; it can read this)"
