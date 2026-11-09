@@ -28,6 +28,7 @@ STOW_PACKAGES=(
   fastfetch
   lazygit
   bat
+  quickshell  # step 4
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.

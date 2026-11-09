@@ -98,6 +98,7 @@ hl.layer_rule({
     no_anim      = true,
     blur         = true,
     ignore_alpha = 0.1,   -- don't blur fully transparent parts (shadows, gaps)
+    blur_popups  = true,  -- tooltips and tray menus
 })
 
 hl.layer_rule({
