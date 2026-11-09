@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# OCR (ALT + O): freeze the screen, select a region, read its text with
+# tesseract (English), copy it to the clipboard, notify with the first 80 chars.
+set -u
+hyprpicker -r -z >/dev/null 2>&1 & freeze=$!
+sleep 0.15
+geom=$(slurp -d -b '0d1b2a66' -c '7fb3ffff' -s '7fb3ff22' -w 2)
+kill $freeze 2>/dev/null
+[[ -z $geom ]] && exit 0
+sleep 0.05
+# 2x upscale helps tesseract with small UI text
+text=$(grim -g "$geom" - | magick - -resize 200% png:- | tesseract - - -l eng --psm 6 2>/dev/null | sed -e 's/[[:space:]]*$//' -e '/^$/N;/^\n$/D')
+if [[ -z ${text//[[:space:]]/} ]]; then
+  notify-send -a OCR -i edit-find "No text found" "Try selecting a larger or clearer area."
+  exit 1
+fi
+printf '%s' "$text" | wl-copy
+preview=$(printf '%s' "$text" | tr '\n' ' ' | cut -c1-80)
+[[ ${#text} -gt 80 ]] && preview+="…"
+notify-send -a OCR -i edit-copy "Text copied" "$preview"

@@ -77,6 +77,19 @@ for i = 1, 6 do
 end
 
 -- ---------------------------------------------------------------------------
+-- Capture: screenshots, color picker, OCR, screen recording
+local scripts = os.getenv("HOME") .. "/dotfiles/scripts/"
+bind("Print",                 exec(scripts .. "screenshot.sh region"), "Capture: Screenshot of a region")
+bind(mod .. " + SHIFT + S",   exec(scripts .. "screenshot.sh region"), "Capture: Screenshot of a region (alternative)")
+bind("SHIFT + Print",         exec(scripts .. "screenshot.sh full"),   "Capture: Screenshot of the whole screen")
+bind(mod .. " + Print",       exec(scripts .. "screenshot.sh window"), "Capture: Screenshot of the active window")
+bind(mod .. " + SHIFT + C",   exec(scripts .. "colorpick.sh"),         "Capture: Pick a color (hex copied)")
+bind(mod .. " + O",           exec(scripts .. "ocr.sh"),               "Capture: Copy text from a screen region (OCR)")
+bind(mod .. " + R",           exec("qs ipc call recorder toggleFull"),   "Capture: Start/stop screen recording")
+bind(mod .. " + SHIFT + R",   exec("qs ipc call recorder toggleRegion"), "Capture: Start/stop recording a region")
+bind(mod .. " + CTRL + R",    exec("qs ipc call recorder replay"),       "Capture: Replay mode on / save last 60 s")
+
+-- ---------------------------------------------------------------------------
 -- System
 bind(mod .. " + I", exec("qs ipc call idle toggle"), "System: Toggle idle inhibitor (stay awake)")
 bind(mod .. " + N", exec("qs ipc call popups toggle notifications"), "System: Notification center")

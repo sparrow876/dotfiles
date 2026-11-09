@@ -5,7 +5,6 @@
 //   left:   workspaces 一 二 三 四 五 六
 //   center: music (artist — title, play/pause)
 //   right:  tray · recording · idle · Wi-Fi · Bluetooth · audio · battery · bell · clock
-//           (recording arrives in step 12)
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -60,6 +59,8 @@ PanelWindow {
 
             Tray { id: tray; barWindow: bar }
             Separator { visible: tray.visible }
+            RecordingIcon { id: recording; barWindow: bar }
+            Separator { visible: recording.visible }
             IdleInhibitIcon {}
             Separator {}
             NetworkIcon { barWindow: bar }

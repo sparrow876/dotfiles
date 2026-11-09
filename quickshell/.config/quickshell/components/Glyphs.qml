@@ -43,6 +43,7 @@ Singleton {
     readonly property string play: "󰐊"
     readonly property string pause: "󰏤"
     readonly property string music: "󰝚"
+    readonly property string replay: "󰑙"
     readonly property string next: "󰒭"
     readonly property string previous: "󰒮"
 }
