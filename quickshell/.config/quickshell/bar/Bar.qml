@@ -5,7 +5,7 @@
 //   left:   workspaces 一 二 三 四 五 六
 //   center: music + cava wave (step 8)
 //   right:  tray · recording · idle · Wi-Fi · Bluetooth · audio · battery · bell · clock
-//           (recording/idle/network/bluetooth/audio/bell arrive in steps 5-7)
+//           (recording/idle arrive in step 6, bell in step 7)
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -47,8 +47,14 @@ PanelWindow {
             spacing: 16
 
             Tray { barWindow: bar }
+            RowLayout {
+                spacing: 10
+                NetworkIcon { barWindow: bar }
+                BluetoothIcon { barWindow: bar }
+                AudioIcon { barWindow: bar }
+            }
             Battery {}
-            Clock {}
+            Clock { barWindow: bar }
         }
     }
 }

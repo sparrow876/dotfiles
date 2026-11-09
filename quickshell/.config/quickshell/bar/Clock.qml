@@ -1,12 +1,17 @@
 // Clock: "HH:MM" + "Mon 09 Nov". Updates once a minute (SystemClock precision),
-// so it costs nothing while idle. Click -> calendar popup (added with the popups in step 5).
+// so it costs nothing while idle. Click -> calendar popup.
 import QtQuick
 import Quickshell
 import qs
 import qs.components
+import qs.popups
+import qs.services
 
 MouseArea {
     id: root
+    required property var barWindow
+    cursorShape: Qt.PointingHandCursor
+    onClicked: Popups.toggle("calendar", barWindow.screen?.name ?? "")
     implicitWidth: row.implicitWidth
     implicitHeight: row.implicitHeight
     hoverEnabled: true
@@ -33,6 +38,9 @@ MouseArea {
 
     Tooltip {
         target: root
-        text: clock.date.toLocaleDateString(root.english, "dddd, d MMMM yyyy")
+        text: Popups.isOpen("calendar", root.barWindow.screen?.name ?? "") ? ""
+              : clock.date.toLocaleDateString(root.english, "dddd, d MMMM yyyy")
     }
+
+    CalendarPopup { barWindow: root.barWindow; anchorItem: root }
 }

@@ -2,12 +2,24 @@
 // with `import qs.<folder>`. Theme colors/fonts: Theme.qml (generated from the palette).
 import QtQuick
 import Quickshell
+import Quickshell.Io
+import Quickshell.Hyprland
 import qs.bar
+import qs.services
 
 ShellRoot {
     // One bar per monitor
     Variants {
         model: Quickshell.screens
         delegate: Bar {}
+    }
+
+    // Control popups from outside (keybinds, scripts):
+    //   qs ipc call popups toggle network|bluetooth|audio|calendar
+    //   qs ipc call popups close
+    IpcHandler {
+        target: "popups"
+        function toggle(name: string): void { Popups.toggle(name, Hyprland.focusedMonitor?.name ?? "") }
+        function close(): void { Popups.close() }
     }
 }
