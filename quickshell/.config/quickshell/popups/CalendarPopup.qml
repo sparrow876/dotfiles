@@ -105,6 +105,7 @@ PopupFrame {
 
     WheelHandler {
         target: null
-        onWheel: event => cal.shift(event.angleDelta.y > 0 ? -1 : 1)
+        property WheelSteps wheel: WheelSteps {}
+        onWheel: event => { const n = wheel.steps(event); if (n) cal.shift(-n) }   // up = earlier month
     }
 }

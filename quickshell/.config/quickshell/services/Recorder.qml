@@ -27,6 +27,7 @@ Singleton {
     property bool mic: false
     property bool replay: false                  // replay buffer running
     property string file: ""
+    property string lastError: ""                 // last "error" line from gpu-screen-recorder
     property real startedAt: 0
     property int elapsed: 0                       // seconds
 
@@ -42,9 +43,11 @@ Singleton {
         selector.running = true
     }
     function start(captureArgs) {
-        region = captureArgs[0] === "region"
+        region = captureArgs.includes("region")
         file = `${dir}/${stamp()}.mp4`
-        rec.command = ["gpu-screen-recorder"].concat(captureArgs, [
+        // setpriv --pdeathsig INT: if Quickshell dies, the recorder finishes the
+        // file and exits instead of recording forever in the background
+        rec.command = ["setpriv", "--pdeathsig", "INT", "gpu-screen-recorder"].concat(captureArgs, [
             "-f", "60", "-a", audio, "-c", "mp4", "-q", "very_high", "-o", file])
         rec.running = true
     }
@@ -66,16 +69,26 @@ Singleton {
     Process {
         id: rec
         onStarted: {
+            root.lastError = ""
             root.recording = true
             root.startedAt = Date.now()
             root.elapsed = 0
         }
+        // "Saved" only when gpu-screen-recorder finished cleanly (exit 0) AND the
+        // file exists; otherwise say it failed, with its error message
         onExited: (code, status) => {
             root.recording = false
-            Quickshell.execDetached([root.notifyScript, "Screen recording",
-                "Recording saved", root.file.split("/").pop(), root.file, "video-x-generic", "open", "folder"])
+            Quickshell.execDetached(["bash", "-c",
+                '[[ $1 == 0 && -s $2 ]] && exec "$3" "Screen recording" "Recording saved" "${2##*/}" "$2" video-x-generic open folder; ' +
+                'notify-send -u critical -a "Screen recording" -i dialog-error "Recording failed" "$4"',
+                "recorder", String(code), root.file, root.notifyScript,
+                root.lastError || `gpu-screen-recorder stopped with code ${code}`])
         }
-        stderr: SplitParser { onRead: line => { if (/error/i.test(line)) console.warn("gpu-screen-recorder:", line) } }
+        stderr: SplitParser {
+            onRead: line => {
+                if (/error/i.test(line)) { console.warn("gpu-screen-recorder:", line); root.lastError = line }
+            }
+        }
     }
     Timer {
         running: root.recording
@@ -91,7 +104,7 @@ Singleton {
             Quickshell.execDetached(["notify-send", "-a", "Screen recording", "-i", "media-record", "Replay mode off"])
             return
         }
-        replayProc.command = ["gpu-screen-recorder", "-w", monitor(), "-f", "60", "-a", audio,
+        replayProc.command = ["setpriv", "--pdeathsig", "INT", "gpu-screen-recorder", "-w", monitor(), "-f", "60", "-a", audio,
                               "-c", "mp4", "-q", "very_high", "-r", "60", "-replay-storage", "ram", "-o", dir]
         replayProc.running = true
     }
@@ -120,6 +133,15 @@ Singleton {
     }
 
     function toggleMic() { mic = !mic }
+
+    // A Quickshell reload (theme switch, config edit) doesn't stop child
+    // processes: finish a recording cleanly and end replay mode instead of
+    // leaving an invisible recorder running. (theme/apply.sh also refuses to
+    // switch themes while recording.)
+    Component.onDestruction: {
+        if (rec.running) rec.signal(2)
+        if (replayProc.running) replayProc.signal(2)
+    }
 
     IpcHandler {
         target: "recorder"

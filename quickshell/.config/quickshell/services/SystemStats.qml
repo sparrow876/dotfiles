@@ -54,8 +54,9 @@ Singleton {
         command: [Quickshell.shellPath("services/sysstats.sh")]
         stdout: StdioCollector {
             onStreamFinished: {
+                if (!root.active) return       // finished after the panel closed
                 let s
-                try { s = JSON.parse(text) } catch (e) { return }
+                try { s = JSON.parse(text) } catch (e) { console.warn("sysstats.sh: bad JSON:", e); return }
                 root.update(s)
             }
         }

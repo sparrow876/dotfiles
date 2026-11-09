@@ -7,14 +7,15 @@ import Quickshell
 import Quickshell.Services.UPower
 import qs
 import qs.components
+import qs.services
 
 MouseArea {
     id: root
-    readonly property UPowerDevice dev: UPower.displayDevice
-    readonly property bool present: dev?.isPresent ?? false
-    readonly property int percent: Math.round((dev?.percentage ?? 0) * 100)
-    readonly property bool onAC: !UPower.onBattery
-    readonly property bool charging: dev?.state === UPowerDeviceState.Charging
+    readonly property UPowerDevice dev: Power.display
+    readonly property bool present: Power.present
+    readonly property int percent: Power.percent
+    readonly property bool onAC: Power.onAC
+    readonly property bool charging: Power.charging
     readonly property color levelColor: !onAC && percent < 10 ? Theme.critical
                                       : !onAC && percent < 20 ? Theme.warn
                                       : Theme.text
@@ -73,19 +74,5 @@ MouseArea {
         }
     }
 
-    // Low-battery notifications (once per threshold per discharge)
-    property int lastWarned: 101
-    onPercentChanged: {
-        if (onAC || !present) return
-        if (percent <= 5 && lastWarned > 5) {
-            lastWarned = 5
-            Quickshell.execDetached(["notify-send", "-u", "critical", "-i", "battery-empty",
-                                     "Battery critically low", `${percent}% left. Plug in now.`])
-        } else if (percent <= 15 && lastWarned > 15) {
-            lastWarned = 15
-            Quickshell.execDetached(["notify-send", "-u", "normal", "-i", "battery-caution",
-                                     "Battery low", `${percent}% left.`])
-        }
-    }
-    onOnACChanged: if (onAC) lastWarned = 101
+    // Low-battery notifications: services/Power.qml (once, not per bar)
 }

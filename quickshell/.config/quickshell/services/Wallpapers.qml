@@ -17,7 +17,11 @@ Singleton {
     property string current: ""     // file name of the current wallpaper
     property int thumbsVersion: 0   // bumps when thumbnails were (re)built
 
-    function thumb(name) { return `file://${thumbDir}/${name}.jpg?v=${thumbsVersion}` }
+    // URL-encoded, so file names with # ? % or spaces still load
+    function thumb(name) {
+        const path = `${thumbDir}/${name}.jpg`.split("/").map(encodeURIComponent).join("/")
+        return `file://${path}?v=${thumbsVersion}`
+    }
     function path(name) { return `${dir}/${name}` }
 
     // List files + current wallpaper (fast), then refresh thumbnails in the background
@@ -36,14 +40,22 @@ Singleton {
             onStreamFinished: {
                 const lines = text.split("\n").filter(l => l)
                 root.current = (lines.find(l => l.startsWith("@current=")) ?? "@current=").substring(9)
-                root.files = lines.filter(l => !l.startsWith("@current="))
+                const files = lines.filter(l => !l.startsWith("@current="))
+                // Same list as before: keep it (reassigning rebuilds every card)
+                if (JSON.stringify(files) !== JSON.stringify(root.files)) root.files = files
             }
         }
     }
     Process {
         id: thumbs
         command: [root.script, "thumbs"]
-        onExited: root.thumbsVersion++
+        // Reload the images only if some thumbnail was actually (re)built
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const m = /changed=(\d+)/.exec(text)
+                if (!m || Number(m[1]) > 0) root.thumbsVersion++
+            }
+        }
     }
 
     Component.onCompleted: refresh()

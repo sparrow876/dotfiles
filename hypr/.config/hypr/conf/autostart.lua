@@ -20,7 +20,7 @@ hl.on("hyprland.start", function()
 
     -- Bar, widgets and (later) notifications: ~/.config/quickshell/shell.qml.
     -- Quickshell reloads itself when a .qml file changes.
-    hl.exec_cmd("qs")
+    hl.exec_cmd(os.getenv("HOME") .. "/dotfiles/scripts/qs.sh")   -- qs with the palette's icon theme
 
     -- Nautilus sidebar: Documents, Music, Pictures, Videos, Downloads come from
     -- ~/.config/gtk-3.0/bookmarks, which GNOME writes at login via its own

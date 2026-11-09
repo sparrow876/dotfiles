@@ -120,13 +120,18 @@ PopupFrame {
         clip: true
         spacing: 2
         boundsBehavior: Flickable.StopAtBounds
-        model: Network.networks.filter(n => !n.connected)
+        // ScriptModel keeps each network's row (and a half-typed password) when
+        // the list re-sorts by signal strength while scanning
+        model: ScriptModel { values: Network.networks.filter(n => !n.connected) }
 
         delegate: ColumnLayout {
             id: entry
             required property var modelData
             readonly property var net: modelData
             readonly property bool secured: Network.isSecured(net)
+            readonly property bool enterprise: Network.isEnterprise(net)
+            // WEP keys can be 5 or 13 characters, WPA passwords at least 8
+            readonly property int minLength: net.security === N.WifiSecurityType.StaticWep ? 5 : 8
             readonly property bool busy: net.state === N.ConnectionState.Connecting
             property string error: ""
             width: list.width
@@ -192,9 +197,34 @@ PopupFrame {
                 }
             }
 
+            // Enterprise network (e.g. eduroam): needs a username/certificate
+            RowLayout {
+                visible: menu.expanded === entry.net && entry.enterprise
+                Layout.fillWidth: true
+                Layout.leftMargin: 38
+                Layout.rightMargin: 4
+                spacing: 8
+                StyledText {
+                    text: "Enterprise network: needs a username"
+                    color: Theme.muted
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.WordWrap
+                    Layout.fillWidth: true
+                }
+                TextButton {
+                    label: "Set up…"
+                    primary: true
+                    onClicked: {
+                        Quickshell.execDetached(["nm-connection-editor", "--create", "--type=802-11-wireless"])
+                        menu.expanded = null
+                        Popups.close()
+                    }
+                }
+            }
+
             // Password for a new secured network
             RowLayout {
-                visible: menu.expanded === entry.net
+                visible: menu.expanded === entry.net && !entry.enterprise
                 Layout.fillWidth: true
                 Layout.leftMargin: 10
                 Layout.rightMargin: 4
@@ -220,7 +250,7 @@ PopupFrame {
                         font.pixelSize: Theme.fontSize
                         echoMode: reveal.shown ? TextInput.Normal : TextInput.Password
                         clip: true
-                        onAccepted: connectButton.clicked(null)
+                        onAccepted: if (connectButton.enabled) connectButton.clicked(null)
                         Keys.onEscapePressed: menu.expanded = null
                         StyledText {
                             visible: !password.text && !password.activeFocus
@@ -245,7 +275,7 @@ PopupFrame {
                     id: connectButton
                     label: "Connect"
                     primary: true
-                    enabled: password.text.length >= 8
+                    enabled: password.text.length >= entry.minLength
                     onClicked: {
                         entry.error = ""
                         entry.net.connectWithPsk(password.text)

@@ -4,7 +4,7 @@
 #   notify-file.sh <app> <title> <body> <file> <icon> <action>...
 # actions: edit (satty), open (default app / mpv), folder (file manager)
 app=$1 title=$2 body=$3 file=$4 icon=$5; shift 5
-args=()
+args=(-A "default=Open")   # clicking the notification itself opens the file
 for a in "$@"; do
   case $a in
     edit)   args+=(-A "edit=Edit") ;;
@@ -16,7 +16,7 @@ done
   choice=$(notify-send -a "$app" -i "$icon" "${args[@]}" "$title" "$body")
   case $choice in
     edit)   satty --filename "$file" --output-filename "$file" --early-exit --copy-command wl-copy ;;
-    open)   xdg-open "$file" ;;
+    open|default) xdg-open "$file" ;;
     folder) xdg-open "$(dirname "$file")" ;;
   esac
 ) >/dev/null 2>&1 &

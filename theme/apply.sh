@@ -26,6 +26,16 @@ name=$1
 mode=$(sed -n 's/^mode *= *"\(.*\)".*/\1/p' "palettes/$name.toml")
 title=$(sed -n 's/^name *= *"\(.*\)".*/\1/p' "palettes/$name.toml")
 
+# A theme switch reloads the whole bar (Quickshell). Don't do that in the middle
+# of a screen recording or with replay mode on.
+if pidof gpu-screen-recorder >/dev/null; then
+  command -v notify-send >/dev/null && notify-send -a Theme -i dialog-warning \
+    "Theme not changed" "Stop the screen recording / replay mode first." || true
+  echo "A screen recording or replay mode is running; stop it first." >&2
+  exit 1
+fi
+
+old_mode=$(sed -n 's/^mode *= *"\(.*\)".*/\1/p' "palettes/$current.toml" 2>/dev/null)
 echo "$name" > current
 if ! ./render.sh >/dev/null; then
   # Don't leave the desktop half-switched: go back to the previous theme
@@ -44,7 +54,13 @@ fi
 pkill -USR1 -x kitty 2>/dev/null || true               # kitty re-reads colors.conf
 "$ROOT/theme/qt.sh" >/dev/null || true                  # Qt apps (next launch)
 command -v bat >/dev/null && bat cache --build >/dev/null 2>&1 || true
-touch "$ROOT/quickshell/.config/quickshell/Theme.qml"  # Quickshell hot-reloads
+if [[ $mode != "$old_mode" ]] && pgrep -x qs >/dev/null && [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
+  # dark <-> light: Quickshell must restart to pick the matching icon theme
+  pkill -x qs; sleep 0.3
+  hyprctl dispatch 'hl.dsp.exec_cmd("'"$ROOT"'/scripts/qs.sh")' >/dev/null || true
+else
+  touch "$ROOT/quickshell/.config/quickshell/Theme.qml"  # Quickshell hot-reloads
+fi
 if command -v gsettings >/dev/null && [[ -n ${DBUS_SESSION_BUS_ADDRESS:-} ]]; then
   if [[ $mode == light ]]; then
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'

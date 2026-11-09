@@ -5,7 +5,8 @@
 #                               card angle) and remember it
 #   wallpaper.sh restore        at login: show the remembered wallpaper
 #   wallpaper.sh thumbs         (re)build thumbnails in ~/.cache/wallpaper-thumbs,
-#                               only for new/changed files; removes stale ones
+#                               only for new/changed files; removes stale ones;
+#                               prints "changed=<n>" (the reel reloads images only if n > 0)
 set -u
 dir="$HOME/Pictures/Wallpapers"
 cache="${XDG_CACHE_HOME:-$HOME/.cache}/wallpaper-thumbs"
@@ -40,12 +41,14 @@ case "${1:-}" in
   thumbs)
     shopt -s nullglob nocaseglob
     declare -A keep
+    changed=0
     for f in "$dir"/*.{jpg,jpeg,png,webp}; do
       [[ $(basename "$f") == current ]] && continue
       name=$(basename "$f")
       thumb="$cache/$name.jpg"
       keep["$name.jpg"]=1
       if [[ ! -s $thumb || $f -nt $thumb ]]; then
+        changed=$((changed + 1))
         magick "$f[0]" -auto-orient -thumbnail '720x405^' -gravity center -extent 720x405 -quality 85 "$thumb" 2>/dev/null &
         # a few in parallel, not hundreds
         (( $(jobs -r | wc -l) >= 4 )) && wait -n
@@ -53,8 +56,9 @@ case "${1:-}" in
     done
     wait
     for t in "$cache"/*.jpg; do
-      [[ -n ${keep[$(basename "$t")]:-} ]] || rm -f "$t"
-    done ;;
+      [[ -n ${keep[$(basename "$t")]:-} ]] || { rm -f "$t"; changed=$((changed + 1)); }
+    done
+    echo "changed=$changed" ;;
 
   *) echo "usage: $0 apply <file> | restore | thumbs" >&2; exit 2 ;;
 esac

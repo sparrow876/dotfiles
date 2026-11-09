@@ -1,7 +1,8 @@
 // Power menu (ALT + Escape): the whole screen blurs behind a soft dark tint,
 // a greeting + uptime, and a row of large tiles that pop in one after another:
 //   Lock (L) · Suspend (S) · Logout (E) · Reboot (R) · Shutdown (P) · BIOS (B)
-// ←/→ or H/L move, Enter / click activates, letters jump straight to an action,
+// ←/→ (or H / Tab) move, Enter / click activates, letters jump straight to an
+// action (L is Lock, so it doesn't move right),
 // Esc or clicking the background closes.
 // Logout / Reboot / Shutdown / BIOS ask for confirmation: the first press starts
 // a 3 s countdown on the tile; press again to do it now, Esc to cancel.
@@ -45,11 +46,11 @@ PanelWindow {
     visible: false
 
     function show() {
-        if (Hyprland.focusedMonitor?.name !== screen.name) return
         Popups.close()
         selected = 0
         cancel()
         uptimeFile.reload()
+        greeting = makeGreeting()
         open = true
         hideAnim.stop()
         visible = true
@@ -59,11 +60,18 @@ PanelWindow {
     function close() {
         if (!open) return
         open = false
+        Overlays.closed("powermenu", screen.name)
         cancel()
         showAnim.stop()
         hideAnim.restart()
     }
-    function toggle() { open ? close() : show() }
+    // Opened/closed through services/Overlays.qml (keybind -> IPC -> the
+    // focused monitor's overlay). A signal handler, not a binding: close()
+    // writes back to Overlays.
+    Connections {
+        target: Overlays
+        function onPowermenuChanged() { Overlays.powermenu === menu.screen.name ? menu.show() : menu.close() }
+    }
 
     function cancel() { pending = -1; countdownTimer.stop() }
     function run(i) {
@@ -104,12 +112,10 @@ PanelWindow {
         onLoaded: menu.uptime = parseFloat(text())
     }
 
-    IpcHandler {
-        target: "powermenu"
-        function toggle(): void { menu.toggle() }
-    }
 
-    readonly property string greeting: {
+    // Set each time the menu opens (a binding on new Date() would never update)
+    property string greeting: ""
+    function makeGreeting() {
         const h = new Date().getHours()
         const name = Quickshell.env("USER") || ""
         const part = h < 5 ? "Good night" : h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : h < 22 ? "Good evening" : "Good night"

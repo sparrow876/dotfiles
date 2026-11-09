@@ -9,7 +9,13 @@ import Quickshell.Io
 
 Singleton {
     id: root
-    property bool enabled: false
+    // Survives Quickshell reloads (a theme switch reloads the whole shell)
+    PersistentProperties {
+        id: persist
+        reloadableId: "idleInhibit"
+        property bool enabled: false
+    }
+    property alias enabled: persist.enabled
 
     function toggle() { enabled = !enabled }
 

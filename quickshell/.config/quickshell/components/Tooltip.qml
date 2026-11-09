@@ -28,6 +28,8 @@ PopupWindow {
         if (hovered) delay.restart()
         else { delay.stop(); visible = false }
     }
+    // Icons blank their tooltip while their popup is open: hide right away
+    onTextChanged: if (text.length === 0) { delay.stop(); visible = false }
 
     Rectangle {
         anchors.fill: parent

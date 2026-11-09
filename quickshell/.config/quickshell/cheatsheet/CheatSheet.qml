@@ -28,7 +28,6 @@ PanelWindow {
     visible: false
 
     function show() {
-        if (Hyprland.focusedMonitor?.name !== screen.name) return
         Popups.close()
         Keybinds.refresh()
         search.text = ""
@@ -41,15 +40,18 @@ PanelWindow {
     function close() {
         if (!open) return
         open = false
+        Overlays.closed("cheatsheet", screen.name)
         showAnim.stop()
         hideAnim.restart()
     }
-    function toggle() { open ? close() : show() }
-
-    IpcHandler {
-        target: "cheatsheet"
-        function toggle(): void { sheet.toggle() }
+    // Opened/closed through services/Overlays.qml (keybind -> IPC -> the
+    // focused monitor's overlay). A signal handler, not a binding: close()
+    // writes back to Overlays.
+    Connections {
+        target: Overlays
+        function onCheatsheetChanged() { Overlays.cheatsheet === sheet.screen.name ? sheet.show() : sheet.close() }
     }
+
 
     // Filter by action, keys or category (case-insensitive)
     readonly property var filtered: {

@@ -219,6 +219,24 @@ PopupFrame {
                                         onLinkActivated: link => Qt.openUrlExternally(link)
                                         Layout.fillWidth: true
                                     }
+                                    // Action buttons (e.g. Edit / Open / Open folder on a
+                                    // screenshot), still usable after the popup is gone
+                                    RowLayout {
+                                        visible: centerActions.count > 0
+                                        Layout.fillWidth: true
+                                        Layout.topMargin: 4
+                                        spacing: 6
+                                        Repeater {
+                                            id: centerActions
+                                            model: item.n.actions.filter(a => a.identifier !== "default" && a.text !== "")
+                                            delegate: TextButton {
+                                                required property var modelData
+                                                label: modelData.text
+                                                Layout.fillWidth: true
+                                                onClicked: { modelData.invoke(); Popups.close() }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

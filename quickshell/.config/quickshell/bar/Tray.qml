@@ -52,7 +52,8 @@ Row {
                     item.secondaryActivate()
                 }
             }
-            onWheel: event => slot.modelData.scroll(event.angleDelta.y / 120, false)
+            WheelSteps { id: wheel }
+            onWheel: event => { const n = wheel.steps(event); if (n) slot.modelData.scroll(n, false) }
 
             Tooltip {
                 target: slot

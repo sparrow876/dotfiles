@@ -9,9 +9,10 @@ set -u
 source "$(dirname "$0")/theme-colors.sh"   # generated: theme colors for slurp
 dir="$HOME/Pictures/Screenshots"
 mkdir -p "$dir"
-file="$dir/$(date +%Y-%m-%d_%H-%M-%S).png"
-n=2
-while [[ -e $file ]]; do file="${file%.png}"; file="${file%-[0-9]*}-$n.png"; n=$((n + 1)); done
+base="$dir/$(date +%Y-%m-%d_%H-%M-%S)"
+file="$base.png"
+n=2   # two shots in the same second: ..._12-30-45-2.png, -3, ...
+while [[ -e $file ]]; do file="$base-$n.png"; n=$((n + 1)); done
 
 case "${1:-region}" in
   region)

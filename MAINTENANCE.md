@@ -77,15 +77,15 @@ AUR helper: **yay** (not paru).
 | `hypr/.config/hypr/hyprland.lua` | only `require("conf.x")` lines |
 | `hypr/.config/hypr/conf/` | `env` `monitors` `input` `look` `animations` `rules` `games` `keybinds` `autostart` (Lua) + `colors.lua` (generated) |
 | `hypr/.config/hypr/hypridle.conf` | idle chain (hyprlang format, not Lua) |
-| `quickshell/.config/quickshell/shell.qml` | entry: one `Variants` per screen for Bar, OSD, StatsPanel, PowerMenu, WallpaperReel, IdleScreen, NotificationPopups; `popups` IPC |
+| `quickshell/.config/quickshell/shell.qml` | entry: one `Variants` per screen for Bar, OSD, StatsPanel, PowerMenu, WallpaperReel, IdleScreen, CheatSheet, NotificationPopups; `popups` IPC. Started by `scripts/qs.sh` (icon theme) |
 | `quickshell/…/Theme.qml` | generated singleton: colors, fonts, sizes |
-| `quickshell/…/services/` | singletons: Audio, Bluetooth, Brightness, IdleInhibit, Keybinds, Media, Network, Notifications, Popups, Recorder, SystemStats (+`sysstats.sh`), Wallpapers |
+| `quickshell/…/services/` | singletons: Audio, Bluetooth, Brightness, IdleInhibit, Keybinds, Media, Network, Notifications, Overlays (IPC for the per-monitor overlays), Popups, Power (battery + low-battery warnings), Recorder, SystemStats (+`sysstats.sh`), Wallpapers |
 | `quickshell/…/bar/` | Bar + modules (`*Icon.qml`, Workspaces, MediaModule, Battery, Clock, Tray, TrayMenu, Bell) |
 | `quickshell/…/popups/` | `PopupFrame` (shared) + Network/Bluetooth/Audio menus, Calendar |
 | `quickshell/…/notifications/` | popups + center |
-| `quickshell/…/components/` | StyledText, Icon, Glyphs (all glyphs), Tooltip, Toggle, Slider, IconButton, TextButton, Card, Spinner, Separator, LevelBar, Graph, RingGauge |
+| `quickshell/…/components/` | StyledText, Icon, Glyphs (all glyphs), Tooltip, Toggle, Slider, IconButton, TextButton, Card, Spinner, Separator, LevelBar, Graph, RingGauge, WheelSteps (scroll → whole steps) |
 | `quickshell/…/{osd,panel,powermenu,wallpaper,idle,cheatsheet}/` | one overlay each |
-| `scripts/` | shell helpers (screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, wallpaper, record, notify-file, theme-picker, theme-colors.sh (generated)) |
+| `scripts/` | shell helpers (qs launcher, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, wallpaper, record, notify-file, theme-picker, theme-colors.sh (generated)) |
 | `theme/` | palettes, style, templates, `render.sh`, `apply.sh`, README |
 | `system/` | ROOT-STEPS.md, root-steps scripts, units (platform profile, paccache), etc (reflector.conf) |
 | `systemd/.config/environment.d/` | env for D-Bus/systemd-started apps (`GSK_RENDERER`) |
@@ -130,7 +130,11 @@ only while recording/replay is on. Measure Quickshell CPU after any change (§7)
 
 `hypridle.conf`: 240 s `idle-dim.sh dim` (30 % of current brightness + IdleScreen)
 → 300 s `loginctl lock-session` → `lock_cmd` = `scripts/lock.sh` (qylock winter,
-never twice) → 360 s DPMS off → 1200 s suspend only if `/sys/class/power_supply/ADP1/online` is 0.
+never twice; hides the IdleScreen 2 s later) → 360 s DPMS off → 1200 s
+`scripts/idle-suspend.sh start`: suspends only while the battery reports
+`Discharging` (USB-C PD charging counts as AC), re-checking every 30 s while
+idle; `stop` on input. `inhibit_sleep = 3`: logind waits until the session is
+really locked before sleeping (hypridle's default only does that for hyprlock).
 Inhibited by: coffee cup (IdleInhibitor on the bar surface), fullscreen
 (`idle_inhibit = "fullscreen"` window rule), D-Bus/systemd inhibitors (calls).
 
@@ -153,8 +157,9 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   must go through `qs ipc call popups toggle x` (no-grab path, §4.2).
 - **New overlay/window**: own folder, `PanelWindow` with
   `WlrLayershell.namespace: "quickshell-<name>"` (prefix required for the blur
-  + no-anim layer rule), add a `Variants` in `shell.qml`, an `IpcHandler`,
-  and a keybind.
+  + no-anim layer rule), add a `Variants` in `shell.qml`, a property + an
+  `IpcHandler` in `services/Overlays.qml` (NOT in the per-screen file, §4.2),
+  a `Connections { target: Overlays }` in the overlay, and a keybind.
 - **New keybind**: `bind(keys, dispatcher, "Category: Action", opts)` in
   `keybinds.lua`; run `Hyprland --verify-config`; regenerate the README table
   (`scripts/keybinds-to-md.sh README.md`). Unusual key names: add to `prettykey`.
@@ -192,7 +197,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   values, curve names, animation styles; NOT regexes or size/move expressions.
 - `hyprctl dispatch` takes Lua: `hyprctl dispatch 'hl.dsp.exit()'`,
   `'hl.dsp.dpms({action = "off"})'`, `'hl.dsp.focus({ workspace = 6 })'`,
-  `'hl.dsp.exec_cmd("qs")'`. `hyprctl configerrors` after `hyprctl reload`.
+  `'hl.dsp.exec_cmd("~/dotfiles/scripts/qs.sh")'`. `hyprctl configerrors` after `hyprctl reload`.
 - Dispatcher args (from source): `focus({direction|workspace})`,
   `window.move({direction|workspace, follow})`, `window.cycle_next({next=false})`
   = previous, `window.fullscreen({mode, action})`.
@@ -213,10 +218,20 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - `import qs.<folder>` works; root singletons via `import qs`.
 - **Name clash**: a bar file and a service singleton with the same name →
   "X is not a type". Bar files use the `*Icon` suffix.
-- **Restart**: `pkill -x qs; hyprctl dispatch 'hl.dsp.exec_cmd("qs")'`. Never
-  `qs kill` (stops one instance only → duplicates stack up). Hot reload keeps
-  old child processes and stale layer sizes; restart for visual/CPU checks.
-  A restart also clears notification history and stops replay mode.
+- **Restart**: `pkill -x qs; hyprctl dispatch "hl.dsp.exec_cmd(\"$HOME/dotfiles/scripts/qs.sh\")"`
+  (the launcher sets the icon theme). Never `qs kill` (stops one instance only
+  → duplicates stack up). Restart for visual/CPU checks (hot reload keeps stale
+  layer sizes). A restart clears notification history and stops replay mode.
+- **Hot reload** (any .qml save, every theme switch) recreates all singletons
+  and does NOT stop child processes: state that must survive goes in
+  `PersistentProperties { reloadableId }` (coffee cup, DND); long-running
+  children are stopped in `Component.onDestruction` and started via
+  `setpriv --pdeathsig <SIG>` so they also die if qs is killed/crashes
+  (udevadm, gpu-screen-recorder). theme/apply.sh refuses to switch while recording.
+- **IpcHandler inside a per-screen `Variants` delegate only works on the first
+  monitor** ("another handler is registered for target"). Overlay IPC lives in
+  `services/Overlays.qml`; overlays react via `Connections` (a `wanted`
+  binding + writing back to Overlays in close() = binding loop).
 - **Grabbing popups** (`grabFocus: true`) fail ("Failed to create grabbing
   popup") unless the bar just received input → keybind/IPC-opened popups use
   `Popups.toggle(name, screen, false)` = no grab + `HyprlandFocusGrab`.
@@ -241,8 +256,18 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   `Layout.preferredWidth: 0` + wrap, or the control is pushed out of view.
 - Soft glows: `Shape` + `RadialGradient` on a `PathRectangle`; a rounded
   `Rectangle` with a gradient has a hard edge.
-- Icon theme for Quickshell: `//@ pragma IconTheme Papirus-Dark` in `shell.qml`
-  (read at startup only).
+- Icon theme for Quickshell: `QS_ICON_THEME` set by `scripts/qs.sh` from the
+  palette mode (Papirus-Dark/Light). Read at startup only; a `//@ pragma
+  IconTheme` in shell.qml would override the env var, so there is none.
+  apply.sh restarts qs when switching dark ↔ light.
+- Touchpads send many small wheel events: use `WheelSteps` (120 units = one
+  step); never step once per `onWheel`.
+- Hover on a card with buttons: `HoverHandler` on the card (a sibling
+  `MouseArea` underneath loses hover to the buttons).
+- UPower `displayDevice` has no health (0, unsupported): use the device with
+  `isLaptopBattery` (BAT0), `healthPercentage` is 0..100. A probe must touch
+  `UPower` at load time or the device list stays empty.
+- `findmnt -r` hex-escapes spaces (`\x20`) → invalid JSON; use `findmnt -J`.
 - Plain file paths as image sources need `file://`.
 - PopupWindow / IconImage / tray: `QsMenuOpener` + `entry.triggered()` to
   build themed tray menus; `SystemTrayItem.display()` exists for native ones.
@@ -379,8 +404,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   are verified.
 - Step 17 apps need the user's `yay` install + tests (call pop-out titles to
   confirm for the `call-popouts` rule; Vesktop theme to check visually).
-- Remaining build steps: 18–21 (Neovim, gaming, maintenance tooling/update.sh,
+- Remaining build steps: 19–21 (gaming, maintenance tooling/update.sh,
   README + license).
+- The deployed `/etc/xdg/reflector/reflector.conf` is still the old broken one
+  (journal: "unrecognized arguments: Lanka") until the user runs
+  `sudo install -Dm644 ~/dotfiles/system/etc/reflector.conf /etc/xdg/reflector/reflector.conf && sudo systemctl start reflector.service`.
+- Light palettes (Latte): occupied vs empty workspace labels (text vs muted)
+  are low contrast.
+- Notification history is capped at 100 (oldest dropped).
 
 ---
 
@@ -406,7 +437,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 ## 8. Recovery
 
 - Desktop won't start: Ctrl+Alt+F3, log in, `cd ~/dotfiles`, `claude`.
-- Bar gone: `pkill -x qs; hyprctl dispatch 'hl.dsp.exec_cmd("qs")'`, then `qs log`.
+- Bar gone: `pkill -x qs; hyprctl dispatch "hl.dsp.exec_cmd(\"$HOME/dotfiles/scripts/qs.sh\")"`,
+  then `qs log`. (From a TTY just log in again; autostart runs it.)
 - Login screen broken: TTY, `sudo systemctl disable sddm.service && reboot`,
   then `start-hyprland` on tty1.
 - Bad update: roll back to the snap-pac "pre" snapshot (ROOT-STEPS §1.6; if
@@ -420,6 +452,28 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-09** — Bug sweep (two review passes over all scripts + QML, each
+  finding verified before fixing). Shell: hypridle `inhibit_sleep = 3` (suspend
+  could happen before qylock was up); battery-only suspend now checks
+  `Discharging` and keeps checking (`idle-suspend.sh`); sysstats disk JSON broke
+  on labels with spaces (`findmnt -J`); clipboard Enter on no match wiped the
+  clipboard (`-no-custom`) + thumbnail pruning; colorpick swatch caching;
+  lock.sh pgrep anchored; apply.sh rollback; install.sh bat/gio order;
+  screenshot same-second names. QML: overlay IPC dead on a 2nd monitor
+  (Overlays singleton); battery warnings doubled per monitor (Power singleton);
+  battery health never shown (BAT0); Wi-Fi password wiped while typing
+  (ScriptModel) + enterprise networks → nm-connection-editor + Enter bypassed
+  the 8-char check; theme switch reset coffee cup/DND and orphaned recorders /
+  udevadm (PersistentProperties, onDestruction, pdeathsig, apply.sh guard);
+  popup closed while hovering its buttons (HoverHandler); stats "End process"
+  could hit a moved row (list frozen while hovered/armed); notification
+  actions reachable from the center + default action; reel reloaded thumbs on
+  every open; light themes used dark tray icons (`scripts/qs.sh`); touchpad
+  scroll jumped volume/months (WheelSteps); recorder said "saved" on failure;
+  notification maps never pruned (+ history cap 100); stale stats sample after
+  reopen; empty tooltips; idle screen animating behind the lock; power-menu
+  greeting stuck; long titles under the tray; audio menu taller than screen.
 
 - **2026-11-09** — Step 17: Outlook web app, teams-for-linux-bin, vesktop-bin
   (palette theme), claude-desktop (PKGBUILDs reviewed); msteams:/discord:

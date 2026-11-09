@@ -37,9 +37,17 @@ PanelWindow {
     visible: false
 
     // Only on the focused monitor
-    function toggle() { open ? close() : show() }
+    // Opened/closed through services/Overlays.qml (keybind -> IPC -> the
+    // focused monitor's overlay). A signal handler, not a binding: close()
+    // writes back to Overlays.
+    Connections {
+        target: Overlays
+        function onPanelChanged() { Overlays.panel === panel.screen.name ? panel.show() : panel.close() }
+    }
+    // Monitor unplugged while the panel is open: stop polling
+    Component.onDestruction: if (open) SystemStats.active = false
+
     function show() {
-        if (Hyprland.focusedMonitor?.name !== screen.name) return
         open = true
         SystemStats.active = true
         hideAnim.stop()
@@ -50,15 +58,13 @@ PanelWindow {
     function close() {
         if (!open) return
         open = false
+        Overlays.closed("panel", screen.name)
         SystemStats.active = false
+        procSection.confirmPid = -1
         showAnim.stop()
         hideAnim.restart()
     }
 
-    IpcHandler {
-        target: "panel"
-        function toggle(): void { panel.toggle() }
-    }
     HyprlandFocusGrab {
         active: panel.open
         windows: [panel]
@@ -307,7 +313,7 @@ PanelWindow {
                 // --------------------------------------------------- 7 battery
                 Section {
                     id: batterySection
-                    readonly property var dev: UPower.displayDevice
+                    readonly property var dev: Power.display
                     title: "Battery"
                     visible: dev?.isPresent ?? false
                     LabeledBar {
@@ -328,9 +334,10 @@ PanelWindow {
                         value: SystemStats.duration(secs)
                     }
                     KeyValue {
-                        visible: batterySection.dev?.healthSupported ?? false
+                        // health comes from the real battery (BAT0), not the display device
+                        visible: Power.battery?.healthSupported ?? false
                         key: "Health"
-                        value: Math.round(batterySection.dev?.healthPercentage ?? 0) + "%"
+                        value: Math.round(Power.battery?.healthPercentage ?? 0) + "%"
                     }
                 }
 
@@ -339,8 +346,18 @@ PanelWindow {
                     id: procSection
                     property bool byMemory: false
                     property int confirmPid: -1
+                    // Rows hold still while the mouse is over the list or a kill is
+                    // armed, so the ✕ / "End process?" never moves onto another process
+                    readonly property bool frozen: procHover.hovered || confirmPid !== -1
+                    readonly property var live: (byMemory ? panel.s?.procsMem : panel.s?.procsCpu)?.slice(0, 8) ?? []
+                    property var rows: []
+                    onLiveChanged: if (!frozen || rows.length === 0) rows = live
+                    onFrozenChanged: if (!frozen) rows = live
+                    onByMemoryChanged: rows = live
                     title: "Processes"
                     visible: (panel.s?.procsCpu?.length ?? 0) > 0
+
+                    HoverHandler { id: procHover }
 
                     RowLayout {
                         Layout.fillWidth: true
@@ -350,7 +367,7 @@ PanelWindow {
                     }
 
                     Repeater {
-                        model: (procSection.byMemory ? panel.s?.procsMem : panel.s?.procsCpu)?.slice(0, 8) ?? []
+                        model: procSection.rows
                         delegate: MouseArea {
                             id: prow
                             required property var modelData

@@ -47,6 +47,10 @@ Item {
         cursorShape: Qt.PointingHandCursor
         onPressed: event => root.setFrom(event.x)
         onPositionChanged: event => { if (pressed) root.setFrom(event.x) }
-        onWheel: event => root.moved(Math.max(0, Math.min(1, root.value + (event.angleDelta.y > 0 ? 0.05 : -0.05))))
+        WheelSteps { id: wheel }
+        onWheel: event => {
+            const n = wheel.steps(event)
+            if (n) root.moved(Math.max(0, Math.min(1, root.value + 0.05 * n)))
+        }
     }
 }

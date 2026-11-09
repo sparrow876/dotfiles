@@ -40,7 +40,6 @@ PanelWindow {
     Behavior on pos { id: posAnim; NumberAnimation { duration: 380; easing.type: Easing.OutQuint } }
 
     function show() {
-        if (Hyprland.focusedMonitor?.name !== screen.name) return
         Popups.close()
         Wallpapers.refresh()
         const i = Math.max(0, files.indexOf(Wallpapers.current))
@@ -57,10 +56,17 @@ PanelWindow {
     function close() {
         if (!open) return
         open = false
+        Overlays.closed("wallpaper", screen.name)
         showAnim.stop()
         hideAnim.restart()
     }
-    function toggle() { open ? close() : show() }
+    // Opened/closed through services/Overlays.qml (keybind -> IPC -> the
+    // focused monitor's overlay). A signal handler, not a binding: close()
+    // writes back to Overlays.
+    Connections {
+        target: Overlays
+        function onWallpaperChanged() { Overlays.wallpaper === reel.screen.name ? reel.show() : reel.close() }
+    }
     function move(step) {
         if (files.length === 0) return
         target = Math.max(0, Math.min(files.length - 1, target + step))
@@ -85,10 +91,6 @@ PanelWindow {
         }
     }
 
-    IpcHandler {
-        target: "wallpaper"
-        function toggle(): void { reel.toggle() }
-    }
 
     // Dim tint over the blurred screen; click closes
     Rectangle {

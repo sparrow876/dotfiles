@@ -17,8 +17,8 @@ PanelWindow {
     id: win
     required property ShellScreen modelData
     screen: modelData
-    // Only on the focused monitor's screen (single-monitor laptop: always eDP-1)
-    visible: Notifications.popups.length > 0 && modelData === Quickshell.screens[0]
+    // Only on the focused monitor
+    visible: Notifications.popups.length > 0 && modelData.name === Overlays.focusedScreen()
 
     WlrLayershell.namespace: "quickshell-notifications"
     WlrLayershell.layer: WlrLayer.Overlay
@@ -62,9 +62,13 @@ PanelWindow {
             NumberAnimation { target: card; property: "x"; to: 0; duration: 260; easing.type: Easing.OutQuint }
         }
 
-        // Auto-hide is handled by the service; hovering (or dragging) pauses it
-        readonly property bool paused: hover.containsMouse || hover.drag.active
+        // Auto-hide is handled by the service; hovering (or dragging) pauses it.
+        // HoverHandler on the card itself stays "hovered" over its buttons too
+        // (the MouseArea below loses hover to the ✕ / action buttons on top of it).
+        HoverHandler { id: cardHover }
+        readonly property bool paused: cardHover.hovered || hover.drag.active
         onPausedChanged: Notifications.setHovered(n, paused)
+        Component.onDestruction: if (paused) Notifications.setHovered(n, false)
 
         MouseArea {
             id: hover

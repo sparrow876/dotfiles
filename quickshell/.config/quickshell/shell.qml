@@ -1,4 +1,5 @@
-//@ pragma IconTheme Papirus-Dark
+// Icon theme: set by scripts/qs.sh (QS_ICON_THEME, Papirus-Dark/Light by palette
+// mode). Start Quickshell with that script, not plain `qs`.
 // Quickshell entry point. Each feature lives in its own folder and is imported
 // with `import qs.<folder>`. Theme colors/fonts: Theme.qml (generated from the palette).
 import QtQuick

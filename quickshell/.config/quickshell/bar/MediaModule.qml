@@ -3,7 +3,8 @@
 //   paused:  ▶  Artist — Title            (muted)
 //   nothing: ♪                            (small muted icon)
 // Click = play/pause, scroll = next / previous track.
-// Long titles are cut at 420px with a soft fade instead of "…" (full title in the tooltip).
+// Long titles are cut at 420px (less if the bar is crowded: Bar.qml sets maxWidth)
+// with a soft fade instead of "…" (full title in the tooltip).
 import QtQuick
 import Qt5Compat.GraphicalEffects
 import qs
@@ -12,7 +13,9 @@ import qs.services
 
 MouseArea {
     id: root
-    readonly property int maxTitleWidth: 420
+    // Room the bar can give the module (centered between workspaces and icons)
+    property real maxWidth: 100000
+    readonly property int maxTitleWidth: Math.max(0, Math.min(420, Math.floor(maxWidth - playIcon.width - row.spacing)))
 
     implicitWidth: row.implicitWidth
     implicitHeight: 32
@@ -36,6 +39,7 @@ MouseArea {
         spacing: 10
 
         Icon {
+            id: playIcon
             anchors.verticalCenter: parent.verticalCenter
             text: !Media.hasTrack ? Glyphs.music : Media.isPlaying ? Glyphs.pause : Glyphs.play
             color: Media.isPlaying ? Theme.lightBlue : Theme.muted
@@ -45,7 +49,7 @@ MouseArea {
         // Title with a fade-out on the right when it's too long
         Item {
             id: titleBox
-            visible: Media.hasTrack
+            visible: Media.hasTrack && root.maxTitleWidth >= 60
             anchors.verticalCenter: parent.verticalCenter
             width: Math.min(title.implicitWidth, root.maxTitleWidth)
             height: title.implicitHeight

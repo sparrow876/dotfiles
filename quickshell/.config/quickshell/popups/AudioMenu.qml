@@ -57,38 +57,54 @@ PopupFrame {
     // --- Apps -----------------------------------------------------------------
     Rectangle { visible: Audio.streams.length > 0; Layout.fillWidth: true; implicitHeight: 1; color: Theme.overlay }
     SectionHeader { visible: Audio.streams.length > 0; title: "Apps" }
-    Repeater {
-        model: Audio.streams
-        delegate: RowLayout {
-            required property var modelData
-            Layout.fillWidth: true
+    // Scrolls when many apps play at once, so the menu never outgrows the screen
+    Flickable {
+        id: appsFlick
+        visible: Audio.streams.length > 0
+        Layout.fillWidth: true
+        Layout.preferredHeight: Math.min(appsCol.implicitHeight, 260)
+        contentHeight: appsCol.implicitHeight
+        clip: true
+        boundsBehavior: Flickable.StopAtBounds
+        interactive: contentHeight > height
+        ColumnLayout {
+            id: appsCol
+            width: appsFlick.width
             spacing: 10
-            IconImage {
-                source: Audio.appIcon(modelData)
-                implicitSize: 22
-            }
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 2
-                StyledText {
-                    text: Audio.appName(modelData)
-                    font.pixelSize: Theme.fontSizeSmall
-                    elide: Text.ElideRight
+            Repeater {
+                model: Audio.streams
+                delegate: RowLayout {
+                    required property var modelData
                     Layout.fillWidth: true
+                    spacing: 10
+                    IconImage {
+                        source: Audio.appIcon(modelData)
+                        implicitSize: 22
+                    }
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 2
+                        StyledText {
+                            text: Audio.appName(modelData)
+                            font.pixelSize: Theme.fontSizeSmall
+                            elide: Text.ElideRight
+                            Layout.fillWidth: true
+                        }
+                        Slider {
+                            Layout.fillWidth: true
+                            value: modelData.audio?.volume ?? 0
+                            muted: modelData.audio?.muted ?? false
+                            onMoved: v => Audio.setVolume(modelData, v)
+                        }
+                    }
+                    StyledText {
+                        text: Math.round((modelData.audio?.volume ?? 0) * 100) + "%"
+                        color: Theme.muted
+                        font.pixelSize: Theme.fontSizeSmall
+                        Layout.preferredWidth: 38
+                        horizontalAlignment: Text.AlignRight
+                    }
                 }
-                Slider {
-                    Layout.fillWidth: true
-                    value: modelData.audio?.volume ?? 0
-                    muted: modelData.audio?.muted ?? false
-                    onMoved: v => Audio.setVolume(modelData, v)
-                }
-            }
-            StyledText {
-                text: Math.round((modelData.audio?.volume ?? 0) * 100) + "%"
-                color: Theme.muted
-                font.pixelSize: Theme.fontSizeSmall
-                Layout.preferredWidth: 38
-                horizontalAlignment: Text.AlignRight
             }
         }
     }

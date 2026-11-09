@@ -8,6 +8,10 @@ lock="$HOME/.local/share/quickshell-lockscreen/lock.sh"
 # doesn't count as "locked")
 pgrep -f '^([^ ]*/)?(quickshell|qs) .*quickshell-lockscreen/lock_shell\.qml' >/dev/null && exit 0
 if [[ -x $lock ]]; then
+  # The idle screen (4 min) would keep animating behind the lock screen all
+  # night: hide it once the lock is up (brightness comes back on input)
+  ( sleep 2; qs ipc call idlescreen leave ) >/dev/null 2>&1 &
+  disown
   exec "$lock" "$@"
 fi
 notify-send -a "Lock screen" -i system-lock-screen "Lock screen not set up yet" \

@@ -26,7 +26,16 @@ Singleton {
     readonly property bool wiredConnected: wired?.connected ?? false
 
     function levelOf(network) { return Math.max(0, Math.min(3, Math.floor((network?.signalStrength ?? 0) * 4))) }
-    function isSecured(network) { return network.security !== N.WifiSecurityType.Open }
+    // Lock icon: anything but open / OWE ("enhanced open", encrypted without a password)
+    function isSecured(network) {
+        return network.security !== N.WifiSecurityType.Open && network.security !== N.WifiSecurityType.Owe
+    }
+    // Enterprise networks (e.g. eduroam) need a username/certificate: set up in
+    // nm-connection-editor, not with a password field
+    function isEnterprise(network) {
+        return [N.WifiSecurityType.Wpa2Eap, N.WifiSecurityType.WpaEap, N.WifiSecurityType.Wpa3SuiteB192,
+                N.WifiSecurityType.DynamicWep, N.WifiSecurityType.Leap].includes(network.security)
+    }
 
     // Bar icon: ethernet, off, connecting (animated), signal level, or disconnected
     property int pulse: 0

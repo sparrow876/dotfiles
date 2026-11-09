@@ -18,7 +18,9 @@ BarIcon {
 
     // Left click is handled by BarIcon (opens the menu); middle click mutes
     onClicked: event => { if (event.button === Qt.MiddleButton) Audio.toggleMute(Audio.sink) }
-    onWheel: event => Audio.setVolume(Audio.sink, Audio.volume + (event.angleDelta.y > 0 ? 0.05 : -0.05))
+    // Scroll: ±5% per wheel notch (touchpad scrolling accumulates)
+    WheelSteps { id: wheel }
+    onWheel: event => { const n = wheel.steps(event); if (n) Audio.setVolume(Audio.sink, Audio.volume + 0.05 * n) }
 
     LevelBar {
         value: Audio.volume

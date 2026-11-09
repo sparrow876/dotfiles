@@ -15,7 +15,13 @@ import Quickshell.Wayland
 Singleton {
     id: root
 
-    property bool dnd: false                      // your switch
+    // Your DND switch; survives Quickshell reloads (e.g. a theme switch)
+    PersistentProperties {
+        id: persist
+        reloadableId: "notificationsDnd"
+        property bool dnd: false
+    }
+    property alias dnd: persist.dnd
     // A Steam game / gamescope window is fullscreen right now
     readonly property bool gameFullscreen: ToplevelManager.toplevels.values.some(
         t => t.fullscreen && /^(steam_app_|gamescope)/.test(t.appId))
@@ -24,6 +30,7 @@ Singleton {
     property var times: ({})                      // notification id -> arrival Date
     readonly property int popupTimeout: 5000
     readonly property int maxPopups: 3
+    readonly property int maxHistory: 100           // oldest are dropped beyond this
 
     // Notifications currently shown as popups (newest first)
     property list<QtObject> popups: []
@@ -47,15 +54,26 @@ Singleton {
             t[notification.id] = new Date()
             root.times = t
             if (!notification.transient) root.unread++
+            const id = notification.id
+            notification.closed.connect(() => { root.hidePopup(notification); root.forget(id) })
+            // Keep the history bounded (days of chat apps without "Clear all")
+            const all = server.trackedNotifications.values
+            for (const old of all.slice(0, Math.max(0, all.length - root.maxHistory))) old.dismiss()
             const critical = notification.urgency === NotificationUrgency.Critical
             if (root.dndActive && !critical) return
             root.popups = [notification].concat(root.popups.filter(n => n !== notification))
-            notification.closed.connect(() => root.hidePopup(notification))
         }
     }
 
     function hidePopup(notification) {
         root.popups = root.popups.filter(n => n !== notification)
+        const id = notification.id
+        if (id in root.shownFor) { const s = Object.assign({}, root.shownFor); delete s[id]; root.shownFor = s }
+        if (id in root.hovered) { const h = Object.assign({}, root.hovered); delete h[id]; root.hovered = h }
+    }
+    // A notification left the history: drop its bookkeeping
+    function forget(id) {
+        if (id in root.times) { const t = Object.assign({}, root.times); delete t[id]; root.times = t }
     }
 
     // Popup auto-hide, tracked here (not in the cards) so new popups never reset

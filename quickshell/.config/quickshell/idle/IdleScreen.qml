@@ -38,14 +38,15 @@ PanelWindow {
     function hide() {
         if (!shown) return
         shown = false
+        Overlays.idle = false
         fadeIn.stop()
         fadeOut.restart()
     }
 
-    IpcHandler {
-        target: "idlescreen"
-        function enter(): void { idle.show() }
-        function leave(): void { idle.hide() }
+    // qs ipc call idlescreen enter|leave -> services/Overlays.qml (all monitors)
+    Connections {
+        target: Overlays
+        function onIdleChanged() { Overlays.idle ? idle.show() : idle.hide() }
     }
 
     // Slow drift: 10 updates a second (cheap), only while visible

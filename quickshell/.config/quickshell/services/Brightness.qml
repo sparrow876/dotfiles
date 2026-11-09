@@ -34,9 +34,13 @@ Singleton {
         onLoaded: root.current = parseInt(text()) || 0
     }
 
+    // A reload (theme switch) doesn't stop old child processes: stop it here
+    Component.onDestruction: udev.running = false
     Process {
+        id: udev
         running: root.device !== ""
-        command: ["udevadm", "monitor", "--kernel", "--subsystem-match=backlight"]
+        // setpriv --pdeathsig: udevadm exits if Quickshell is killed or crashes
+        command: ["setpriv", "--pdeathsig", "TERM", "udevadm", "monitor", "--kernel", "--subsystem-match=backlight"]
         stdout: SplitParser {
             onRead: line => { if (line.includes(" change ")) curFile.reload() }
         }

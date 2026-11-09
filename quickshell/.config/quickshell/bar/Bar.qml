@@ -41,6 +41,7 @@ PanelWindow {
         border.color: Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.12)
 
         Workspaces {
+            id: workspaces
             anchors.left: parent.left
             anchors.leftMargin: 6
             anchors.verticalCenter: parent.verticalCenter
@@ -49,9 +50,14 @@ PanelWindow {
 
         MediaModule {
             anchors.centerIn: parent
+            // Centered, so it may use twice the smaller gap to its neighbours
+            // (keeps a long title from running under the tray / icons)
+            maxWidth: 2 * Math.min(background.width / 2 - (workspaces.x + workspaces.width),
+                                   rightGroup.x - background.width / 2) - 40
         }
 
         RowLayout {
+            id: rightGroup
             anchors.right: parent.right
             anchors.rightMargin: 14
             anchors.verticalCenter: parent.verticalCenter
