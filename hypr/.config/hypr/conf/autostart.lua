@@ -22,6 +22,11 @@ hl.on("hyprland.start", function()
     -- Quickshell reloads itself when a .qml file changes.
     hl.exec_cmd("qs")
 
+    -- Nautilus sidebar: Documents, Music, Pictures, Videos, Downloads come from
+    -- ~/.config/gtk-3.0/bookmarks, which GNOME writes at login via its own
+    -- autostart (not run under Hyprland). Only rewrites it if the folders change.
+    hl.exec_cmd("xdg-user-dirs-gtk-update")
+
     -- Clipboard history (ALT + C): record text and images, keep 200 entries,
     -- and keep copied content alive after the source app closes
     hl.exec_cmd("wl-paste --type text --watch cliphist -max-items 200 store")

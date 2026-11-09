@@ -288,6 +288,11 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 - GTK4 user CSS (`~/.config/gtk-4.0/gtk.css`) can target Nautilus via
   `.nautilus-window`.
+- Nautilus sidebar folders (Documents, Music, …) come from
+  `~/.config/gtk-3.0/bookmarks`, written by `xdg-user-dirs-gtk-update`; GNOME
+  runs it from XDG autostart, Hyprland doesn't → it's in `autostart.lua` +
+  `install.sh`. The file holds absolute paths: never commit it (gitignored,
+  gtk-3.0 is a no-fold dir). The Google Drive bookmark (step 16) goes there too.
 - rofi custom widgets need a type prefix (`textbox-search`, `icon-…`).
 - rofi `drun` sorts by usage history automatically when the query is empty.
 - reflector config: multi-word country names get split; use codes (`IN,SG,BD`).
@@ -380,6 +385,11 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-09** — Nautilus sidebar had no Documents/Music/Pictures/Videos/
+  Downloads. Cause: `~/.config/gtk-3.0/bookmarks` never created (GNOME's
+  autostart for `xdg-user-dirs-gtk-update` doesn't run under Hyprland). Fix:
+  run it in autostart + install.sh. Files: `hypr/conf/autostart.lua`,
+  `install.sh`, `packages/pacman.txt`.
 - **2026-11-09** — Step 15: keybind cheat sheet (ALT+/) + README table
   generator, both from `scripts/keybinds.jq`.
 - **2026-11-09** — Build steps 1–14 + theme system done (see `git log`).

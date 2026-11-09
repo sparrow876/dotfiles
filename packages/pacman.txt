@@ -15,6 +15,7 @@ python
 libnotify
 xdg-utils
 xdg-user-dirs
+xdg-user-dirs-gtk    # writes the Nautilus sidebar bookmarks (Documents, Music, ...)
 usbutils
 pciutils
 evtest

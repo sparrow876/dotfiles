@@ -84,6 +84,8 @@ step_packages() {
 step_dirs() {
   info "Creating user folders"
   command -v xdg-user-dirs-update >/dev/null && xdg-user-dirs-update
+  # Nautilus sidebar entries (Documents, Music, ...) = ~/.config/gtk-3.0/bookmarks
+  command -v xdg-user-dirs-gtk-update >/dev/null && xdg-user-dirs-gtk-update
   # Some of these may already exist as btrfs subvolumes (ROOT-STEPS section 1);
   # mkdir -p leaves existing ones alone.
   mkdir -p "$HOME"/{Music,Documents,Downloads,Pictures,Videos,Desktop,Templates,Public} \
