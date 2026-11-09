@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Render every color/theme file in the repo from the active theme:
 #   theme/style.toml              fonts, sizes, shape (shared by all themes)
-#   theme/palettes/<current>.toml  colors (+ [meta] name/mode)
+#   theme/palettes/<current>.toml  colors (+ [meta] name)
 #   theme/current                  name of the active palette (e.g. blue-ice)
 # To switch themes and reload the running apps, use theme/apply.sh instead.
 #
@@ -11,7 +11,7 @@
 #      becomes kitty/.config/kitty/colors.conf
 #
 # Placeholders available in templates (every key of style.toml + the palette,
-# plus {{theme}} = palette file name, {{name}} = display name, {{mode}} = dark|light):
+# plus {{theme}} = palette file name, {{name}} = display name):
 #   {{name}}        value as written, e.g. #7fb3ff  or  JetBrainsMono Nerd Font
 #   {{name.hex}}    color without '#', e.g. 7fb3ff
 #   {{name.rgb}}    decimal triple, e.g. 127, 179, 255

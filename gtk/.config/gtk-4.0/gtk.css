@@ -3,7 +3,7 @@
  * Nautilus is Nord (as the brief asks), whatever desktop theme is active.
  * libadwaita >= 1.6 defines its colors as CSS variables, so setting them on
  * .nautilus-window recolors only Nautilus (and its menus/popovers); every
- * other GTK4 app keeps following the theme (dark/light from theme/apply.sh).
+ * other GTK4 app keeps following the theme (dark, set by theme/apply.sh).
  * Nord palette: https://www.nordtheme.com/docs/colors-and-palettes
  */
 .nautilus-window {

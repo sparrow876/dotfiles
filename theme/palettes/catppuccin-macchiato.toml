@@ -3,7 +3,6 @@
 
 [meta]
 name = "Catppuccin Macchiato"
-mode = "dark"        # dark | light (sets the GTK/Qt preference)
 
 [colors]
 base      = "#181926"   # deepest background

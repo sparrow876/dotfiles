@@ -26,7 +26,7 @@ hl.config({
             enabled      = true,
             range        = 12,
             render_power = 3,
-            color        = 0x55000000,   -- always a dark shadow (also in light themes)
+            color        = 0x55000000,   -- always a dark shadow
         },
 
         -- Frosted glass: only surfaces that are themselves translucent get blurred

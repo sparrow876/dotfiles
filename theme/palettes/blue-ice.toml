@@ -3,7 +3,6 @@
 
 [meta]
 name = "Blue Ice"
-mode = "dark"        # dark | light (sets the GTK/Qt preference)
 
 [colors]
 base      = "#0d1b2a"   # deepest background

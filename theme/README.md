@@ -10,15 +10,17 @@ theme/apply.sh catppuccin-mocha    # switch + reload running apps
 
 | File | What it is |
 |------|------------|
-| `palettes/<name>.toml` | One theme: `[meta]` name + mode (dark/light), `[colors]` |
+| `palettes/<name>.toml` | One theme: `[meta]` name, `[colors]` |
 | `style.toml` | Fonts, text sizes, rounding, gaps (shared by every theme) |
 | `current` | Name of the active palette |
 | `templates/**.tmpl` | Each app's color file with `{{placeholders}}` |
 | `render.sh` | Fills the templates from style + active palette |
 | `apply.sh` | Sets `current`, renders, reloads Hyprland/kitty/Quickshell/bat/GTK |
 
-Included: **Blue Ice** (the original), **Catppuccin Mocha / Macchiato / Frappé**
-(dark) and **Catppuccin Latte** (light), using Catppuccin's official palette.
+Included: **Blue Ice** (the original) and **Catppuccin Mocha / Macchiato /
+Frappé**, using Catppuccin's official palette. All themes are dark (light
+themes were removed on purpose: the icon theme, GTK/Qt preference and
+contrast are only set up for dark).
 
 Not themed by design: Neovim, Nautilus and zathura (Nord), the lock/login
 screen (qylock theme).

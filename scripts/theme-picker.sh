@@ -20,7 +20,7 @@ list() {
         -alpha off -compose CopyOpacity -composite "$swatch" 2>/dev/null
     fi
     mark=""; [[ $n == "$current" ]] && mark="  ✓"
-    printf '%s\t%s <span size="small" alpha="60%%">%s%s</span>\0icon\x1f%s\n' "$n" "$(get name)" "$(get mode)" "$mark" "$swatch"
+    printf '%s\t%s<span size="small" alpha="60%%">%s</span>\0icon\x1f%s\n' "$n" "$(get name)" "$mark" "$swatch"
   done
 }
 

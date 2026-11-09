@@ -80,7 +80,7 @@ AUR helper: **yay** (not paru).
 | `hypr/.config/hypr/hyprland.lua` | only `require("conf.x")` lines |
 | `hypr/.config/hypr/conf/` | `env` `monitors` `input` `look` `animations` `rules` `games` `keybinds` `autostart` (Lua) + `colors.lua` (generated) |
 | `hypr/.config/hypr/hypridle.conf` | idle chain (hyprlang format, not Lua) |
-| `quickshell/.config/quickshell/shell.qml` | entry: one `Variants` per screen for Bar, OSD, StatsPanel, PowerMenu, WallpaperReel, IdleScreen, CheatSheet, NotificationPopups; `popups` IPC. Started by `scripts/qs.sh` (icon theme) |
+| `quickshell/.config/quickshell/shell.qml` | entry: one `Variants` per screen for Bar, OSD, StatsPanel, PowerMenu, WallpaperReel, IdleScreen, CheatSheet, NotificationPopups; `popups` IPC |
 | `quickshell/…/Theme.qml` | generated singleton: colors, fonts, sizes |
 | `quickshell/…/services/` | singletons: Audio, Bluetooth, Brightness, IdleInhibit, Keybinds, Media, Network, Notifications, Overlays (IPC for the per-monitor overlays), Popups, Power (battery + low-battery warnings), Recorder, SystemStats (+`sysstats.sh`), Wallpapers |
 | `quickshell/…/bar/` | Bar + modules (`*Icon.qml`, Workspaces, MediaModule, Battery, Clock, Tray, TrayMenu, Bell) |
@@ -88,7 +88,7 @@ AUR helper: **yay** (not paru).
 | `quickshell/…/notifications/` | popups + center |
 | `quickshell/…/components/` | StyledText, Icon, Glyphs (all glyphs), Tooltip, Toggle, Slider, IconButton, TextButton, Card, Spinner, Separator, LevelBar, Graph, RingGauge, WheelSteps (scroll → whole steps) |
 | `quickshell/…/{osd,panel,powermenu,wallpaper,idle,cheatsheet}/` | one overlay each |
-| `scripts/` | shell helpers (qs launcher, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, wallpaper, record, notify-file, theme-picker, theme-colors.sh (generated)) |
+| `scripts/` | shell helpers (screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, wallpaper, record, notify-file, theme-picker, theme-colors.sh (generated)) |
 | `theme/` | palettes, style, templates, `render.sh`, `apply.sh`, README |
 | `system/` | ROOT-STEPS.md, root-steps scripts, units (platform profile, paccache), etc (reflector.conf) |
 | `systemd/.config/environment.d/` | env for D-Bus/systemd-started apps (`GSK_RENDERER`) |
@@ -202,7 +202,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   values, curve names, animation styles; NOT regexes or size/move expressions.
 - `hyprctl dispatch` takes Lua: `hyprctl dispatch 'hl.dsp.exit()'`,
   `'hl.dsp.dpms({action = "off"})'`, `'hl.dsp.focus({ workspace = 6 })'`,
-  `'hl.dsp.exec_cmd("~/dotfiles/scripts/qs.sh")'`. `hyprctl configerrors` after `hyprctl reload`.
+  `'hl.dsp.exec_cmd("qs")'`. `hyprctl configerrors` after `hyprctl reload`.
 - Dispatcher args (from source): `focus({direction|workspace})`,
   `window.move({direction|workspace, follow})`, `window.cycle_next({next=false})`
   = previous, `window.fullscreen({mode, action})`.
@@ -223,9 +223,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - `import qs.<folder>` works; root singletons via `import qs`.
 - **Name clash**: a bar file and a service singleton with the same name →
   "X is not a type". Bar files use the `*Icon` suffix.
-- **Restart**: `pkill -x qs; hyprctl dispatch "hl.dsp.exec_cmd(\"$HOME/dotfiles/scripts/qs.sh\")"`
-  (the launcher sets the icon theme). Never `qs kill` (stops one instance only
-  → duplicates stack up). Restart for visual/CPU checks (hot reload keeps stale
+- **Restart**: `pkill -x qs; hyprctl dispatch 'hl.dsp.exec_cmd("qs")'`.
+  Never `qs kill` (stops one instance only → duplicates stack up). Restart for visual/CPU checks (hot reload keeps stale
   layer sizes). A restart clears notification history and stops replay mode.
 - **Hot reload** (any .qml save, every theme switch) recreates all singletons
   and does NOT stop child processes: state that must survive goes in
@@ -261,10 +260,9 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   `Layout.preferredWidth: 0` + wrap, or the control is pushed out of view.
 - Soft glows: `Shape` + `RadialGradient` on a `PathRectangle`; a rounded
   `Rectangle` with a gradient has a hard edge.
-- Icon theme for Quickshell: `QS_ICON_THEME` set by `scripts/qs.sh` from the
-  palette mode (Papirus-Dark/Light). Read at startup only; a `//@ pragma
-  IconTheme` in shell.qml would override the env var, so there is none.
-  apply.sh restarts qs when switching dark ↔ light.
+- Icon theme for Quickshell: `//@ pragma IconTheme Papirus-Dark` in shell.qml
+  (read at startup only; it overrides the `QS_ICON_THEME` env var). All themes
+  are dark, so it never changes.
 - Touchpads send many small wheel events: use `WheelSteps` (120 units = one
   step); never step once per `onWheel`.
 - Hover on a card with buttons: `HoverHandler` on the card (a sibling
@@ -416,7 +414,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Wallpapers never created | default palette gradient only if folder empty | no blank screen on fresh install |
 | Logout | `hyprshutdown` if installed | graceful app shutdown |
 | Music title truncation | soft fade, 420 px | user request |
-| Nord GTK3 theme (e.g. Nordic) | not installed; Nautilus (GTK4) is Nord via scoped CSS, GTK3 dialogs follow the theme's Adwaita dark/light | Nordic AUR last updated 2022; a global GTK3 theme would fight the theme switcher |
+| Nord GTK3 theme (e.g. Nordic) | not installed; Nautilus (GTK4) is Nord via scoped CSS, GTK3 dialogs use Adwaita-dark | Nordic AUR last updated 2022; a global GTK3 theme would fight the theme switcher |
 | Qt via Kvantum | qt5ct/qt6ct Fusion + generated palette (Kvantum installed, unused) | follows theme switches; Kvantum needs SVG themes per palette |
 | Default apps in `mimeapps.list` | `hyprland-mimeapps.list` | apps rewrite mimeapps.list (breaks stow) |
 
@@ -438,8 +436,6 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - The deployed `/etc/xdg/reflector/reflector.conf` is still the old broken one
   (journal: "unrecognized arguments: Lanka") until the user runs
   `sudo install -Dm644 ~/dotfiles/system/etc/reflector.conf /etc/xdg/reflector/reflector.conf && sudo systemctl start reflector.service`.
-- Light palettes (Latte): occupied vs empty workspace labels (text vs muted)
-  are low contrast.
 - Notification history is capped at 100 (oldest dropped).
 
 ---
@@ -466,7 +462,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 ## 8. Recovery
 
 - Desktop won't start: Ctrl+Alt+F3, log in, `cd ~/dotfiles`, `claude`.
-- Bar gone: `pkill -x qs; hyprctl dispatch "hl.dsp.exec_cmd(\"$HOME/dotfiles/scripts/qs.sh\")"`,
+- Bar gone: `pkill -x qs; hyprctl dispatch 'hl.dsp.exec_cmd("qs")'`,
   then `qs log`. (From a TTY just log in again; autostart runs it.)
 - Login screen broken: TTY, `sudo systemctl disable sddm.service && reboot`,
   then `start-hyprland` on tty1.
@@ -481,6 +477,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-09** — Light themes removed at the user's request (Catppuccin
+  Latte palette, the palettes' `mode` key, light branches in apply.sh/qt.sh,
+  the picker's mode label, `scripts/qs.sh`; Quickshell back to the
+  `IconTheme Papirus-Dark` pragma + plain `qs` in autostart). Every theme is
+  dark; apply.sh always sets prefer-dark / Adwaita-dark / Papirus-Dark.
+  **Don't re-add light themes unless the user asks.**
 
 - **2026-11-09** — Step 18: Neovim (lazy.nvim, Nord, which-key, Telescope,
   Treesitter main, mason + lspconfig + blink.cmp, neo-tree, lualine,
@@ -505,7 +508,7 @@ root cause, fix, files.
   popup closed while hovering its buttons (HoverHandler); stats "End process"
   could hit a moved row (list frozen while hovered/armed); notification
   actions reachable from the center + default action; reel reloaded thumbs on
-  every open; light themes used dark tray icons (`scripts/qs.sh`); touchpad
+  every open; touchpad
   scroll jumped volume/months (WheelSteps); recorder said "saved" on failure;
   notification maps never pruned (+ history cap 100); stale stats sample after
   reopen; empty tooltips; idle screen animating behind the lock; power-menu

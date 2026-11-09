@@ -7,14 +7,13 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 current=$(tr -d '[:space:]' < "$ROOT/theme/current")
-mode=$(sed -n 's/^mode *= *"\(.*\)".*/\1/p' "$ROOT/theme/palettes/$current.toml")
-icons=$([[ $mode == light ]] && echo Papirus-Light || echo Papirus-Dark)
+icons=Papirus-Dark   # every theme is dark
 
 for v in qt5ct qt6ct; do
   dir="$HOME/.config/$v"
   mkdir -p "$dir"
   cat > "$dir/$v.conf" <<CONF
-# Written by ~/dotfiles/theme/qt.sh ($current, $mode). Changes here are
+# Written by ~/dotfiles/theme/qt.sh ($current). Changes here are
 # overwritten on the next theme switch; edit theme/qt.sh instead.
 [Appearance]
 color_scheme_path=$dir/colors/rice.conf

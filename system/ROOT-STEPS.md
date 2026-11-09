@@ -376,7 +376,6 @@ Undo: `sudo systemctl disable sddm.service`, `sudo rm -r /usr/share/sddm/themes/
 ```sh
 # Folder icons in Nord blue to match Nautilus (changes Papirus' folders system-wide)
 sudo papirus-folders -C nordic --theme Papirus-Dark
-sudo papirus-folders -C nordic --theme Papirus-Light
 
 # Google Drive: sign in once (no sudo, see system/APPS.md for the prompts),
 # then mount it at every login
