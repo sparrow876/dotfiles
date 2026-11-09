@@ -8,6 +8,7 @@ import Quickshell.Hyprland
 import qs.bar
 import qs.notifications
 import qs.osd
+import qs.panel
 import qs.services
 
 ShellRoot {
@@ -21,6 +22,12 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         delegate: Osd {}
+    }
+
+    // System stats panel (ALT + S): qs ipc call panel toggle
+    Variants {
+        model: Quickshell.screens
+        delegate: StatsPanel {}
     }
 
     // Notification popups (top-right)

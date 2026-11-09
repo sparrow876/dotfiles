@@ -3,16 +3,16 @@
 //   paused:  ▶  Artist — Title            (muted)
 //   nothing: ♪                            (small muted icon)
 // Click = play/pause, scroll = next / previous track.
-// Long titles are cut at 280px with a soft fade instead of "…".
+// Long titles are cut at 420px with a soft fade instead of "…" (full title in the tooltip).
 import QtQuick
-import QtQuick.Effects
+import Qt5Compat.GraphicalEffects
 import qs
 import qs.components
 import qs.services
 
 MouseArea {
     id: root
-    readonly property int maxTitleWidth: 280
+    readonly property int maxTitleWidth: 420
 
     implicitWidth: row.implicitWidth
     implicitHeight: 32
@@ -61,12 +61,8 @@ MouseArea {
             }
 
             layer.enabled: overflowing
-            layer.effect: MultiEffect {
-                maskEnabled: true
-                maskSource: fadeMask
-                maskThresholdMin: 0.0
-                maskSpreadAtMin: 1.0
-            }
+            // (QtQuick.Effects' MultiEffect mask didn't apply here; OpacityMask does)
+            layer.effect: OpacityMask { maskSource: fadeMask }
         }
         Item {
             id: fadeMask
@@ -79,7 +75,7 @@ MouseArea {
                 gradient: Gradient {
                     orientation: Gradient.Horizontal
                     GradientStop { position: 0.0; color: "white" }
-                    GradientStop { position: 0.82; color: "white" }
+                    GradientStop { position: 0.75; color: "white" }
                     GradientStop { position: 1.0; color: "transparent" }
                 }
             }

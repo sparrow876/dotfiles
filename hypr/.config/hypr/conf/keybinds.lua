@@ -78,6 +78,7 @@ end
 -- System
 bind(mod .. " + I", exec("qs ipc call idle toggle"), "System: Toggle idle inhibitor (stay awake)")
 bind(mod .. " + N", exec("qs ipc call popups toggle notifications"), "System: Notification center")
+bind(mod .. " + S", exec("qs ipc call panel toggle"), "System: System stats panel")
 
 -- ---------------------------------------------------------------------------
 -- Media keys (work on the lock screen too)
