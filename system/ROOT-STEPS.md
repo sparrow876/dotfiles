@@ -368,3 +368,27 @@ GNOME Keyring unlocks at login already (`pam_gnome_keyring` is in Arch's
 (then `start-hyprland` as before). Logs: `journalctl -b -u sddm`.
 
 Undo: `sudo systemctl disable sddm.service`, `sudo rm -r /usr/share/sddm/themes/winter /etc/sddm.conf.d/theme.conf`, `rm -r ~/.local/share/quickshell-lockscreen ~/.config/qylock`.
+
+---
+
+## 11. Files, Google Drive, folder colors (build step 16)
+
+```sh
+# Folder icons in Nord blue to match Nautilus (changes Papirus' folders system-wide)
+sudo papirus-folders -C nordic --theme Papirus-Dark
+sudo papirus-folders -C nordic --theme Papirus-Light
+
+# Google Drive: sign in once (no sudo, see system/APPS.md for the prompts),
+# then mount it at every login
+rclone config
+systemctl --user enable --now rclone-gdrive.service
+```
+The `papirus-folders` package re-applies the color after every Papirus update
+(pacman hook). Undo: `sudo papirus-folders -D --theme Papirus-Dark` (and
+`-Light`); `systemctl --user disable --now rclone-gdrive.service`;
+`rclone config delete gdrive` removes the stored token.
+
+**LocalSend check:** open LocalSend on the laptop and on your phone (same Wi-Fi):
+each should see the other. If not, `sudo ufw status` must list 53317/tcp and
+53317/udp ALLOW IN from your current subnet (§7).
+

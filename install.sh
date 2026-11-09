@@ -6,7 +6,7 @@
 #   ./install.sh --packages    install packages/pacman.txt + packages/aur.txt
 #                                (asks for your sudo password via pacman/yay)
 #   ./install.sh --all         --packages, then the user-level setup
-#   ./install.sh --only <step> run one step: dirs | wallpaper | clones | render | stow | gsettings
+#   ./install.sh --only <step> run one step: dirs | wallpaper | clones | render | stow | qt | gsettings
 #
 # It never enables services, edits /etc or runs third-party scripts.
 # Root-level steps live in system/ROOT-STEPS.md and are run by hand.
@@ -30,8 +30,11 @@ STOW_PACKAGES=(
   bat
   quickshell  # step 4
   gtk         # step 5 (Nautilus text size; Nord theme in step 16)
-  systemd     # user environment (GSK_RENDERER), user units later
+  systemd     # user environment (GSK_RENDERER), rclone-gdrive.service
   rofi        # step 11
+  qt          # step 16: Qt color files (qt*ct.conf written by theme/qt.sh)
+  xdg         # step 16: default apps (hyprland-mimeapps.list)
+  applications  # step 16: nvim-kitty.desktop (and web apps in step 17)
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.
@@ -51,7 +54,8 @@ SHARED_DIRS=(".config/systemd" ".config/environment.d" ".local" ".config/autosta
 # Directories that must stay real directories (stow links the files inside
 # instead of symlinking the whole folder), because apps write their own files
 # there that must never end up in the repo (e.g. Nautilus bookmarks).
-NO_FOLD_DIRS=(".config/gtk-3.0" ".config/gtk-4.0" ".config/systemd/user" ".config/environment.d" ".local/share/applications")
+NO_FOLD_DIRS=(".config/gtk-3.0" ".config/gtk-4.0" ".config/systemd/user" ".config/environment.d" ".local/share/applications"
+              ".config/qt5ct" ".config/qt6ct" ".config/qt5ct/colors" ".config/qt6ct/colors")
 # ---------------------------------------------------------------------------
 
 c_blue=$'\e[38;2;127;179;255m'; c_warn=$'\e[38;2;242;198;109m'; c_err=$'\e[38;2;239;111;122m'; c_off=$'\e[0m'
@@ -86,6 +90,11 @@ step_dirs() {
   command -v xdg-user-dirs-update >/dev/null && xdg-user-dirs-update
   # Nautilus sidebar entries (Documents, Music, ...) = ~/.config/gtk-3.0/bookmarks
   command -v xdg-user-dirs-gtk-update >/dev/null && xdg-user-dirs-gtk-update
+  # Google Drive in Nautilus's sidebar (mounted by rclone-gdrive.service)
+  local bm="$HOME/.config/gtk-3.0/bookmarks"
+  mkdir -p "$(dirname "$bm")"
+  grep -qs "file://$HOME/GoogleDrive " "$bm" || echo "file://$HOME/GoogleDrive Google Drive" >> "$bm"
+  command -v gio >/dev/null && gio set -t string "$HOME/GoogleDrive" metadata::custom-icon-name folder-google-drive 2>/dev/null || true
   # Some of these may already exist as btrfs subvolumes (ROOT-STEPS section 1);
   # mkdir -p leaves existing ones alone.
   mkdir -p "$HOME"/{Music,Documents,Downloads,Pictures,Videos,Desktop,Templates,Public} \
@@ -140,8 +149,13 @@ step_clones() {
 }
 
 step_render() {
-  info "Rendering theme files from theme/palette.toml"
+  info "Rendering theme files from the active theme"
   "$REPO/theme/render.sh" >/dev/null
+}
+
+step_qt() {
+  info "Configuring Qt apps (qt5ct/qt6ct)"
+  "$REPO/theme/qt.sh" >/dev/null
 }
 
 is_shared() {
@@ -224,6 +238,11 @@ step_gsettings() {
   gsettings set $s font-name 'Noto Sans 11.25'
   gsettings set $s document-font-name 'Noto Sans 12'
   gsettings set $s monospace-font-name 'JetBrainsMono Nerd Font 11.25'
+  # Nautilus "Open in Terminal" -> kitty (nautilus-open-any-terminal)
+  if gsettings list-keys com.github.stunkymonkey.nautilus-open-any-terminal >/dev/null 2>&1; then
+    gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
+    gsettings set com.github.stunkymonkey.nautilus-open-any-terminal new-tab false
+  fi
 }
 
 user_setup() {
@@ -232,6 +251,7 @@ user_setup() {
   step_clones
   step_render
   step_stow
+  step_qt
   step_gsettings
   info "Done. Anything moved aside is in ${BACKUP_DIR/#$HOME/\~} (if it exists)."
 }

@@ -34,6 +34,7 @@ if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
   hyprctl reload >/dev/null || true                    # borders, shadows
 fi
 pkill -USR1 -x kitty 2>/dev/null || true               # kitty re-reads colors.conf
+"$ROOT/theme/qt.sh" >/dev/null || true                  # Qt apps (next launch)
 command -v bat >/dev/null && bat cache --build >/dev/null 2>&1 || true
 touch "$ROOT/quickshell/.config/quickshell/Theme.qml"  # Quickshell hot-reloads
 if command -v gsettings >/dev/null && [[ -n ${DBUS_SESSION_BUS_ADDRESS:-} ]]; then

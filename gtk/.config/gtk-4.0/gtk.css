@@ -1,7 +1,51 @@
-/* User CSS for GTK4 / libadwaita apps. The full Nord theme for Nautilus comes
- * in build step 16; for now only text size tweaks. */
-
-/* Nautilus: slightly larger text than the system default (11.25pt) */
+/* User CSS for GTK4 / libadwaita apps.
+ *
+ * Nautilus is Nord (as the brief asks), whatever desktop theme is active.
+ * libadwaita >= 1.6 defines its colors as CSS variables, so setting them on
+ * .nautilus-window recolors only Nautilus (and its menus/popovers); every
+ * other GTK4 app keeps following the theme (dark/light from theme/apply.sh).
+ * Nord palette: https://www.nordtheme.com/docs/colors-and-palettes
+ */
 .nautilus-window {
+  /* Polar Night: nord0 #2e3440  nord1 #3b4252  nord2 #434c5e  nord3 #4c566a
+     Snow Storm:  nord4 #d8dee9  nord5 #e5e9f0  nord6 #eceff4
+     Frost:       nord7 #8fbcbb  nord8 #88c0d0  nord9 #81a1c1  nord10 #5e81ac
+     Aurora:      nord11 #bf616a nord12 #d08770 nord13 #ebcb8b nord14 #a3be8c */
+  --window-bg-color: #2e3440;
+  --window-fg-color: #eceff4;
+  --view-bg-color: #2e3440;
+  --view-fg-color: #eceff4;
+  --headerbar-bg-color: #3b4252;
+  --headerbar-fg-color: #eceff4;
+  --sidebar-bg-color: #3b4252;
+  --sidebar-fg-color: #e5e9f0;
+  --secondary-sidebar-bg-color: #3b4252;
+  --secondary-sidebar-fg-color: #e5e9f0;
+  --card-bg-color: #3b4252;
+  --card-fg-color: #eceff4;
+  --popover-bg-color: #3b4252;
+  --popover-fg-color: #eceff4;
+  --dialog-bg-color: #3b4252;
+  --dialog-fg-color: #eceff4;
+  --overview-bg-color: #2e3440;
+  --overview-fg-color: #eceff4;
+  --thumbnail-bg-color: #434c5e;
+  --thumbnail-fg-color: #eceff4;
+  --accent-bg-color: #5e81ac;
+  --accent-fg-color: #eceff4;
+  --accent-color: #88c0d0;
+  --active-toggle-bg-color: #4c566a;
+  --active-toggle-fg-color: #eceff4;
+  --destructive-bg-color: #bf616a;
+  --destructive-fg-color: #eceff4;
+  --error-bg-color: #bf616a;
+  --error-fg-color: #eceff4;
+  --success-bg-color: #a3be8c;
+  --success-fg-color: #2e3440;
+  --warning-bg-color: #ebcb8b;
+  --warning-fg-color: #2e3440;
+  --shade-color: rgba(0, 0, 0, 0.25);
+
+  /* slightly larger text than the system default (11.25pt) */
   font-size: 12pt;
 }

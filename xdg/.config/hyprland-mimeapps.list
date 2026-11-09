@@ -1,0 +1,71 @@
+# Default apps for this desktop (XDG_CURRENT_DESKTOP=Hyprland reads
+# hyprland-mimeapps.list BEFORE mimeapps.list). Kept separate on purpose: apps
+# rewrite ~/.config/mimeapps.list when you pick a default, which would replace
+# a stowed symlink. To change a default, edit this file (or ask Claude).
+# msteams:/discord: handlers are added in build step 17.
+[Default Applications]
+# org.pwmt.zathura.desktop
+application/pdf=org.pwmt.zathura.desktop
+application/epub+zip=org.pwmt.zathura.desktop
+# mpv.desktop
+video/mp4=mpv.desktop
+video/x-matroska=mpv.desktop
+video/webm=mpv.desktop
+video/quicktime=mpv.desktop
+video/x-msvideo=mpv.desktop
+video/mpeg=mpv.desktop
+video/ogg=mpv.desktop
+video/x-flv=mpv.desktop
+video/3gpp=mpv.desktop
+audio/mpeg=mpv.desktop
+audio/flac=mpv.desktop
+audio/ogg=mpv.desktop
+audio/x-wav=mpv.desktop
+audio/wav=mpv.desktop
+audio/mp4=mpv.desktop
+audio/aac=mpv.desktop
+audio/opus=mpv.desktop
+audio/webm=mpv.desktop
+audio/x-m4a=mpv.desktop
+# org.gnome.Loupe.desktop
+image/png=org.gnome.Loupe.desktop
+image/jpeg=org.gnome.Loupe.desktop
+image/gif=org.gnome.Loupe.desktop
+image/webp=org.gnome.Loupe.desktop
+image/bmp=org.gnome.Loupe.desktop
+image/tiff=org.gnome.Loupe.desktop
+image/svg+xml=org.gnome.Loupe.desktop
+image/avif=org.gnome.Loupe.desktop
+image/heic=org.gnome.Loupe.desktop
+image/x-icon=org.gnome.Loupe.desktop
+# nvim-kitty.desktop
+text/plain=nvim-kitty.desktop
+text/markdown=nvim-kitty.desktop
+text/x-shellscript=nvim-kitty.desktop
+application/x-shellscript=nvim-kitty.desktop
+text/x-python=nvim-kitty.desktop
+application/json=nvim-kitty.desktop
+application/toml=nvim-kitty.desktop
+application/x-yaml=nvim-kitty.desktop
+text/x-c=nvim-kitty.desktop
+text/x-c++=nvim-kitty.desktop
+text/x-lua=nvim-kitty.desktop
+text/x-tex=nvim-kitty.desktop
+text/csv=nvim-kitty.desktop
+# zen.desktop
+x-scheme-handler/http=zen.desktop
+x-scheme-handler/https=zen.desktop
+text/html=zen.desktop
+application/xhtml+xml=zen.desktop
+# org.gnome.Nautilus.desktop
+inode/directory=org.gnome.Nautilus.desktop
+# org.gnome.FileRoller.desktop
+application/zip=org.gnome.FileRoller.desktop
+application/x-tar=org.gnome.FileRoller.desktop
+application/x-compressed-tar=org.gnome.FileRoller.desktop
+application/x-xz-compressed-tar=org.gnome.FileRoller.desktop
+application/zstd=org.gnome.FileRoller.desktop
+application/x-zstd-compressed-tar=org.gnome.FileRoller.desktop
+application/x-7z-compressed=org.gnome.FileRoller.desktop
+application/vnd.rar=org.gnome.FileRoller.desktop
+application/gzip=org.gnome.FileRoller.desktop

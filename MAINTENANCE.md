@@ -20,7 +20,7 @@ Contents:
 
 ## 1. Snapshot
 
-Recorded 2026-11-09 (build steps 1–15 done).
+Recorded 2026-11-09 (build steps 1–16 done).
 
 | Component | Version |
 |-----------|---------|
@@ -304,6 +304,20 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   silently empties a `reduce`; use `[ … | capture(…) ] | .[0]`.
 - Markdown: backticks inside inline code need a double-backtick span.
 
+- Nautilus is Nord via libadwaita CSS *variables* scoped to `.nautilus-window`
+  in `gtk/.config/gtk-4.0/gtk.css` (libadwaita ≥ 1.6); other GTK4 apps follow
+  the theme. Dialogs opened as separate windows (Properties) stay Adwaita.
+- Default apps live in `xdg/.config/hyprland-mimeapps.list` (read before
+  `mimeapps.list` because XDG_CURRENT_DESKTOP=Hyprland). Apps rewrite
+  `~/.config/mimeapps.list` and would break a stowed symlink, so that file stays
+  user-owned. Check with `gio mime <type>`.
+- Qt: qt5ct/qt6ct, Fusion + generated `qt/.config/qt*ct/colors/rice.conf`;
+  `theme/qt.sh` writes `qt*ct.conf` (absolute path → not committed) on install
+  and every theme switch. Kvantum Manager always draws in Kvantum's own style,
+  so it's useless for checking the palette; use `qt6ct`.
+- Hyprland reuses window addresses right away: when testing windows, wait for
+  the old one to disappear before diffing addresses for the next one.
+
 ### 4.8 qylock
 
 - Pinned at c2933f2 in `~/.local/src/qylock` (GPL-3.0, not copied into this
@@ -331,6 +345,9 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Wallpapers never created | default palette gradient only if folder empty | no blank screen on fresh install |
 | Logout | `hyprshutdown` if installed | graceful app shutdown |
 | Music title truncation | soft fade, 420 px | user request |
+| Nord GTK3 theme (e.g. Nordic) | not installed; Nautilus (GTK4) is Nord via scoped CSS, GTK3 dialogs follow the theme's Adwaita dark/light | Nordic AUR last updated 2022; a global GTK3 theme would fight the theme switcher |
+| Qt via Kvantum | qt5ct/qt6ct Fusion + generated palette (Kvantum installed, unused) | follows theme switches; Kvantum needs SVG themes per palette |
+| Default apps in `mimeapps.list` | `hyprland-mimeapps.list` | apps rewrite mimeapps.list (breaks stow) |
 
 ---
 
@@ -343,7 +360,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - Tearing (`immediate`) for games is set but unverified with iGPU-scanout (step 19).
 - Step 14 needs the user's qylock/SDDM runs + reboot before lock/SDDM/suspend
   are verified.
-- Remaining build steps: 16–21 (Nautilus/GDrive/GTK/Qt, apps,
+- Remaining build steps: 17–21 (apps,
   Neovim, gaming, maintenance tooling/update.sh, README + license).
 
 ---
@@ -385,6 +402,10 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-09** — Step 16: Nautilus Nord (scoped libadwaita variables),
+  Open in Terminal → kitty, Google Drive (rclone unit + sidebar bookmark),
+  Qt palette (qt5ct/qt6ct), default apps (hyprland-mimeapps.list), APPS.md,
+  ROOT-STEPS §11. Nord GTK3 theme skipped (see §5).
 - **2026-11-09** — Nautilus sidebar had no Documents/Music/Pictures/Videos/
   Downloads. Cause: `~/.config/gtk-3.0/bookmarks` never created (GNOME's
   autostart for `xdg-user-dirs-gtk-update` doesn't run under Hyprland). Fix:

@@ -1,0 +1,11 @@
+[Desktop Entry]
+# Opens text files in Neovim inside kitty (default app for text, see
+# xdg/.config/hyprland-mimeapps.list). Hidden from the launcher.
+Type=Application
+Name=Neovim (kitty)
+Comment=Edit text files in Neovim
+Exec=kitty -e nvim %F
+Icon=nvim
+Terminal=false
+NoDisplay=true
+MimeType=text/plain;text/markdown;text/x-shellscript;application/x-shellscript;text/x-python;application/json;application/toml;application/x-yaml;text/x-c;text/x-c++;text/x-lua;text/x-tex;text/csv;

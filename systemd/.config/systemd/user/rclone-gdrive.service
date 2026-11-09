@@ -1,0 +1,28 @@
+# Google Drive at ~/GoogleDrive via rclone (remote "gdrive", set up once with
+# `rclone config`; its token lives in ~/.config/rclone/rclone.conf, never in this
+# repo). Full VFS cache so apps can open and save files normally.
+# Enable (no sudo):  systemctl --user enable --now rclone-gdrive.service
+# Status:            systemctl --user status rclone-gdrive   ·   ls ~/GoogleDrive
+[Unit]
+Description=Google Drive (rclone mount at ~/GoogleDrive)
+Documentation=man:rclone(1)
+After=default.target
+
+[Service]
+Type=notify
+ExecStartPre=/usr/bin/mkdir -p %h/GoogleDrive %h/.cache/rclone
+ExecStart=/usr/bin/rclone mount gdrive: %h/GoogleDrive \
+    --vfs-cache-mode full \
+    --vfs-cache-max-size 10G \
+    --vfs-cache-max-age 72h \
+    --dir-cache-time 30m \
+    --poll-interval 1m \
+    --cache-dir %h/.cache/rclone \
+    --log-level NOTICE
+# Clean unmount on logout / stop (lazy, so an open file doesn't block it)
+ExecStop=/usr/bin/fusermount3 -uz %h/GoogleDrive
+Restart=on-failure
+RestartSec=15
+
+[Install]
+WantedBy=default.target
