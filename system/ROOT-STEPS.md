@@ -9,6 +9,17 @@ Conventions:
 - **Undo** lines reverse the block directly above them.
 - Sections marked *(later)* belong to a later build step. Skip them until that step.
 
+**Scripts:** the same commands as scripts in `system/root-steps/`, one per stretch
+between reboots. Each calls `sudo` itself, skips what's already done, and is safe
+to re-run. The sections below explain what each command does and how to undo it.
+
+| Run | Covers | When |
+|-----|--------|------|
+| `bash system/root-steps/1-snapshots.sh` | 1.1–1.4 | any time |
+| `bash system/root-steps/1.5-home-subvolumes.sh` | 1.5 | from a TTY, desktop logged out (no sudo) |
+| `bash system/root-steps/2-nvidia.sh` | 2.1–2.2 | then **reboot** |
+| `bash system/root-steps/3-system.sh` | 2.3 checks, 3, 4, 5, 6, 7 | after that reboot, inside the desktop |
+
 System facts these steps rely on (checked 2026-11-09): Arch, kernel `linux` 7.2,
 **btrfs** root (`@`, `@home`, `@pkg`, `@log`, mounted with `subvol=` in fstab and the
 kernel cmdline), **systemd-boot** booting a UKI (`/boot/EFI/Linux/arch-linux.efi`),
@@ -33,9 +44,6 @@ sudo snapper -c root create-config /
 Creates `/etc/snapper/configs/root` and a `/.snapshots` subvolume nested inside `@`.
 
 ### 1.2 Move snapshots to their own top-level subvolume `@snapshots`
-
-**Script version** (if pasting is awkward): `bash system/root-steps/1-snapshots.sh` runs 1.1–1.4;
-`bash system/root-steps/1.5-home-subvolumes.sh` runs 1.5 (from a TTY, desktop logged out).
 
 A rollback replaces `@`. If the snapshots lived inside `@` they'd be swapped out with
 it, so they get their own subvolume next to `@` (standard Arch wiki layout).
@@ -234,6 +242,9 @@ Undo: `sudo mv /etc/pacman.conf.bak /etc/pacman.conf && sudo pacman -Syu`
 Runs `sudo pacman -S --needed` on `packages/pacman.txt`, then `yay -S --needed` on the
 uncommented lines of `packages/aur.txt`. Each AUR package's PKGBUILD summary is in
 that file. yay will show you the PKGBUILD diff; read it.
+**This machine has `pulseaudio` and `jack2` installed.** pacman will say they conflict
+with `pipewire-pulse` / `pipewire-jack` and ask to remove them: answer **y**. The
+default (N) cancels the whole install.
 Then the user-level part (no sudo): `./install.sh`.
 Undo: remove what you don't want with `sudo pacman -Rns <pkg>`.
 
