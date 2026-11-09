@@ -13,6 +13,10 @@ nautilus-open-any-terminal   # [b4bcde8] upstream tag tarball, `make install`; N
 papirus-folders              # [db13c53] signed upstream git tag; ships a pacman hook that re-applies your folder color after papirus updates
 bibata-cursor-theme-bin      # [5d418e2] upstream release tarball -> /usr/share/icons
 protonup-qt                  # [bf73d8f] builds the upstream Python release; installs GE-Proton for Steam
+#   pulled in automatically as protonup-qt dependencies (not in official repos), reviewed 2026-11-09:
+#   python-steam [bfda7b1], python-inputs [816fe50], python-gevent-eventemitter [8e97ec7]
+#   -> plain Python library builds from upstream GitHub tags (python-steam also applies an
+#      upstream PR patch, checksummed); no .install scripts. Same AUR maintainer as protonup-qt.
 
 ## Pending review in later steps (left commented on purpose)
 # teams-for-linux            # step 17: read PKGBUILD first
