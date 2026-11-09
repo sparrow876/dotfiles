@@ -392,3 +392,15 @@ The `papirus-folders` package re-applies the color after every Papirus update
 each should see the other. If not, `sudo ufw status` must list 53317/tcp and
 53317/udp ALLOW IN from your current subnet (§7).
 
+---
+
+## 12. Work and chat apps (build step 17)
+
+```sh
+yay -S --needed teams-for-linux-bin vesktop-bin claude-desktop
+```
+PKGBUILD reviews are in `packages/aur.txt`; app notes in `system/APPS.md`.
+`claude-desktop` pulls QEMU + OVMF (for its Cowork VM). Outlook needs nothing
+extra (Chromium is already installed).
+Undo: `yay -Rns teams-for-linux-bin vesktop-bin claude-desktop`.
+

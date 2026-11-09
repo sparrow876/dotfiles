@@ -90,11 +90,25 @@ Singleton {
         hidePopup(notification)
         notification.dismiss()
     }
-    // Click on a notification: run its default action (usually "focus the app")
+    // Click on a notification: run its default action, then bring the app's
+    // window forward ourselves (apps can't raise themselves: focus stealing is
+    // off, misc.focus_on_activate = false). Matches the notification's
+    // desktop-entry / app name against open windows' app ids.
     function activate(notification) {
         const def = notification.actions.find(a => a.identifier === "default")
         if (def) def.invoke()
+        focusApp(notification)
         hidePopup(notification)
+    }
+    function focusApp(notification) {
+        const keys = [notification.desktopEntry, notification.appName]
+            .filter(k => k).map(k => k.toLowerCase().replace(/\.desktop$/, ""))
+        if (keys.length === 0) return false
+        const wins = ToplevelManager.toplevels.values
+        const match = wins.find(t => keys.includes((t.appId || "").toLowerCase()))
+                   ?? wins.find(t => keys.some(k => k.length > 2 && (t.appId || "").toLowerCase().includes(k)))
+        if (match) { match.activate(); return true }
+        return false
     }
     function clearAll() {
         for (const n of server.trackedNotifications.values.slice()) n.dismiss()
@@ -152,6 +166,13 @@ Singleton {
     IpcHandler {
         target: "notifications"
         function dnd(): void { root.dnd = !root.dnd }
+        // testing: act as if the newest notification was clicked
+        function clickLatest(): string {
+            const n = root.history[0]
+            if (!n) return "no notifications"
+            const focused = root.focusApp(n)
+            return `${n.appName}: ${focused ? "focused its window" : "no matching window"}`
+        }
         function status(): string { return `dnd=${root.dnd} game=${root.gameFullscreen} unread=${root.unread} history=${root.history.length}` }
         function clear(): void { root.clearAll() }
     }

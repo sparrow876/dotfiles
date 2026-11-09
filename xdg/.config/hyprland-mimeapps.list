@@ -2,7 +2,6 @@
 # hyprland-mimeapps.list BEFORE mimeapps.list). Kept separate on purpose: apps
 # rewrite ~/.config/mimeapps.list when you pick a default, which would replace
 # a stowed symlink. To change a default, edit this file (or ask Claude).
-# msteams:/discord: handlers are added in build step 17.
 [Default Applications]
 # org.pwmt.zathura.desktop
 application/pdf=org.pwmt.zathura.desktop
@@ -69,3 +68,6 @@ application/x-zstd-compressed-tar=org.gnome.FileRoller.desktop
 application/x-7z-compressed=org.gnome.FileRoller.desktop
 application/vnd.rar=org.gnome.FileRoller.desktop
 application/gzip=org.gnome.FileRoller.desktop
+# Teams links (msteams:) -> teams-for-linux, Discord links -> Vesktop
+x-scheme-handler/msteams=teams-for-linux.desktop
+x-scheme-handler/discord=vesktop.desktop

@@ -1,0 +1,65 @@
+/**
+ * @name Rice (Blue Ice)
+ * @author dotfiles (theme/render.sh)
+ * @description Desktop palette for Discord. GENERATED from the active theme; edit theme/templates/vesktop/.config/vesktop/themes/rice.theme.css.tmpl. Enable once: Vesktop Settings > Vencord > Themes > rice.
+ * @version 1.0.0
+ */
+
+/* Discord's 2025 "visual refresh" variables + the older names, so both work */
+:root, .theme-dark, .theme-darker, .theme-midnight, .theme-light, .visual-refresh {
+  /* backgrounds: server list < channel list < chat < popouts */
+  --background-base-lowest: #0d1b2a;
+  --background-base-lower: #0d1b2a;
+  --background-base-low: #1b263b;
+  --background-surface-high: #2b3a55;
+  --background-surface-higher: #2b3a55;
+  --background-surface-highest: #2b3a55;
+  --chat-background-default: #1b263b;
+  --modal-background: #1b263b;
+  --input-background: #2b3a55;
+  --background-tertiary: #0d1b2a;
+  --background-secondary: #0d1b2a;
+  --background-secondary-alt: #0d1b2a;
+  --background-primary: #1b263b;
+  --background-floating: #2b3a55;
+  --channeltextarea-background: #2b3a55;
+  --background-mod-subtle: rgba(43, 58, 85, 0.45);
+  --background-mod-normal: rgba(43, 58, 85, 0.7);
+  --background-mod-strong: #2b3a55;
+  --background-modifier-hover: rgba(43, 58, 85, 0.45);
+  --background-modifier-active: rgba(43, 58, 85, 0.7);
+  --background-modifier-selected: rgba(127, 179, 255, 0.18);
+
+  /* text */
+  --text-default: #f4f8ff;
+  --text-normal: #f4f8ff;
+  --text-strong: #f4f8ff;
+  --text-muted: #9fb3c8;
+  --text-link: #7fb3ff;
+  --header-primary: #f4f8ff;
+  --header-secondary: #9fb3c8;
+  --channels-default: #9fb3c8;
+  --interactive-normal: #9fb3c8;
+  --interactive-muted: rgba(159, 179, 200, 0.5);
+  --interactive-hover: #f4f8ff;
+  --interactive-active: #f4f8ff;
+
+  /* accent */
+  --brand-500: #7fb3ff;
+  --brand-560: #7fb3ff;
+  --brand-experiment: #7fb3ff;
+  --control-brand-foreground: #7fb3ff;
+  --control-brand-foreground-new: #7fb3ff;
+  --text-brand: #7fb3ff;
+  --status-danger: #ef6f7a;
+  --status-warning: #f2c66d;
+  --status-positive: #93d8b4;
+
+  /* lines */
+  --border-subtle: rgba(207, 232, 255, 0.08);
+  --border-normal: rgba(207, 232, 255, 0.12);
+  --border-strong: rgba(207, 232, 255, 0.2);
+
+  --font-primary: "Noto Sans", sans-serif;
+  --font-code: "JetBrainsMono Nerd Font", monospace;
+}

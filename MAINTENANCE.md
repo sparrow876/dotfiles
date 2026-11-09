@@ -20,7 +20,7 @@ Contents:
 
 ## 1. Snapshot
 
-Recorded 2026-11-09 (build steps 1–16 done).
+Recorded 2026-11-09 (build steps 1–17 done).
 
 | Component | Version |
 |-----------|---------|
@@ -103,7 +103,7 @@ AUR helper: **yay** (not paru).
 | `idle` | `toggle`, `status` | ALT+I (coffee cup) |
 | `idlescreen` | `enter`, `leave` | hypridle via `scripts/idle-dim.sh` |
 | `cheatsheet` | `toggle` | ALT+/ |
-| `notifications` | `dnd`, `clear`, `status` | — |
+| `notifications` | `dnd`, `clear`, `status`, `clickLatest` | — |
 | `recorder` | `toggleFull`, `toggleRegion`, `replay`, `toggleReplay`, `toggleMic`, `status` | ALT+R, ALT+Shift+R, ALT+Ctrl+R, ALT+Ctrl+Shift+R |
 | `audio` | `devices` | debugging |
 
@@ -318,6 +318,20 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - Hyprland reuses window addresses right away: when testing windows, wait for
   the old one to disappear before diffing addresses for the next one.
 
+- Chromium **ignores `--class` on Wayland**: an `--app=` window's class is
+  `chrome-<host+path, / -> _>-<profile>` (Outlook: `chrome-outlook.office.com__mail_-Default`).
+  Changing the URL or profile changes the class (update rules + StartupWMClass).
+- `.desktop` Exec quoting: only double quotes; `$`, `"` inside need `\\$`,
+  `\\"`. Check with `desktop-file-validate`.
+- Notification click → focus: apps can't raise themselves
+  (`focus_on_activate = false`), so `Notifications.focusApp()` matches
+  `desktop-entry`/app name to a Wayland toplevel `appId` and calls
+  `Toplevel.activate()` (switches workspace too). Test:
+  `qs ipc call notifications clickLatest`.
+- `install.sh` stow backups: dirs in `NO_FOLD_DIRS` are treated as shared
+  (per-file backup), otherwise generated real files (qt*ct.conf) made it move
+  the whole dir.
+
 ### 4.8 qylock
 
 - Pinned at c2933f2 in `~/.local/src/qylock` (GPL-3.0, not copied into this
@@ -360,7 +374,9 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - Tearing (`immediate`) for games is set but unverified with iGPU-scanout (step 19).
 - Step 14 needs the user's qylock/SDDM runs + reboot before lock/SDDM/suspend
   are verified.
-- Remaining build steps: 17–21 (apps,
+- Step 17 apps need the user's `yay` install + tests (call pop-out titles to
+  confirm for the `call-popouts` rule; Vesktop theme to check visually).
+- Remaining build steps: 18–21 (
   Neovim, gaming, maintenance tooling/update.sh, README + license).
 
 ---
@@ -402,6 +418,10 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-09** — Step 17: Outlook web app, teams-for-linux-bin, vesktop-bin
+  (palette theme), claude-desktop (PKGBUILDs reviewed); msteams:/discord:
+  handlers; call pop-out rule; notification click focuses the app.
+  install.sh fix: no-fold dirs get per-file backups only.
 - **2026-11-09** — Step 16: Nautilus Nord (scoped libadwaita variables),
   Open in Terminal → kitty, Google Drive (rclone unit + sidebar bookmark),
   Qt palette (qt5ct/qt6ct), default apps (hyprland-mimeapps.list), APPS.md,

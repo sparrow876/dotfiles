@@ -1,0 +1,65 @@
+/**
+ * @name Rice ({{name}})
+ * @author dotfiles (theme/render.sh)
+ * @description Desktop palette for Discord. GENERATED from the active theme; edit theme/templates/vesktop/.config/vesktop/themes/rice.theme.css.tmpl. Enable once: Vesktop Settings > Vencord > Themes > rice.
+ * @version 1.0.0
+ */
+
+/* Discord's 2025 "visual refresh" variables + the older names, so both work */
+:root, .theme-dark, .theme-darker, .theme-midnight, .theme-light, .visual-refresh {
+  /* backgrounds: server list < channel list < chat < popouts */
+  --background-base-lowest: {{base}};
+  --background-base-lower: {{base}};
+  --background-base-low: {{surface}};
+  --background-surface-high: {{overlay}};
+  --background-surface-higher: {{overlay}};
+  --background-surface-highest: {{overlay}};
+  --chat-background-default: {{surface}};
+  --modal-background: {{surface}};
+  --input-background: {{overlay}};
+  --background-tertiary: {{base}};
+  --background-secondary: {{base}};
+  --background-secondary-alt: {{base}};
+  --background-primary: {{surface}};
+  --background-floating: {{overlay}};
+  --channeltextarea-background: {{overlay}};
+  --background-mod-subtle: rgba({{overlay.rgb}}, 0.45);
+  --background-mod-normal: rgba({{overlay.rgb}}, 0.7);
+  --background-mod-strong: {{overlay}};
+  --background-modifier-hover: rgba({{overlay.rgb}}, 0.45);
+  --background-modifier-active: rgba({{overlay.rgb}}, 0.7);
+  --background-modifier-selected: rgba({{lightblue.rgb}}, 0.18);
+
+  /* text */
+  --text-default: {{text}};
+  --text-normal: {{text}};
+  --text-strong: {{text}};
+  --text-muted: {{muted}};
+  --text-link: {{lightblue}};
+  --header-primary: {{text}};
+  --header-secondary: {{muted}};
+  --channels-default: {{muted}};
+  --interactive-normal: {{muted}};
+  --interactive-muted: rgba({{muted.rgb}}, 0.5);
+  --interactive-hover: {{text}};
+  --interactive-active: {{text}};
+
+  /* accent */
+  --brand-500: {{lightblue}};
+  --brand-560: {{lightblue}};
+  --brand-experiment: {{lightblue}};
+  --control-brand-foreground: {{lightblue}};
+  --control-brand-foreground-new: {{lightblue}};
+  --text-brand: {{lightblue}};
+  --status-danger: {{critical}};
+  --status-warning: {{warn}};
+  --status-positive: {{green}};
+
+  /* lines */
+  --border-subtle: rgba({{ice.rgb}}, 0.08);
+  --border-normal: rgba({{ice.rgb}}, 0.12);
+  --border-strong: rgba({{ice.rgb}}, 0.2);
+
+  --font-primary: "Noto Sans", sans-serif;
+  --font-code: "{{font_ui}}", monospace;
+}

@@ -89,6 +89,22 @@ hl.window_rule({
 })
 
 -- ---------------------------------------------------------------------------
+-- Work & chat apps (Teams, Vesktop/Discord, Outlook, Claude)
+-- No focus stealing: misc.focus_on_activate = false (look.lua) already stops
+-- their notifications from raising/switching windows; clicking a notification
+-- focuses the app on purpose (services/Notifications.qml).
+-- Call pop-outs / mini windows: small, pinned, bottom-right like PiP.
+-- (Title patterns to confirm while testing calls; see system/APPS.md.)
+hl.window_rule({
+    name  = "call-popouts",
+    match = { class = "^(teams-for-linux|vesktop)$", title = "(?i)^(.*pop-?out.*|.*mini.?view.*|picture.in.picture)$" },
+    float = true,
+    pin   = true,
+    size  = { "monitor_w*0.25", "monitor_h*0.25" },
+    move  = { "monitor_w-window_w-24", "monitor_h-window_h-24" },
+})
+
+-- ---------------------------------------------------------------------------
 -- Layers
 -- Quickshell surfaces animate themselves and get frosted-glass blur.
 -- Every Quickshell window in this repo uses a namespace starting with "quickshell".

@@ -34,7 +34,8 @@ STOW_PACKAGES=(
   rofi        # step 11
   qt          # step 16: Qt color files (qt*ct.conf written by theme/qt.sh)
   xdg         # step 16: default apps (hyprland-mimeapps.list)
-  applications  # step 16: nvim-kitty.desktop (and web apps in step 17)
+  applications  # step 16: nvim-kitty.desktop, step 17: Outlook web app
+  vesktop     # step 17: palette theme for Discord (Vencord themes folder)
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.
@@ -55,7 +56,8 @@ SHARED_DIRS=(".config/systemd" ".config/environment.d" ".local" ".config/autosta
 # instead of symlinking the whole folder), because apps write their own files
 # there that must never end up in the repo (e.g. Nautilus bookmarks).
 NO_FOLD_DIRS=(".config/gtk-3.0" ".config/gtk-4.0" ".config/systemd/user" ".config/environment.d" ".local/share/applications"
-              ".config/qt5ct" ".config/qt6ct" ".config/qt5ct/colors" ".config/qt6ct/colors")
+              ".config/qt5ct" ".config/qt6ct" ".config/qt5ct/colors" ".config/qt6ct/colors"
+              ".config/vesktop" ".config/vesktop/themes")
 # ---------------------------------------------------------------------------
 
 c_blue=$'\e[38;2;127;179;255m'; c_warn=$'\e[38;2;242;198;109m'; c_err=$'\e[38;2;239;111;122m'; c_off=$'\e[0m'
@@ -158,9 +160,11 @@ step_qt() {
   "$REPO/theme/qt.sh" >/dev/null
 }
 
+# Shared = never move the whole directory. All no-fold dirs count too: apps or
+# our own scripts write real files there (qt*ct.conf, vesktop settings, ...).
 is_shared() {
   local p
-  for p in "${SHARED_DIRS[@]}"; do [[ $1 == "$p" || $1 == "$p"/* ]] && return 0; done
+  for p in "${SHARED_DIRS[@]}" "${NO_FOLD_DIRS[@]}"; do [[ $1 == "$p" || $1 == "$p"/* ]] && return 0; done
   return 1
 }
 

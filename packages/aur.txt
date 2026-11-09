@@ -18,9 +18,12 @@ protonup-qt                  # [bf73d8f] builds the upstream Python release; ins
 #   -> plain Python library builds from upstream GitHub tags (python-steam also applies an
 #      upstream PR patch, checksummed); no .install scripts. Same AUR maintainer as protonup-qt.
 
+
+## Work and chat apps (step 17), reviewed 2026-11-09
+teams-for-linux-bin          # [3bea043] upstream release .deb from github.com/IsmaelMartinez/teams-for-linux (unofficial Teams client); unpacks /opt + /usr only
+vesktop-bin                  # [eac51f5] maintained by Vesktop's author; official release tarball from github.com/Vencord/Vesktop -> /opt/vesktop; launcher reads ~/.config/*-flags.conf
+claude-desktop               # [c913337] Anthropic's OFFICIAL .deb from downloads.claude.ai (sha256-pinned), payload only (no Debian scripts); Wayland launcher; chrome-sandbox setuid like every Chromium app; pulls qemu-system-x86 + edk2-ovmf for the Cowork VM
+
 ## Pending review in later steps (left commented on purpose)
-# teams-for-linux            # step 17: read PKGBUILD first
-# claude-desktop             # step 17: confirm it repackages Anthropic's official .deb
-# vesktop-bin                # step 17: only if you pick Vesktop over official Discord
 # game-devices-udev          # step 19: only if Steam doesn't see the 8BitDo controller
 # nordic-theme               # step 16: Nord GTK3 theme (last updated 2022; may pick another)

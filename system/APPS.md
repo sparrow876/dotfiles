@@ -1,6 +1,72 @@
 # Apps: install notes, sign-in, limitations
 
-Work and chat apps (Outlook, Teams, Discord, Claude) are added in build step 17.
+Install the chat apps (AUR, PKGBUILDs reviewed; notes in `packages/aur.txt`):
+```sh
+yay -S --needed teams-for-linux-bin vesktop-bin claude-desktop
+```
+None of them autostart. All of them: native Wayland (sharp text), tray icon,
+notifications through the bar's notification server, screen sharing through
+the Wayland portal (xdg-desktop-portal-hyprland: you pick a screen or window in
+the share dialog), mic + camera through PipeWire.
+Clicking one of their notifications brings the app forward; they can't steal
+focus or switch your workspace by themselves.
+
+## Microsoft Outlook (web app)
+
+No Linux app exists, so **Outlook** in the launcher is Outlook on the web in its
+own Chromium window (own profile in `~/.local/share/webapps/outlook`, separate
+from Zen). Sign in once; it stays signed in.
+- Dark mode: Outlook → Settings → General → Appearance → Dark (Chromium also
+  asks sites for dark mode).
+- Notifications: allow them when Outlook asks (or the padlock → Notifications).
+- Window class `chrome-outlook.office.com__mail_-Default` (Hyprland rules).
+
+## Microsoft Teams (teams-for-linux)
+
+Microsoft retired its Linux client; **teams-for-linux** is an unofficial
+wrapper around Teams on the web.
+- Sign in with your work/school account. Some organizations block unmanaged
+  devices or "unsupported clients"; if sign-in is refused, use Teams on the web
+  in a Chromium app window instead:
+  `chromium --user-data-dir="$HOME/.local/share/webapps/teams" --app=https://teams.microsoft.com`
+- Closing the window keeps it in the tray (it keeps notifying); quit from the
+  tray icon.
+- Screen sharing: Share → pick a screen/window in the portal dialog.
+- Settings file: `~/.config/teams-for-linux/config.json` (app-owned, not in
+  this repo).
+- `msteams:` links open it.
+
+## Discord (Vesktop)
+
+**Vesktop** is a third-party Discord client (Vencord built in) with better
+Wayland screen sharing **including audio**. Discord's terms technically don't
+allow third-party clients (you chose it knowing that).
+- Palette theme: Settings → Vencord → **Themes** → enable **rice** (once). It
+  follows ALT + T theme switches (the file is regenerated).
+- Closing the window minimizes to the tray (Settings → Vesktop → "Minimize to
+  tray" if you want to change it).
+- Screen share with audio: in the share dialog pick the window/screen and the
+  audio source.
+- `discord:` links open it.
+
+## Claude (desktop)
+
+`claude-desktop` repackages **Anthropic's official .deb** (downloaded from
+downloads.claude.ai, checksum-pinned). It also installs QEMU + OVMF (a few
+hundred MB) for the app's "Cowork" feature, which runs tasks in a small VM.
+- Extra launch flags: `~/.config/claude-desktop-flags.conf`.
+- Sign-in data stays in `~/.config/Claude` (app-owned, never in this repo).
+
+## Testing checklist (step 17)
+
+1. Launch each from ALT + D: correct icon in the launcher, sharp text.
+2. Tray icon appears (Teams, Vesktop, Claude); right-click opens the themed menu.
+3. Send yourself a message: the notification shows top-right; clicking it
+   focuses the app (even from another workspace).
+4. Calls (Teams + Vesktop): mic, camera, screen share (a window and the whole
+   screen; Vesktop with audio). If a call opens a small pop-out window, tell
+   Claude its title so the "call-popouts" rule (float, pin, bottom-right) can
+   match it exactly.
 
 ## Google Drive (rclone)
 
