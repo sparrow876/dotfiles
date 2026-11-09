@@ -30,6 +30,7 @@ STOW_PACKAGES=(
   bat
   quickshell  # step 4
   gtk         # step 5 (Nautilus text size; Nord theme in step 16)
+  systemd     # user environment (GSK_RENDERER), user units later
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.
@@ -49,7 +50,7 @@ SHARED_DIRS=(".config/systemd" ".config/environment.d" ".local" ".config/autosta
 # Directories that must stay real directories (stow links the files inside
 # instead of symlinking the whole folder), because apps write their own files
 # there that must never end up in the repo (e.g. Nautilus bookmarks).
-NO_FOLD_DIRS=(".config/gtk-3.0" ".config/gtk-4.0" ".config/systemd/user" ".local/share/applications")
+NO_FOLD_DIRS=(".config/gtk-3.0" ".config/gtk-4.0" ".config/systemd/user" ".config/environment.d" ".local/share/applications")
 # ---------------------------------------------------------------------------
 
 c_blue=$'\e[38;2;127;179;255m'; c_warn=$'\e[38;2;242;198;109m'; c_err=$'\e[38;2;239;111;122m'; c_off=$'\e[0m'
