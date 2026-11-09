@@ -20,14 +20,16 @@ Contents:
 
 ## 1. Snapshot
 
-Recorded 2026-11-09 (build steps 1–19 done; per-game setup waits for the games).
+Recorded 2026-11-09 (build steps 1–20 done; per-game setup waits for the games).
+BIOS F.28, Intel ME 16.1.32.2418, SSD (Micron MTFDKBA512TFH) firmware HPS0043.
+After an update, compare with `pacman -Q <pkg>` and update this table.
 
 | Component | Version |
 |-----------|---------|
 | Kernel | linux 7.2.14-arch1-1 |
 | Hyprland | 0.57.1 (Lua config) |
 | Quickshell | 0.3.2 |
-| NVIDIA | nvidia-open / nvidia-utils 615.78.08 |
+| NVIDIA | nvidia-open 615.78.08-4 / nvidia-utils 615.78.08-1 |
 | Mesa | 26.2.6 |
 | PipeWire / WirePlumber | 1.6.10 / 0.5.18 |
 | awww (ex-swww) | 0.12.1 |
@@ -89,7 +91,7 @@ AUR helper: **yay** (not paru).
 | `quickshell/…/notifications/` | popups + center |
 | `quickshell/…/components/` | StyledText, Icon, Glyphs (all glyphs), Tooltip, Toggle, Slider, IconButton, TextButton, Card, Spinner, Separator, LevelBar, Graph, RingGauge, WheelSteps (scroll → whole steps) |
 | `quickshell/…/{osd,panel,powermenu,wallpaper,idle,cheatsheet}/` | one overlay each |
-| `scripts/` | shell helpers (screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, wallpaper, record, notify-file, theme-picker, theme-colors.sh (generated)) |
+| `scripts/` | shell helpers (update, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, wallpaper, record, notify-file, theme-picker, theme-colors.sh (generated)) |
 | `theme/` | palettes, style, templates, `render.sh`, `apply.sh`, README |
 | `system/` | ROOT-STEPS.md, root-steps scripts, units (platform profile, paccache), etc (reflector.conf) |
 | `systemd/.config/environment.d/` | env for D-Bus/systemd-started apps (`GSK_RENDERER`) |
@@ -146,6 +148,40 @@ idle; `stop` on input. `inhibit_sleep = 3`: logind waits until the session is
 really locked before sleeping (hypridle's default only does that for hyprlock).
 Inhibited by: coffee cup (IdleInhibitor on the bar surface), fullscreen
 (`idle_inhibit = "fullscreen"` window rule), D-Bus/systemd inhibitors (calls).
+
+### 2.7 Updates, timers, firmware
+
+**`update`** (`scripts/update.sh`, alias in `zsh/.config/zsh/aliases.zsh`):
+Arch news since the last "full system upgrade" in pacman.log (python, RSS;
+STOPS with a y/N prompt if a manual-intervention item names an installed
+package or names none it can recognise) → `checkupdates` + `yay -Qua` with a
+watch list (kernel/NVIDIA/firmware/mesa/systemd = reboot; Hyprland/Quickshell/
+Qt/SDDM/audio = log out) → `yay -Syu` (snap-pac pre/post snapshots) → reboot /
+log-out hint, `Hyprland --verify-config` if Hyprland changed, the "pre"
+snapshot number → housekeeping: `pacdiff -o`, `pacman -Qdtq`, explicitly
+installed packages missing from `packages/{pacman,aur,base}.txt`, failed
+units, `fwupdmgr get-updates`. `update --check` = everything but the upgrade
+(safe for Claude to run). History: `~/.local/state/dotfiles/update.log`.
+`packages/base.txt` = archinstall/bootstrap packages (globs ok), only for that check.
+
+| Timer | Does | Set up in |
+|-------|------|-----------|
+| `snapper-timeline` / `snapper-cleanup` | hourly/daily home + root snapshots, pruned by limits | ROOT-STEPS §1 |
+| snap-pac (pacman hook, not a timer) | pre/post snapshot around every pacman transaction | ROOT-STEPS §1 |
+| `paccache.timer` | weekly, keeps the last 2 versions of each package | ROOT-STEPS §6 |
+| `reflector.timer` | weekly, 20 fastest HTTPS mirrors (IN, SG, BD) | ROOT-STEPS §6 |
+| `archlinux-keyring-wkd-sync.timer` | keyring refresh (Arch default) | — |
+| (no fstrim.timer) | not needed: btrfs mounts with `discard=async` | — |
+
+Check: `systemctl list-timers`. Firmware: fwupd sees BIOS, ME, SSD, Secure
+Boot DBs; `fwupdmgr refresh` is allowed without a password (polkit
+`refresh-remote`). HP publishes nothing for this model on LVFS so far (BIOS
+updates via HP's own updater).
+
+**After an update breaks something** (CLAUDE.md §30): `grep -E 'upgraded|installed'
+/var/log/pacman.log | tail -40`, `~/.local/state/dotfiles/update.log`,
+`snapper -c root list | tail` (the "pre" snapshot = before the update),
+Arch news, this file's §9. Rollback: ROOT-STEPS §1.6.
 
 ---
 
@@ -455,10 +491,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   are verified.
 - Step 17 apps need the user's `yay` install + tests (call pop-out titles to
   confirm for the `call-popouts` rule; Vesktop theme to check visually).
-- Remaining build steps: 20–21 (maintenance tooling/update.sh, README + license).
-- The deployed `/etc/xdg/reflector/reflector.conf` is still the old broken one
-  (journal: "unrecognized arguments: Lanka") until the user runs
-  `sudo install -Dm644 ~/dotfiles/system/etc/reflector.conf /etc/xdg/reflector/reflector.conf && sudo systemctl start reflector.service`.
+- Remaining build step: 21 (README + license).
 - Notification history is capped at 100 (oldest dropped).
 
 ---
@@ -500,6 +533,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-09** — Step 20: `scripts/update.sh` + `update` alias (news gate,
+  watch list, yay, post-checks, `--check`), §2.7 timers/firmware/diagnosis,
+  `packages/base.txt`; `btop` and `claude-code` (AUR, PKGBUILD reviewed) added
+  to the lists. reflector fix confirmed deployed (mirrorlist HTTPS IN/SG/BD).
+  Versions in §1 re-checked.
 
 - **2026-11-09** — Step 19 (general part; the user asked to leave per-game
   configs until the games are installed): MangoHud config (theme template,

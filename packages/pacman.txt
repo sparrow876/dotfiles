@@ -146,6 +146,7 @@ fd
 zoxide
 fastfetch
 lazygit
+btop                 # task manager in the terminal (you added it 2026-11-09)
 
 ## Neovim + LaTeX
 neovim

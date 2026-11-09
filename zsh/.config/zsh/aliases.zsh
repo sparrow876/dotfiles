@@ -18,3 +18,6 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias grep='grep --color=auto'
 alias dots='cd ~/dotfiles'
+
+# System update with Arch news, snapshots and checks (scripts/update.sh)
+alias update='~/dotfiles/scripts/update.sh'

@@ -286,7 +286,8 @@ HP doesn't always publish laptop BIOS updates to LVFS. If nothing shows up, chec
 support page for your model (their Windows-based updater or a BIOS USB flash).
 
 `pacdiff` (from pacman-contrib) merges `.pacnew` config files after updates:
-`sudo DIFFPROG='nvim -d' pacdiff`. `scripts/update.sh` (step 20) lists them for you.
+`sudo DIFFPROG='nvim -d' pacdiff`. The `update` command (scripts/update.sh) lists them,
+and checks firmware too.
 
 ---
 

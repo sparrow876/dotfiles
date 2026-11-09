@@ -120,6 +120,18 @@ terminal, Neovim's terminal or over SSH). Run `fastfetch` any time to see it aga
 | `lg` | `lazygit` |
 | `..` / `...` | go up one / two folders |
 | `dots` | `cd ~/dotfiles` |
+| `update` | update the whole system safely (below) |
+
+### `update`: keeping the system up to date
+
+Run `update` about once a week. It shows the Arch Linux news first and **stops
+if a news item needs a manual step for something you have** (ask Claude to
+explain it), lists what will change, then runs `yay -Syu` (confirm with Enter;
+a snapshot is taken automatically before and after). Afterwards it tells you
+whether to reboot or log out, and checks config files, unneeded packages,
+failed services and firmware.
+
+`update --check` does all of that except the upgrade itself (changes nothing).
 
 Git aliases from Oh My Zsh's git plugin, the most useful ones:
 

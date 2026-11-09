@@ -1,0 +1,24 @@
+# Packages that were on the system BEFORE this repo: installed by archinstall
+# (or bootstrapped by hand, like yay) and NOT installed by install.sh, because a
+# fresh Arch install already has them. Listed only so scripts/update.sh's check
+# "explicitly installed but not in packages/*.txt" doesn't flag them.
+# One per line; `#` starts a comment; shell globs allowed (xorg-*).
+
+base
+linux
+linux-firmware
+intel-ucode
+mkinitcpio
+efibootmgr
+sudo
+vim
+wpa_supplicant
+zram-generator
+power-profiles-daemon   # masked on purpose (ROOT-STEPS §3): the platform profile is pinned instead
+firefox
+ttf-dejavu
+ttf-liberation
+xf86-video-vesa
+xorg-*                  # archinstall's "xorg" group (Hyprland only needs xorg-xwayland, in pacman.txt)
+yay                     # AUR helper, bootstrapped by hand before install.sh (ROOT-STEPS §5)
+yay-debug

@@ -24,6 +24,9 @@ teams-for-linux-bin          # [3bea043] upstream release .deb from github.com/I
 vesktop-bin                  # [eac51f5] maintained by Vesktop's author; official release tarball from github.com/Vencord/Vesktop -> /opt/vesktop; launcher reads ~/.config/*-flags.conf
 claude-desktop               # [c913337] Anthropic's OFFICIAL .deb from downloads.claude.ai (sha256-pinned), payload only (no Debian scripts); Wayland launcher; chrome-sandbox setuid like every Chromium app; pulls qemu-system-x86 + edk2-ovmf for the Cowork VM
 
+## Maintenance (step 20), reviewed 2026-11-09
+claude-code                  # [ec02864] Anthropic's official claude binary from downloads.claude.ai (sha256-pinned) -> /opt/claude-code; /usr/bin/claude wrapper turns off its self-updater (pacman updates it); no .install script. Needed for TTY recovery (README)
+
 ## Pending review in later steps (left commented on purpose)
 # game-devices-udev          # step 19: only if Steam doesn't see the 8BitDo controller
 # nordic-theme               # step 16: Nord GTK3 theme (last updated 2022; may pick another)
