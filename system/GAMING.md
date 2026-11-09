@@ -26,9 +26,12 @@ The per-game sections at the end are filled in once each game is installed.
 ## 2. One-time Steam setup
 
 1. **ROOT-STEPS §13** (gamemode group), then log out and back in.
-2. Steam → **Settings → Compatibility** → turn on **Enable Steam Play for all
-   other titles**, and pick the newest **Proton** (not "Experimental") as the
-   default. Windows-only games then just install and run.
+2. Steam → **Settings → Compatibility** → **Default compatibility tool:
+   Proton Stable**. (Current Steam has Steam Play always on; this only picks
+   which Proton Windows games use. "Proton Stable" follows the newest stable
+   release by itself; the preselected "Proton Experimental" gets frequent test
+   builds that occasionally break a game.) A single game can still use another
+   version: *Properties → Compatibility*. Leave "Show all compatibility tools" off.
 3. Optional, **GE-Proton** (community Proton with extra fixes some games need):
    open **ProtonUp-Qt** (from rofi) → *Add version* → GE-Proton → latest →
    *Install*, then restart Steam. It appears in each game's
@@ -86,7 +89,7 @@ standard Xbox layout: A B X Y, LB RB, LT RT (analog), both sticks + clicks,
 D-pad, View/Menu, Home, rumble. It also works in the browser
 (gamepadtester.com).
 
-In Steam: **Settings → Controller**: it should be listed. Steam Input (Steam's
+In Steam: **Settings → Controller**: it is listed (checked 2026-11-09). Steam Input (Steam's
 remapping layer) can then remap any of those buttons per game.
 
 ### The extra L4 / R4 buttons (next to LB / RB)
