@@ -5,6 +5,7 @@
 //   ALT + R          start/stop recording the focused monitor
 //   ALT + SHIFT + R  start/stop recording a selected region
 //   ALT + CTRL + R   replay mode off -> turn it on; on -> save the last 60 s
+//   ALT + CTRL + SHIFT + R  turn replay mode on / off
 // Desktop audio always; microphone optional (bar indicator right-click menu).
 // Files: ~/Videos/Recordings. On save: notification with Open + Open folder.
 //   qs ipc call recorder toggleFull|toggleRegion|replay|toggleReplay|toggleMic|status
@@ -81,7 +82,11 @@ Singleton {
 
     // --- replay buffer (last 60 s kept in RAM) ----------------------------------
     function toggleReplay() {
-        if (replayProc.running) { replayProc.signal(2); return }
+        if (replayProc.running) {
+            replayProc.signal(2)
+            Quickshell.execDetached(["notify-send", "-a", "Screen recording", "-i", "media-record", "Replay mode off"])
+            return
+        }
         replayProc.command = ["gpu-screen-recorder", "-w", monitor(), "-f", "60", "-a", audio,
                               "-c", "mp4", "-q", "very_high", "-r", "60", "-replay-storage", "ram", "-o", dir]
         replayProc.running = true

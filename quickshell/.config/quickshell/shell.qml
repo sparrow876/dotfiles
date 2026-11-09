@@ -55,7 +55,7 @@ ShellRoot {
     //   qs ipc call popups close
     IpcHandler {
         target: "popups"
-        function toggle(name: string): void { Popups.toggle(name, Hyprland.focusedMonitor?.name ?? "") }
+        function toggle(name: string): void { Popups.toggle(name, Hyprland.focusedMonitor?.name ?? "", false) }
         function close(): void { Popups.close() }
     }
 }

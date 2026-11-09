@@ -1,7 +1,8 @@
 // Recording indicator: hidden unless recording or replay mode is on.
 //   recording: blinking red dot + elapsed time (+ small replay icon if on)
 //   replay only: light-blue replay icon
-// Click: stop the recording. Right-click: menu with Microphone and Replay mode.
+// Click: stop the recording (or open the menu if only replay is on).
+// Right-click: menu with Microphone, Replay mode on/off, Save last 60 s.
 import QtQuick
 import QtQuick.Layouts
 import qs
@@ -71,7 +72,7 @@ MouseArea {
         name: "recording"
         barWindow: root.barWindow
         anchorItem: root
-        contentWidth: 320
+        contentWidth: 360
 
         StyledText { text: "Screen recording"; font.weight: Font.Bold }
         RowLayout {
@@ -79,9 +80,10 @@ MouseArea {
             Icon { text: Recorder.mic ? Glyphs.mic : Glyphs.micOff; color: Recorder.mic ? Theme.lightBlue : Theme.muted; size: 18 }
             ColumnLayout {
                 Layout.fillWidth: true
+                Layout.preferredWidth: 0      // leftover width only: the switch always stays visible
                 spacing: 0
                 StyledText { text: "Microphone" }
-                StyledText { text: "Applies to the next recording"; color: Theme.muted; font.pixelSize: Theme.fontSizeSmall }
+                StyledText { text: "Applies to the next recording"; color: Theme.muted; font.pixelSize: Theme.fontSizeSmall; wrapMode: Text.WordWrap; Layout.fillWidth: true }
             }
             Toggle { checked: Recorder.mic; onToggled: Recorder.toggleMic() }
         }
@@ -90,9 +92,16 @@ MouseArea {
             Icon { text: Glyphs.replay; color: Recorder.replay ? Theme.lightBlue : Theme.muted; size: 18 }
             ColumnLayout {
                 Layout.fillWidth: true
+                Layout.preferredWidth: 0      // leftover width only: the switch always stays visible
                 spacing: 0
                 StyledText { text: "Replay mode" }
-                StyledText { text: "Keeps the last 60 s · ALT + CTRL + R saves"; color: Theme.muted; font.pixelSize: Theme.fontSizeSmall }
+                StyledText {
+                    text: Recorder.replay ? "On · keeping the last 60 s · ALT + CTRL + R saves" : "Off · ALT + CTRL + SHIFT + R turns it on"
+                    color: Theme.muted
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.WordWrap
+                    Layout.fillWidth: true
+                }
             }
             Toggle { checked: Recorder.replay; onToggled: Recorder.toggleReplay() }
         }
@@ -100,6 +109,7 @@ MouseArea {
             Layout.fillWidth: true
             spacing: 8
             TextButton { visible: Recorder.replay; label: "Save last 60 s"; primary: true; onClicked: Recorder.replayKey() }
+            TextButton { visible: Recorder.replay; label: "Turn off replay"; onClicked: Recorder.toggleReplay() }
             Item { Layout.fillWidth: true }
             TextButton { visible: Recorder.recording; label: "Stop recording"; danger: true; onClicked: { Recorder.stop(); Popups.close() } }
         }

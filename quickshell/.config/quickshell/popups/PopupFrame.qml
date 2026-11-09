@@ -6,6 +6,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Hyprland
 import qs
 import qs.services
 
@@ -28,8 +29,16 @@ PopupWindow {
     implicitWidth: contentWidth
     implicitHeight: body.implicitHeight + 28
     color: "transparent"
-    grabFocus: true
+    grabFocus: Popups.byClick
     visible: false
+
+    // Opened by a keybind/IPC: no grabbing popup possible, so let Hyprland close
+    // it on an outside click instead (the keybind toggles it closed too).
+    HyprlandFocusGrab {
+        active: frame.visible && frame.shouldShow && !Popups.byClick
+        windows: [frame]
+        onCleared: Popups.close()
+    }
 
     onShouldShowChanged: {
         if (shouldShow) {

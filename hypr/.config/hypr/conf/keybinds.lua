@@ -88,6 +88,7 @@ bind(mod .. " + O",           exec(scripts .. "ocr.sh"),               "Capture:
 bind(mod .. " + R",           exec("qs ipc call recorder toggleFull"),   "Capture: Start/stop screen recording")
 bind(mod .. " + SHIFT + R",   exec("qs ipc call recorder toggleRegion"), "Capture: Start/stop recording a region")
 bind(mod .. " + CTRL + R",    exec("qs ipc call recorder replay"),       "Capture: Replay mode on / save last 60 s")
+bind(mod .. " + CTRL + SHIFT + R", exec("qs ipc call recorder toggleReplay"), "Capture: Replay mode on / off")
 
 -- ---------------------------------------------------------------------------
 -- System
