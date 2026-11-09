@@ -193,7 +193,7 @@ PanelWindow {
                                                 }
                                                 // Alternatives ("ALT + H" / "ALT + ←") as keycap groups
                                                 Flow {
-                                                    Layout.maximumWidth: 210
+                                                    Layout.maximumWidth: 250   // fits "ALT SHIFT ← / ALT SHIFT H" on one line
                                                     Layout.preferredWidth: childrenRect.width
                                                     spacing: 4
                                                     layoutDirection: Qt.RightToLeft

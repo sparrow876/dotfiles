@@ -20,7 +20,7 @@ Contents:
 
 ## 1. Snapshot
 
-Recorded 2026-11-09 (build steps 1–20 done; per-game setup waits for the games).
+Recorded 2026-11-09 (build complete, steps 1–21; per-game setup waits for the games).
 BIOS F.28, Intel ME 16.1.32.2418, SSD (Micron MTFDKBA512TFH) firmware HPS0043.
 After an update, compare with `pacman -Q <pkg>` and update this table.
 
@@ -491,7 +491,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   are verified.
 - Step 17 apps need the user's `yay` install + tests (call pop-out titles to
   confirm for the `call-popouts` rule; Vesktop theme to check visually).
-- Remaining build step: 21 (README + license).
+- Build complete (steps 1–21). Open: per-game setup (GAMING.md §7), user's
+  rclone sign-in, call pop-out titles for the `call-popouts` rule.
 - Notification history is capped at 100 (oldest dropped).
 
 ---
@@ -533,6 +534,16 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-09** — Step 21: README (screenshots in `docs/screenshots/*.jpg`,
+  generated keybind table, install, recovery, docs, credits), MIT LICENSE,
+  `lockscreen/README.md` (qylock used unmodified, GPL notice rule). Fixes found
+  while taking screenshots: cheat-sheet rows with two long combos wrapped with
+  a leading "/" (keycap area 210 → 250 px, `cheatsheet/CheatSheet.qml`);
+  NetworkMenu rows read properties of a network that just vanished from a scan
+  (null guards, `popups/NetworkMenu.qml`, `services/Network.qml`).
+  README screenshots: take them on an empty workspace with only your own demo
+  windows (never the user's windows); README table: `scripts/keybinds-to-md.sh README.md`.
 
 - **2026-11-09** — Step 20: `scripts/update.sh` + `update` alias (news gate,
   watch list, yay, post-checks, `--check`), §2.7 timers/firmware/diagnosis,

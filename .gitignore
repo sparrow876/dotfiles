@@ -43,3 +43,4 @@ lazygit/.config/lazygit/state.yml
 *.png
 !applications/**/*.png
 !docs/screenshots/*.png
+!docs/screenshots/*.jpg

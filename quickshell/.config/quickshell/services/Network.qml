@@ -28,11 +28,13 @@ Singleton {
     function levelOf(network) { return Math.max(0, Math.min(3, Math.floor((network?.signalStrength ?? 0) * 4))) }
     // Lock icon: anything but open / OWE ("enhanced open", encrypted without a password)
     function isSecured(network) {
+        if (!network) return false
         return network.security !== N.WifiSecurityType.Open && network.security !== N.WifiSecurityType.Owe
     }
     // Enterprise networks (e.g. eduroam) need a username/certificate: set up in
     // nm-connection-editor, not with a password field
     function isEnterprise(network) {
+        if (!network) return false
         return [N.WifiSecurityType.Wpa2Eap, N.WifiSecurityType.WpaEap, N.WifiSecurityType.Wpa3SuiteB192,
                 N.WifiSecurityType.DynamicWep, N.WifiSecurityType.Leap].includes(network.security)
     }

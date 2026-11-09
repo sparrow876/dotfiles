@@ -127,12 +127,13 @@ PopupFrame {
         delegate: ColumnLayout {
             id: entry
             required property var modelData
+            // null for a moment when the network vanishes from a scan (before the row goes)
             readonly property var net: modelData
             readonly property bool secured: Network.isSecured(net)
             readonly property bool enterprise: Network.isEnterprise(net)
             // WEP keys can be 5 or 13 characters, WPA passwords at least 8
-            readonly property int minLength: net.security === N.WifiSecurityType.StaticWep ? 5 : 8
-            readonly property bool busy: net.state === N.ConnectionState.Connecting
+            readonly property int minLength: net?.security === N.WifiSecurityType.StaticWep ? 5 : 8
+            readonly property bool busy: net?.state === N.ConnectionState.Connecting
             property string error: ""
             width: list.width
             spacing: 4
@@ -172,12 +173,12 @@ PopupFrame {
                     anchors.rightMargin: 4
                     spacing: 10
                     Icon { text: Glyphs.wifiLevels[Network.levelOf(entry.net)]; size: 18; color: Theme.text }
-                    StyledText { text: entry.net.name; elide: Text.ElideRight; Layout.fillWidth: true }
-                    Icon { visible: entry.net.known; text: Glyphs.check; size: 15; color: Theme.lightBlue }
+                    StyledText { text: entry.net?.name ?? ""; elide: Text.ElideRight; Layout.fillWidth: true }
+                    Icon { visible: entry.net?.known ?? false; text: Glyphs.check; size: 15; color: Theme.lightBlue }
                     Icon { visible: entry.secured; text: Glyphs.lock; size: 15; color: Theme.muted }
                     Spinner { visible: entry.busy; size: 15 }
                     IconButton {
-                        visible: entry.net.known && !entry.busy
+                        visible: (entry.net?.known ?? false) && !entry.busy
                         glyph: Glyphs.dots
                         size: 15
                         tooltip: "Options"
