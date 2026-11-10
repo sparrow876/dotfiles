@@ -23,7 +23,11 @@ Singleton {
     property bool idle: false
 
     function focusedScreen() { return Hyprland.focusedMonitor?.name ?? Quickshell.screens[0]?.name ?? "" }
-    function toggle(name) { root[name] = root[name] !== "" ? "" : focusedScreen() }
+    function toggle(name) {
+        // open on a monitor that has since been unplugged counts as closed
+        const open = root[name] !== "" && Quickshell.screens.some(s => s.name === root[name])
+        root[name] = open ? "" : focusedScreen()
+    }
     // An overlay closed itself (Esc, click outside, action ran)
     function closed(name, screenName) { if (root[name] === screenName) root[name] = "" }
 

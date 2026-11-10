@@ -86,15 +86,16 @@ if [[ -n $iface ]]; then
 fi
 
 # Processes: top 10 by CPU (measured over 0.6 s) and top 10 by memory
-toplist=$(top -b -n 2 -d 0.6 -w 512 2>/dev/null | awk '
+# (neutral HOME: a saved ~/.config/procps/toprc would change the columns)
+toplist=$(HOME=/nonexistent XDG_CONFIG_HOME=/nonexistent top -b -n 2 -d 0.6 -w 512 2>/dev/null | awk '
   /^ *PID/ { frame++; next }
-  frame == 2 && NF >= 12 {
+  frame == 2 && NF >= 12 && $1 ~ /^[0-9]+$/ && $9 ~ /^[0-9.]+$/ && $10 ~ /^[0-9.]+$/ {
     cmd=$12
     for (k=13; k<=NF; k++) cmd = cmd " " $k
     gsub(/\\/, "\\\\", cmd); gsub(/"/, "\\\"", cmd)
-    print $1 "\t" $9 "\t" $10 "\t" cmd
+    print $1 "\t" $9 "\t" $10 "\t" cmd "\t" $2
   }')
-tojson() { awk -F'\t' 'NF >= 4 && $1 != "" { printf "%s{\"pid\":%d,\"cpu\":%s,\"mem\":%s,\"name\":\"%s\"}", (n++ ? "," : ""), $1, $2, $3, $4 }'; }
+tojson() { awk -F'\t' 'NF >= 5 && $1 != "" { printf "%s{\"pid\":%d,\"cpu\":%s,\"mem\":%s,\"name\":\"%s\",\"user\":\"%s\"}", (n++ ? "," : ""), $1, $2, $3, $4, $5 }'; }
 procs_cpu=$(printf '%s\n' "$toplist" | sort -t$'\t' -k2,2nr | head -n 10 | tojson)
 procs_mem=$(printf '%s\n' "$toplist" | sort -t$'\t' -k3,3nr | head -n 10 | tojson)
 

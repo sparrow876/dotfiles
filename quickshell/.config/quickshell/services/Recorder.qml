@@ -100,10 +100,12 @@ Singleton {
     // --- replay buffer (last 60 s kept in RAM) ----------------------------------
     function toggleReplay() {
         if (replayProc.running) {
+            root.stoppingReplay = true
             replayProc.signal(2)
             Quickshell.execDetached(["notify-send", "-a", "Screen recording", "-i", "media-record", "Replay mode off"])
             return
         }
+        root.replayError = ""
         replayProc.command = ["setpriv", "--pdeathsig", "INT", "gpu-screen-recorder", "-w", monitor(), "-f", "60", "-a", audio,
                               "-c", "mp4", "-q", "very_high", "-r", "60", "-replay-storage", "ram", "-o", dir]
         replayProc.running = true
@@ -111,16 +113,28 @@ Singleton {
     // ALT + CTRL + R: save if running, otherwise start replay mode
     function replayKey() {
         if (!replayProc.running) {
-            toggleReplay()
-            Quickshell.execDetached(["notify-send", "-a", "Screen recording", "-i", "media-record",
-                "Replay mode on", "The last 60 s are kept in memory. ALT + CTRL + R saves them."])
+            toggleReplay()        // "Replay mode on" is announced once it really started
         } else {
             replayProc.signal(10)   // SIGUSR1: save the buffer
         }
     }
+    property bool stoppingReplay: false
+    property string replayError: ""
     Process {
         id: replayProc
         onRunningChanged: root.replay = running
+        onStarted: Quickshell.execDetached(["notify-send", "-a", "Screen recording", "-i", "media-record",
+            "Replay mode on", "The last 60 s are kept in memory. ALT + CTRL + R saves them."])
+        // Stopped by itself (not by us): say why
+        onExited: (code, status) => {
+            if (!root.stoppingReplay)
+                Quickshell.execDetached(["notify-send", "-u", "critical", "-a", "Screen recording", "-i", "dialog-error",
+                    "Replay mode failed", root.replayError || `gpu-screen-recorder stopped with code ${code}`])
+            root.stoppingReplay = false
+        }
+        stderr: SplitParser {
+            onRead: line => { if (/error/i.test(line)) root.replayError = line }
+        }
         // gpu-screen-recorder prints the saved file's path on stdout
         stdout: SplitParser {
             onRead: line => {
@@ -140,7 +154,7 @@ Singleton {
     // switch themes while recording.)
     Component.onDestruction: {
         if (rec.running) rec.signal(2)
-        if (replayProc.running) replayProc.signal(2)
+        if (replayProc.running) { root.stoppingReplay = true; replayProc.signal(2) }
     }
 
     IpcHandler {

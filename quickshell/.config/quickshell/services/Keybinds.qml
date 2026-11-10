@@ -9,6 +9,7 @@ import Quickshell.Io
 Singleton {
     id: root
     property var groups: []        // [{ category, items: [{ action, keys: [...] }] }]
+    property string error: ""      // set when hyprctl/jq failed
 
     function refresh() { if (!proc.running) proc.running = true }
 
@@ -17,7 +18,8 @@ Singleton {
         command: ["sh", "-c", `hyprctl binds -j | jq -c -f "${Quickshell.env("HOME")}/dotfiles/scripts/keybinds.jq"`]
         stdout: StdioCollector {
             onStreamFinished: {
-                try { root.groups = JSON.parse(text) } catch (e) { console.warn("keybinds: bad JSON", e) }
+                try { root.groups = JSON.parse(text); root.error = "" }
+                catch (e) { console.warn("keybinds: bad JSON", e); root.error = "Couldn't read the keybinds (hyprctl / jq)" }
             }
         }
     }

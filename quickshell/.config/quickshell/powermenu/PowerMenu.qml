@@ -142,7 +142,7 @@ PanelWindow {
         Keys.onPressed: event => {
             const k = event.key
             if (k === Qt.Key_Escape) { menu.pending >= 0 ? menu.cancel() : menu.close() }
-            else if (k === Qt.Key_Left || k === Qt.Key_H) { menu.cancel(); menu.selected = (menu.selected + 5) % 6 }
+            else if (k === Qt.Key_Left || k === Qt.Key_H || k === Qt.Key_Backtab) { menu.cancel(); menu.selected = (menu.selected + 5) % 6 }
             else if (k === Qt.Key_Right || k === Qt.Key_Tab) { menu.cancel(); menu.selected = (menu.selected + 1) % 6 }
             // Activation ignores key auto-repeat: holding Enter / R must not count
             // as the confirming second press (it would reboot without the countdown)

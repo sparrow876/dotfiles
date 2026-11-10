@@ -568,6 +568,19 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-10** — Review batch 2 (Quickshell, low): R20 replay mode announces
+  on start / failure (stderr + onExited). R21 ScriptModel in Audio/Bluetooth
+  menus. R22 recording popup closes with its icon. R23 Overlays.toggle treats an
+  overlay on an unplugged monitor as closed. R24 stats reset on close. R25 kill
+  button only for own processes (sysstats gains "user"), never qs; failure
+  notifies. R26 `top` runs with a neutral HOME + numeric row guard. R27 battery
+  warning state persists across reloads. R28 Wi-Fi IP re-read after (re)connect.
+  R29 OSD only on the focused monitor. R30 reel thumbnails only while open.
+  R55 battery minutes, Shift+Tab in power menu, cheat sheet load error, per-core
+  bars animate (model = count). Gotcha: PersistentProperties can't carry a JS
+  object across reloads ("JSValue can't be reassigned to another engine"):
+  store JSON strings.
+
 - **2026-11-10** — Code review batch 1 (high/medium; review = 12 area
   reviewers + adversarial verification, plan in ~/.claude/plans). R1 rclone
   unit ordering cycle (After=default.target removed: Drive never mounted after

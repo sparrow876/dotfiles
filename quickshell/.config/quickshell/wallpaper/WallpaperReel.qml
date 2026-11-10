@@ -181,7 +181,8 @@ PanelWindow {
                         width: parent.width + reel.lean * parent.height
                         height: parent.height
                         x: -reel.lean * parent.height / 2
-                        source: Wallpapers.thumb(card.modelData)
+                        // decoded only while the reel is open (not kept in memory all day)
+                        source: reel.visible ? Wallpapers.thumb(card.modelData) : ""
                         fillMode: Image.PreserveAspectCrop
                         asynchronous: true
                         cache: true

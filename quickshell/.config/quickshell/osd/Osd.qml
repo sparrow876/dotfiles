@@ -38,6 +38,7 @@ PanelWindow {
 
     function show(g, value, lbl, isDimmed) {
         if (!ready) return
+        if (osd.modelData.name !== Overlays.focusedScreen()) return   // one pill, on the focused monitor
         glyph = g
         level = value
         label = lbl

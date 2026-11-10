@@ -20,6 +20,9 @@ import qs.services
 
 PanelWindow {
     id: panel
+    readonly property string me: Quickshell.env("USER") || ""
+    // top cuts user names to 8 characters and marks the cut with "+"
+    function isMine(user) { return !!user && (user === me || (user.endsWith("+") && me.startsWith(user.slice(0, -1)))) }
     required property ShellScreen modelData
     screen: modelData
 
@@ -173,9 +176,11 @@ PanelWindow {
                         Layout.preferredHeight: 34
                         spacing: 4
                         Repeater {
-                            model: SystemStats.cores
+                            // a count, not the array: bars stay and animate between polls
+                            model: SystemStats.cores.length
                             delegate: Rectangle {
-                                required property real modelData
+                                required property int index
+                                readonly property real modelData: SystemStats.cores[index] ?? 0
                                 width: (parent.width - (SystemStats.cores.length - 1) * 4) / Math.max(1, SystemStats.cores.length)
                                 height: 34
                                 radius: 3
@@ -401,7 +406,10 @@ PanelWindow {
                                 }
                                 // Hover -> kill button -> confirm (SIGTERM)
                                 IconButton {
+                                    // only your own processes, and never the shell itself
                                     visible: prow.containsMouse && !prow.confirming
+                                             && panel.isMine(prow.modelData.user)
+                                             && !/^(qs|quickshell)$/.test(prow.modelData.name.split(" ")[0])
                                     glyph: Glyphs.close
                                     size: 13
                                     color: Theme.critical
@@ -413,7 +421,8 @@ PanelWindow {
                                     label: "End process?"
                                     danger: true
                                     onClicked: {
-                                        Quickshell.execDetached(["kill", "-TERM", String(prow.modelData.pid)])
+                                        Quickshell.execDetached(["sh", "-c", 'kill -TERM "$1" 2>/dev/null || notify-send -a "System stats" -i dialog-error "Couldn\'t end $2" "It belongs to another user or has already exited."',
+                                            "kill", String(prow.modelData.pid), prow.modelData.name])
                                         procSection.confirmPid = -1
                                     }
                                 }

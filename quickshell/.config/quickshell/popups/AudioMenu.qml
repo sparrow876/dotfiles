@@ -22,7 +22,7 @@ PopupFrame {
         Layout.fillWidth: true
     }
     Repeater {
-        model: Audio.sinks.length > 1 ? Audio.sinks : []
+        model: ScriptModel { values: Audio.sinks.length > 1 ? Audio.sinks : [] }
         delegate: DeviceChoice {
             required property var modelData
             Layout.fillWidth: true
@@ -43,7 +43,7 @@ PopupFrame {
         Layout.fillWidth: true
     }
     Repeater {
-        model: Audio.sources.length > 1 ? Audio.sources : []
+        model: ScriptModel { values: Audio.sources.length > 1 ? Audio.sources : [] }
         delegate: DeviceChoice {
             required property var modelData
             Layout.fillWidth: true
@@ -72,7 +72,7 @@ PopupFrame {
             width: appsFlick.width
             spacing: 10
             Repeater {
-                model: Audio.streams
+                model: ScriptModel { values: Audio.streams }
                 delegate: RowLayout {
                     required property var modelData
                     Layout.fillWidth: true

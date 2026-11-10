@@ -39,7 +39,12 @@ Singleton {
 
     onActiveChanged: {
         if (active) poll()
-        else { prev = null; cpuHistory = []; memHistory = []; rxHistory = []; txHistory = [] }
+        else {
+            // forget everything, so reopening shows "Reading…" instead of old values
+            prev = null; snap = null; cpu = 0; cores = []; mem = 0; swap = 0
+            rxRate = 0; txRate = 0; readRate = 0; writeRate = 0
+            cpuHistory = []; memHistory = []; rxHistory = []; txHistory = []
+        }
     }
     Timer {
         running: root.active

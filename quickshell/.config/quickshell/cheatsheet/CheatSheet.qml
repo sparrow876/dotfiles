@@ -248,7 +248,8 @@ PanelWindow {
 
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
-                text: sheet.filtered.length === 0 ? "No keybinds match"
+                text: Keybinds.error !== "" ? Keybinds.error
+                      : sheet.filtered.length === 0 ? "No keybinds match"
                       : "Esc closes · popups and menus also close with Esc · 3-finger swipe switches workspace"
                 color: Theme.muted
                 font.pixelSize: Theme.fontSizeSmall

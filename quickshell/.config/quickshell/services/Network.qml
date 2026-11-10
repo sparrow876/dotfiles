@@ -74,6 +74,15 @@ Singleton {
     // IPv4 address of the active connection (read once when the menu opens)
     property string ip: ""
     function refreshIp() { ipProc.running = true }
+    // After connecting, DHCP needs a moment: read the address again shortly after
+    onActiveChanged: { root.ip = ""; ipRetry.tries = 0; ipRetry.restart() }
+    onWiredConnectedChanged: { root.ip = ""; ipRetry.tries = 0; ipRetry.restart() }
+    Timer {
+        id: ipRetry
+        property int tries: 0
+        interval: 1500
+        onTriggered: { root.refreshIp(); if (++tries < 3) restart() }
+    }
     Process {
         id: ipProc
         command: ["ip", "-j", "-4", "addr", "show"]

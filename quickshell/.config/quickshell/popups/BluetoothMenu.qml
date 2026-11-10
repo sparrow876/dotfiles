@@ -78,7 +78,7 @@ PopupFrame {
         font.pixelSize: Theme.fontSizeSmall
     }
     Repeater {
-        model: Bluetooth.enabled ? Bluetooth.paired : []
+        model: ScriptModel { values: Bluetooth.enabled ? Bluetooth.paired : [] }
         delegate: ColumnLayout {
             id: row
             required property var modelData
@@ -127,7 +127,7 @@ PopupFrame {
         font.pixelSize: Theme.fontSizeSmall
     }
     Repeater {
-        model: Bluetooth.enabled ? Bluetooth.unpaired : []
+        model: ScriptModel { values: Bluetooth.enabled ? Bluetooth.unpaired : [] }
         delegate: DeviceRow {
             required property var modelData
             Layout.fillWidth: true

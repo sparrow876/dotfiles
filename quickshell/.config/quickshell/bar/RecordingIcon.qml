@@ -16,6 +16,8 @@ MouseArea {
     readonly property string screenName: barWindow.screen?.name ?? ""
 
     visible: Recorder.recording || Recorder.replay
+    // Replay turned off from its own popup: the icon disappears, so must the popup
+    onVisibleChanged: if (!visible && Popups.isOpen("recording", screenName)) Popups.close()
     implicitWidth: row.implicitWidth + 4
     implicitHeight: 28
     hoverEnabled: true

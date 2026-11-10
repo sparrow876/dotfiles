@@ -20,7 +20,13 @@ Singleton {
     readonly property bool charging: display?.state === UPowerDeviceState.Charging
 
     // Low-battery notifications: once per threshold per discharge
-    property int lastWarned: 101
+    // (kept across Quickshell reloads, or every theme switch would re-warn)
+    PersistentProperties {
+        id: persist
+        reloadableId: "powerWarn"
+        property int lastWarned: 101
+    }
+    property alias lastWarned: persist.lastWarned
     onPercentChanged: {
         if (onAC || !present) return
         if (percent <= 5 && lastWarned > 5) {
