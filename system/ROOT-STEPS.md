@@ -21,6 +21,7 @@ The sections below explain what each command does and how to undo it.
 | `bash system/root-steps/2-nvidia.sh` | 2.1–2.2 | then **reboot** |
 | `bash system/root-steps/3-system.sh` | 2.3 checks, 3, 4, 5, 6, 7 | after that reboot, inside the desktop |
 | `bash system/root-steps/4-login.sh` | 10 (SDDM) | after running qylock's two scripts |
+| `bash system/root-steps/5-trash-mounts.sh` | 15 (trash in subvolume folders) | any time |
 
 System facts these steps rely on (checked 2026-11-09): Arch, kernel `linux` 7.2,
 **btrfs** root (`@`, `@home`, `@pkg`, `@log`, mounted with `subvol=` in fstab and the
@@ -466,4 +467,23 @@ that moment; it suspends after 20 minutes idle on battery (hypridle, section 2.6
 of MAINTENANCE.md).
 
 Undo: `sudo rm /etc/systemd/logind.conf.d/10-lid.conf && sudo systemctl kill -s HUP systemd-logind`.
+
+---
+
+## 15. Trash in Downloads, Recordings, .cache, Steam
+
+Those folders are their own btrfs subvolumes (§1.5, to keep them out of
+snapshots). GLib/Nautilus can only "Move to Trash" across subvolumes when each
+is a real mount, so right now deleting there is permanent. The fix mounts each
+subvolume at its own path from `/etc/fstab` (nothing moves; same folders), with
+`x-gvfs-hide` (no extra drives in the sidebar), `x-gvfs-trash` and `nofail`.
+
+```sh
+bash system/root-steps/5-trash-mounts.sh
+```
+It backs up `/etc/fstab` to `/etc/fstab.before-trash-mounts`, adds one line per
+folder, mounts them right away and tests trashing in Downloads. Each folder
+keeps its trash in `<folder>/.Trash-<uid>`; Nautilus's Trash shows all of them.
+
+Undo: `sudo cp /etc/fstab.before-trash-mounts /etc/fstab && sudo systemctl daemon-reload`, then reboot.
 

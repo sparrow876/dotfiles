@@ -574,6 +574,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-10** — Nautilus deleted permanently in ~/Downloads (and other §1.5
+  subvolumes): GLib: "Trashing on system internal mounts is not supported" — a
+  nested btrfs subvolume has its own st_dev but no mount entry. Fix (user runs):
+  system/root-steps/5-trash-mounts.sh / ROOT-STEPS §15 mounts each subvolume at
+  its path via fstab (nofail, x-gvfs-hide, x-gvfs-trash); trash then lives in
+  <folder>/.Trash-<uid>. Test: `gio trash` a file in ~/Downloads.
+
 - **2026-11-10** — No PDF thumbnails in Nautilus: no PDF thumbnailer installed
   (GNOME's come with Papers/Evince). Added stow package `thumbnailers/`
   (`~/.local/share/thumbnailers/pdf.thumbnailer`, pdftoppm from poppler, inline
