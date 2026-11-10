@@ -150,4 +150,16 @@ the recommended Proton version and launch options here.
 | Metal Gear Solid V: The Phantom Pain | Proton; launch options from ProtonDB | not installed |
 | BeamNG.drive | compare the native Linux build with Proton, pick the better one | not installed |
 | Assetto Corsa | Proton + Content Manager + Custom Shaders Patch (community setup script: I read it and summarize it, you run it); controller via Content Manager | not installed |
-| Assetto Corsa Competizione | Proton + launch options; LAN server: ports + ufw rule from your subnet only (ROOT-STEPS §7), `serverList.json` fallback; controller in ACC's settings | not installed |
+| Assetto Corsa Competizione | see below | **installed 2026-11-10**, runs |
+
+### Assetto Corsa Competizione (Steam app 805550)
+
+- Windows-only game (no Linux build), runs with **Proton 11.0** (the "Proton
+  Stable" default). Starts out of the box (checked 2026-11-10).
+- ProtonDB: **Gold, trending Platinum**, 164 reports, strong confidence. No
+  open Proton issue needs a workaround (ValveSoftware/Proton #1420).
+- Launch options: just the standard line, nothing game-specific:
+  `prime-run gamemoderun mangohud %command%`
+- Still to do: LAN server (ports + ufw rule from your subnet only, ROOT-STEPS §7;
+  `serverList.json` fallback) and controller setup in ACC's settings.
+
