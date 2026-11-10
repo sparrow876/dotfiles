@@ -21,7 +21,11 @@ if [[ $# -eq 0 ]]; then
 fi
 
 name=$1
-[[ -f palettes/$name.toml ]] || { echo "No theme '$name'. Run $0 to list them." >&2; exit 1; }
+if [[ ! -f palettes/$name.toml ]]; then
+  echo "No theme '$name'. Run $0 to list them." >&2
+  command -v notify-send >/dev/null && notify-send -a Theme -i dialog-error "No theme '$name'" || true
+  exit 1
+fi
 title=$(sed -n 's/^name *= *"\(.*\)".*/\1/p' "palettes/$name.toml")
 
 # A theme switch reloads the whole bar (Quickshell). Don't do that in the middle

@@ -6,7 +6,8 @@ local au = function(events, opts) vim.api.nvim_create_autocmd(events, vim.tbl_ex
 -- padding). kitty's remote control (socket only, see kitty.conf) changes the
 -- window's background opacity: 1.0 while Neovim runs, back to 0.80 after.
 local kitty = vim.env.KITTY_LISTEN_ON
-if kitty and kitty ~= "" then
+-- (not for a Neovim started inside Neovim, e.g. lazygit's editor: $NVIM is set)
+if kitty and kitty ~= "" and not vim.env.NVIM then
   local function opacity(value, wait)
     local job = vim.system({ "kitty", "@", "--to", kitty, "set-background-opacity", value })
     if wait then job:wait(300) end

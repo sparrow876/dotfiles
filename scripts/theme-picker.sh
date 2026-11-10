@@ -24,7 +24,7 @@ list() {
   done
 }
 
-choice=$(list | rofi -dmenu -i -p "" -markup-rows -show-icons \
+choice=$(list | rofi -dmenu -i -no-custom -p "" -markup-rows -show-icons \
   -display-columns 2 -display-column-separator $'\t' \
   -theme-str 'element-icon { size: 36px; } entry { placeholder: "Choose a theme"; } listview { lines: 8; }')
 [[ -z $choice ]] && exit 0

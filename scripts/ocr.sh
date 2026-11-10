@@ -18,4 +18,6 @@ fi
 printf '%s' "$text" | wl-copy
 preview=$(printf '%s' "$text" | tr '\n' ' ' | cut -c1-80)
 [[ ${#text} -gt 80 ]] && preview+="…"
+# notification bodies understand markup: show OCR'd <, > and & literally
+preview=${preview//&/&amp;}; preview=${preview//</&lt;}; preview=${preview//>/&gt;}
 notify-send -a OCR -i edit-copy "Text copied" "$preview"

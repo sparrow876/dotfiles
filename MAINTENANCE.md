@@ -502,6 +502,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Default apps in `mimeapps.list` | `hyprland-mimeapps.list` | apps rewrite mimeapps.list (breaks stow) |
 | Touchpad natural scroll | normal (traditional) scrolling | user's choice, 2026-11-09 |
 | Lid close → lock + suspend | plugged in: lock only; battery: suspend | user's choice, 2026-11-09 (downloads keep running) |
+| Electron apps native Wayland | Teams stays XWayland (package's --ozone-platform=x11) | screen sharing risk; no blur at 1x scale |
+| Qt5 apps themed | only Qt6 (QT_QPA_PLATFORMTHEME=qt6ct) | no Qt5 apps installed; if one appears, launch it with QT_QPA_PLATFORMTHEME=qt5ct |
 
 ---
 
@@ -567,6 +569,20 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-10** — Review batch 3 (scripts, configs, security): R14 kitty
+  remote-control socket moved from abstract @socket to $XDG_RUNTIME_DIR (0700).
+  R31 wallpaper.sh apply notifies + keeps `current` on failure. R32 update.sh
+  news window starts at the last *completed* upgrade and also flags recent
+  manual-intervention items naming a pending package. R33 fwupd errors no
+  longer read as "updates available". R34 notify-file.sh `timeout 1h`. R35 OCR
+  preview escaped. R36 cursor/toolkit/Qt/Electron/GSK env exported to
+  systemd+D-Bus (`hl.env(name, value, true)`). R37 Qt5 + R38 Teams X11 kept,
+  documented (§5). R39 nested nvim leaves kitty opacity alone. R40 LSP `gr`
+  nowait. R41 `lnew` alias. R42 theme picker -no-custom, apply.sh notifies.
+  R43 palettes may override style keys (render.sh reads palette first);
+  Catppuccin glass_alpha 0.85. R54 small script fixes. R56 dead code removed
+  (7 glyphs, Bluetooth.glyph, Recorder.region, THEME_NAME, empty cava/).
 
 - **2026-11-10** — Review batch 2 (Quickshell, low): R20 replay mode announces
   on start / failure (stderr + onExited). R21 ScriptModel in Audio/Bluetooth

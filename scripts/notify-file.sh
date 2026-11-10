@@ -13,7 +13,9 @@ for a in "$@"; do
   esac
 done
 (
-  choice=$(notify-send -a "$app" -i "$icon" "${args[@]}" "$title" "$body")
+  # notify-send -A waits until a button is pressed or the notification closes;
+  # give up after an hour so old ones don't leave processes behind
+  choice=$(timeout 1h notify-send -a "$app" -i "$icon" "${args[@]}" "$title" "$body")
   case $choice in
     edit)   satty --filename "$file" --output-filename "$file" --early-exit --copy-command wl-copy ;;
     open|default) xdg-open "$file" ;;

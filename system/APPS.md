@@ -4,7 +4,9 @@ Install the chat apps (AUR, PKGBUILDs reviewed; notes in `packages/aur.txt`):
 ```sh
 yay -S --needed teams-for-linux-bin vesktop-bin claude-desktop
 ```
-None of them autostart. All of them: native Wayland (sharp text), tray icon,
+None of them autostart. All of them: native Wayland (sharp text; Teams is the
+exception: its package starts it under XWayland on purpose, which is sharp
+at this screen's 1x scale and keeps screen sharing reliable), tray icon,
 notifications through the bar's notification server, screen sharing through
 the Wayland portal (xdg-desktop-portal-hyprland: you pick a screen or window in
 the share dialog), mic + camera through PipeWire.

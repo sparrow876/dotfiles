@@ -27,7 +27,8 @@ return {
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("rice-lsp", { clear = true }),
         callback = function(args)
-          local map = function(keys, fn, desc) vim.keymap.set("n", keys, fn, { buffer = args.buf, desc = desc }) end
+          -- nowait: Neovim 0.12 also has gra/grn/grr/gri, which would make "gr" wait
+          local map = function(keys, fn, desc) vim.keymap.set("n", keys, fn, { buffer = args.buf, desc = desc, nowait = true }) end
           map("gd", vim.lsp.buf.definition, "Go to definition")
           map("gr", vim.lsp.buf.references, "Show references")
           map("K", vim.lsp.buf.hover, "Show documentation")

@@ -25,9 +25,12 @@ case "${1:-}" in
   apply)
     file=$(realpath "${2:?file}")
     [[ -f $file ]] || { echo "no such file: $file" >&2; exit 1; }
+    fail() { notify-send -a Wallpaper -i dialog-error "Wallpaper not changed" "$1"; exit 1; }
+    wait_daemon || fail "The wallpaper daemon (awww-daemon) isn't running."
     awww img "$file" --resize crop \
       --transition-type wipe --transition-angle "$WIPE_ANGLE" \
-      --transition-duration 1.1 --transition-fps 60 --transition-bezier .23,1,.32,1
+      --transition-duration 1.1 --transition-fps 60 --transition-bezier .23,1,.32,1 \
+      || fail "awww couldn't show ${file##*/}."
     ln -sfn "$file" "$dir/current" ;;
 
   restore)

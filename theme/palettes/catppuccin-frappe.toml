@@ -5,6 +5,7 @@
 name = "Catppuccin Frappé"
 
 [colors]
+glass_alpha = "0.85"   # more opaque than style.toml's 0.75: lighter surfaces need it for text contrast
 base      = "#232634"   # deepest background
 surface   = "#303446"   # bar, panels, popups, rofi, kitty bg
 overlay   = "#414559"   # cards, hover, inactive borders

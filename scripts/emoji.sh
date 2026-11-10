@@ -7,7 +7,7 @@ exec rofimoji \
   --action type copy \
   --typer wtype \
   --clipboarder wl-copy \
-  --max-recent 12 \
+  --max-recent 10 \
   --skin-tone neutral \
   --prompt "" \
   --selector-args "-theme-str 'entry { placeholder: \"Search emoji\"; }'"

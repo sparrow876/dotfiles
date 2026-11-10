@@ -30,6 +30,7 @@ export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-ran
 export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --color=always --icons=always {}'"
 
 # zsh-syntax-highlighting must stay last
+# (colored-man-pages is in the brief; MANPAGER=bat below does the colouring in practice)
 plugins=(git sudo fzf zoxide extract colored-man-pages zsh-autosuggestions zsh-syntax-highlighting)
 source "$ZSH/oh-my-zsh.sh"
 

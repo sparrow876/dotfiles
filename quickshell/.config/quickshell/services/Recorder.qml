@@ -23,7 +23,6 @@ Singleton {
     readonly property string notifyScript: Quickshell.env("HOME") + "/dotfiles/scripts/notify-file.sh"
 
     property bool recording: false
-    property bool region: false
     property bool mic: false
     property bool replay: false                  // replay buffer running
     property string file: ""
@@ -43,7 +42,6 @@ Singleton {
         selector.running = true
     }
     function start(captureArgs) {
-        region = captureArgs.includes("region")
         file = `${dir}/${stamp()}.mp4`
         // setpriv --pdeathsig INT: if Quickshell dies, the recorder finishes the
         // file and exits instead of recording forever in the background

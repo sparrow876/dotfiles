@@ -22,7 +22,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CURRENT="$(tr -d '[:space:]' < "$ROOT/theme/current" 2>/dev/null || echo blue-ice)"
+CURRENT="$(tr -d '[:space:]' 2>/dev/null < "$ROOT/theme/current" || true)"
+CURRENT=${CURRENT:-blue-ice}
 PALETTE="$ROOT/theme/palettes/$CURRENT.toml"
 STYLE="$ROOT/theme/style.toml"
 [[ -f $PALETTE ]] || { echo "render.sh: no palette '$CURRENT' in theme/palettes/" >&2; exit 1; }
@@ -48,7 +49,7 @@ while IFS= read -r line; do
     alpha="$(awk -v a="$val" 'BEGIN { printf "%02x", int(a * 255 + 0.5) }')"
     printf 's|{{%s.alpha}}|%s|g\n' "$key" "$alpha" >>"$sedscript"
   fi
-done < <(cat "$STYLE" "$PALETTE"; printf 'theme = "%s"\n' "$CURRENT")
+done < <(cat "$PALETTE" "$STYLE"; printf 'theme = "%s"\n' "$CURRENT")   # palette first: it may override a style key (glass_alpha)
 
 count=0
 while IFS= read -r -d '' tmpl; do

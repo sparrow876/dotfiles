@@ -19,9 +19,6 @@ Singleton {
     readonly property var unpaired: devices.filter(d => !d.paired && !d.bonded && d.deviceName.length > 0)
     readonly property var connected: devices.filter(d => d.connected)
 
-    readonly property string glyph: !enabled ? Glyphs.bluetoothOff
-                                  : connected.length > 0 ? Glyphs.bluetoothConnected
-                                  : Glyphs.bluetooth
     readonly property string summary: !available ? "No Bluetooth adapter"
                                     : !enabled ? "Bluetooth off"
                                     : connected.length === 0 ? "Bluetooth on, nothing connected"

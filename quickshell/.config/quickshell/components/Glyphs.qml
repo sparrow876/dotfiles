@@ -21,20 +21,15 @@ Singleton {
     readonly property string speaker: "󰓃"
     readonly property string headphones: "󰋋"
     readonly property string monitor: "󰍹"
-    readonly property string app: "󰣆"
     readonly property string refresh: "󰑐"
     readonly property string lock: "󰌾"
     readonly property string check: "󰄬"
     readonly property string dots: "󰇘"
     readonly property string eye: "󰈈"
     readonly property string eyeOff: "󰈉"
-    readonly property string cog: "󰒓"
     readonly property string chevronLeft: "󰅁"
     readonly property string chevronRight: "󰅂"
     readonly property string close: "󰅖"
-    readonly property string unlink: "󰌸"
-    readonly property string trash: "󰆴"
-    readonly property string calendar: "󰃰"
     readonly property string coffee: "󰅶"          // idle inhibitor on
     readonly property string coffeeOutline: "󰛊"   // idle inhibitor off
     readonly property var brightnessLevels: ["󰃞", "󰃟", "󰃠"]   // low, mid, high
@@ -44,6 +39,4 @@ Singleton {
     readonly property string pause: "󰏤"
     readonly property string music: "󰝚"
     readonly property string replay: "󰑙"
-    readonly property string next: "󰒭"
-    readonly property string previous: "󰒮"
 }

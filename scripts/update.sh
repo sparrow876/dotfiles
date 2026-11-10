@@ -35,7 +35,7 @@ CHECK=0
 case "${1:-}" in
   "")        ;;
   --check)   CHECK=1 ;;
-  -h|--help) sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+  -h|--help) sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
   *)         echo "usage: update [--check]" >&2; exit 2 ;;
 esac
 
@@ -58,10 +58,18 @@ watch_note() {  # $1 = package name -> prints the note if it's on the watch list
 }
 
 # ---------------------------------------------------------------------------
+# What's pending (also used by the news check below)
+repo=$(checkupdates 2>/dev/null); rc=$?
+aur=$("$AUR" -Qua 2>/dev/null)
+all=$(printf '%s\n%s\n' "$repo" "$aur" | sed '/^$/d')
+
 section "Arch Linux news"
-last_upgrade=$(grep 'starting full system upgrade' "$PACLOG" 2>/dev/null | tail -1 | sed -nE 's/^\[([^]]+)\].*/\1/p')
-python3 -I - "${last_upgrade:-}" <<'PY'
-import sys, re, html, subprocess, urllib.request, email.utils, datetime
+# Last full upgrade that actually finished ("starting" alone may have been aborted)
+last_upgrade=$(awk '/starting full system upgrade/ { s = substr($1, 2, length($1) - 2) }
+                    /\[ALPM\] transaction completed/ && s { last = s; s = "" }
+                    END { print last }' "$PACLOG" 2>/dev/null)
+PENDING="$(awk '{print $1}' <<<"$all" | paste -sd' ')" python3 -I - "${last_upgrade:-}" <<'PY'
+import sys, re, os, html, subprocess, urllib.request, email.utils, datetime
 import xml.etree.ElementTree as ET
 
 B, DIM, OFF, Y, R = "\033[1m", "\033[2m", "\033[0m", "\033[33m", "\033[31m"
@@ -101,6 +109,11 @@ new = [i for i in items if since is None or i[0] > since]
 if since is None:
     new = items[:5]
     print(f"  {DIM}(no full update in pacman.log yet: showing the 5 newest){OFF}")
+# Also: recent manual-intervention items about a package that is about to update,
+# even if they're older than the last upgrade (e.g. that upgrade skipped it)
+pending = set(os.environ.get("PENDING", "").split())
+recent = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=14)
+new += [i for i in items if i not in new and i[3] and i[0] > recent and set(i[5]) & pending]
 if not new:
     d, t = items[0][0], items[0][1]
     print(f"  Nothing new since your last update ({since:%d %b %Y}). Newest: {d:%d %b} · {t}")
@@ -129,10 +142,7 @@ esac
 
 # ---------------------------------------------------------------------------
 section "Available updates"
-repo=$(checkupdates 2>/dev/null); rc=$?
 [[ $rc -eq 1 ]] && warn "Couldn't check the official repos (offline?)."
-aur=$("$AUR" -Qua 2>/dev/null)
-all=$(printf '%s\n%s\n' "$repo" "$aur" | sed '/^$/d')
 if [[ -z $all ]]; then
   ok "Everything is up to date."
 else
@@ -178,7 +188,7 @@ else
       if ((verify_hypr)) && command -v Hyprland >/dev/null; then
         if out=$(Hyprland --verify-config -c "$HOME/.config/hypr/hyprland.lua" 2>&1); then
           ok "Hyprland config still valid with the new version."
-  else
+        else
           bad "Hyprland reports config errors with the new version:"
           printf '%s\n' "$out" | tail -8 | sed 's/^/      /'
           note "Ask Claude to fix it before logging out (cd ~/dotfiles && claude)."
@@ -238,6 +248,8 @@ if command -v fwupdmgr >/dev/null; then
   fw=$(fwupdmgr get-updates --no-unreported-check --no-metadata-check --no-reboot-check 2>&1)
   if grep -qiE 'no updat|no upgrades|No updatable' <<<"$fw"; then
     ok "No firmware updates (fwupd). HP BIOS updates that fwupd doesn't offer need HP's own updater."
+  elif ! grep -qE '^[├└]|New version' <<<"$fw"; then
+    note "Couldn't check firmware (fwupd): $(tail -1 <<<"$fw")"
   else
     warn "Firmware updates available:"
     grep -E '^[├└]|New version|Summary' <<<"$fw" | head -12 | sed 's/^/      /'
