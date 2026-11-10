@@ -20,22 +20,23 @@ Contents:
 
 ## 1. Snapshot
 
-Recorded 2026-11-09 (build complete, steps 1–21; per-game setup waits for the games).
+Recorded 2026-11-09 (build complete, steps 1–21; per-game setup waits for the games);
+updated 2026-11-10 after the 82-package upgrade.
 BIOS F.28, Intel ME 16.1.32.2418, SSD (Micron MTFDKBA512TFH) firmware HPS0043.
 After an update, compare with `pacman -Q <pkg>` and update this table.
 
 | Component | Version |
 |-----------|---------|
-| Kernel | linux 7.2.14-arch1-1 |
-| Hyprland | 0.57.1 (Lua config) |
+| Kernel | linux 7.2.15-arch1-1 |
+| Hyprland | 0.57.2 (Lua config) |
 | Quickshell | 0.3.2 |
-| NVIDIA | nvidia-open 615.78.08-4 / nvidia-utils 615.78.08-1 |
+| NVIDIA | nvidia-open 615.78.08-6 / nvidia-utils 615.78.08-2 |
 | Mesa | 26.2.6 |
-| PipeWire / WirePlumber | 1.6.10 / 0.5.18 |
+| PipeWire / WirePlumber | 1.6.11 / 0.5.19 |
 | awww (ex-swww) | 0.12.1 |
 | hypridle | 0.1.8 |
 | rofi | 2.0.0 (native Wayland) |
-| kitty | 0.49.2 |
+| kitty | 0.50.0 |
 | gpu-screen-recorder | 6.1.7 |
 | Steam / MangoHud / GameMode | 1.0.0.87 / 0.8.4 / 1.8.2 (gamescope 3.17.0) |
 | SDDM | 0.21.0 (X11 greeter) |
@@ -571,6 +572,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-10** — Post-update check after the 82-package upgrade (Hyprland
+  0.57.2, linux 7.2.15, nvidia-open 615.78.08-6, PipeWire 1.6.11, WirePlumber
+  0.5.19, kitty 0.50.0, systemd 262.2, qt6-base 6.12.0-4). Nothing broke:
+  `--verify-config` ok, no configerrors, one qs instance, no failed units,
+  dGPU suspended, speaker sink active, kitty config parses, `update --check`
+  clean. Boot log only has the usual HP ACPI BIOS errors. §1 table updated.
 
 - **2026-11-10** — Review batch 4 (docs + root-step scripts): R15 ROOT-STEPS
   §5.0 yay bootstrap + 3-system.sh stops without yay; README says
