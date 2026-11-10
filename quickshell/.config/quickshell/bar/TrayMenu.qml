@@ -1,6 +1,7 @@
 // Palette-themed replacement for a tray app's right-click menu.
 // Reads the app's menu over D-Bus (QsMenuOpener) and draws it ourselves.
-// Submenus open in place with a "back" row. Closes on Esc, outside click,
+// Submenus open in place with a "back" row. Closes on Esc, outside click (it's a
+// grabbing popup: the compositor closes it),
 // clicking the same icon again, or after choosing an entry.
 import QtQuick
 import QtQuick.Layouts
@@ -17,8 +18,13 @@ PopupWindow {
     property var anchorItem: null
     property var menuStack: []          // parent menus, for the back button
 
+    // Set when the compositor closed the menu (outside click). A click on the
+    // same tray icon closes it that way first; don't reopen it right after.
+    property var lastClosedItem: null
+    property real lastClosedAt: 0
     function toggle(item, slot) {
         if (visible && trayItem === item) { close(); return }
+        if (!visible && lastClosedItem === item && Date.now() - lastClosedAt < 300) return
         trayItem = item
         anchorItem = slot
         menuStack = []
@@ -28,6 +34,15 @@ PopupWindow {
     }
     function close() {
         visible = false
+        trayItem = null
+        opener.menu = null
+    }
+    // A real grabbing popup (always opened by a click on the bar): the
+    // compositor closes it on any click outside it. Keep our state in sync.
+    grabFocus: true
+    onVisibleChanged: if (!visible && trayItem !== null) {
+        lastClosedItem = trayItem
+        lastClosedAt = Date.now()
         trayItem = null
         opener.menu = null
     }
@@ -42,13 +57,6 @@ PopupWindow {
     visible: false
 
     QsMenuOpener { id: opener }
-
-    // Close when clicking anywhere outside the menu
-    HyprlandFocusGrab {
-        active: popup.visible
-        windows: [popup]
-        onCleared: popup.close()
-    }
 
     Rectangle {
         id: frame

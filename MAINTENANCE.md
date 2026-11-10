@@ -574,6 +574,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-11** — Tray right-click menu didn't close on an outside click: it
+  relied on HyprlandFocusGrab, which didn't clear for it. Fix: it's always
+  opened by a click, so it's now a grabbing popup (`grabFocus: true`, the
+  compositor dismisses it) with state synced in onVisibleChanged; a click on the
+  same icon within 300 ms of that dismissal doesn't reopen it. File:
+  `bar/TrayMenu.qml`.
+
 - **2026-11-10** — Nautilus deleted permanently in ~/Downloads (and other §1.5
   subvolumes): GLib: "Trashing on system internal mounts is not supported" — a
   nested btrfs subvolume has its own st_dev but no mount entry. Fix (user runs):
