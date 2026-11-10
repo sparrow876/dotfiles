@@ -40,6 +40,7 @@ STOW_PACKAGES=(
   zathura     # step 18: PDF viewer, Nord colours, SyncTeX
   mangohud    # step 19: in-game overlay (generated from the theme)
   gamemode    # step 19: gamemoderun settings
+  thumbnailers  # PDF thumbnails in Nautilus (pdftoppm)
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.

@@ -105,6 +105,7 @@ AUR helper: **yay** (not paru).
 | `zathura/` | zathurarc (Nord, SyncTeX, recolor on Ctrl+R) |
 | `mangohud/` | MangoHud.conf (generated from `theme/templates/mangohud/…`) |
 | `gamemode/` | `gamemode.ini` (renice, screensaver inhibit) |
+| `thumbnailers/` | `pdf.thumbnailer` (PDF thumbnails in Nautilus via pdftoppm) |
 | `system/GAMING.md` | Steam setup, launch options, controller, per-game notes |
 
 ### 2.3 Quickshell IPC targets (`qs ipc call <target> <fn>`)
@@ -572,6 +573,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-10** — No PDF thumbnails in Nautilus: no PDF thumbnailer installed
+  (GNOME's come with Papers/Evince). Added stow package `thumbnailers/`
+  (`~/.local/share/thumbnailers/pdf.thumbnailer`, pdftoppm from poppler, inline
+  `sh -c` because the thumbnail sandbox can't see ~/dotfiles). Nautilus reads
+  thumbnailers at start: quit it (`nautilus -q`) after changes. Failed attempts
+  are cached in ~/.cache/thumbnails/fail/ (delete to retry). Test without
+  Nautilus: GnomeDesktop.DesktopThumbnailFactory via python gi.
 
 - **2026-11-10** — Post-update check after the 82-package upgrade (Hyprland
   0.57.2, linux 7.2.15, nvidia-open 615.78.08-6, PipeWire 1.6.11, WirePlumber

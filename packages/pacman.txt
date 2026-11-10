@@ -119,6 +119,7 @@ nautilus
 gvfs
 gvfs-mtp
 file-roller
+poppler              # pdftoppm: PDF thumbnails in Nautilus (thumbnailers/)
 loupe
 ffmpegthumbnailer
 udiskie

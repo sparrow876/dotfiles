@@ -1,0 +1,7 @@
+# PDF thumbnails in Nautilus (first page), made with pdftoppm from poppler.
+# Nautilus runs thumbnailers in a sandbox that can't see ~/dotfiles, so the
+# command is inline. %s = size, %i = input file, %o = output PNG.
+[Thumbnailer Entry]
+TryExec=pdftoppm
+Exec=sh -c 'pdftoppm -f 1 -l 1 -singlefile -png -scale-to "$0" "$1" > "$2"' %s %i %o
+MimeType=application/pdf;application/x-pdf;
