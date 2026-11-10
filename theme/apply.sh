@@ -3,8 +3,8 @@
 #   theme/apply.sh                 list themes (* = active)
 #   theme/apply.sh <name>          e.g. catppuccin-mocha, blue-ice
 # What changes: Hyprland borders, the bar/popups/panels (Quickshell), rofi,
-# kitty, starship, fzf, bat, lazygit, fastfetch, slurp selections, Qt colors
-# and MangoHud (next game launch). All themes are dark. Neovim, Nautilus and zathura stay Nord, the
+# kitty, starship, fzf, bat, lazygit, fastfetch, slurp selections, Qt colors,
+# the Vesktop (Discord) theme and MangoHud (next game launch). All themes are dark. Neovim, Nautilus and zathura stay Nord, the
 # lock/login screen keeps its qylock theme.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

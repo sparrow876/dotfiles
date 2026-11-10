@@ -132,7 +132,7 @@ clone_pinned() {
   info "$name pinned at ${commit:0:10}"
 }
 
-# A default wallpaper made from the palette, only if the folder is empty (your
+# A default Blue Ice gradient wallpaper, only if the folder is empty (your
 # own wallpapers are never touched or committed).
 step_wallpaper() {
   local dir="$HOME/Pictures/Wallpapers"

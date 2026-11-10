@@ -1,9 +1,6 @@
 -- Keybinds. Modifier is ALT; SUPER is only used for the lock screen.
 -- Every bind has a description "Category: Action". The cheat sheet (ALT + /) and
 -- the README keybind table are generated from these (`hyprctl binds -j`).
---
--- Binds for features that don't exist yet are added in the build step that
--- creates them (launcher theme, dropdown terminal, panels, capture tools, lock).
 
 local mod = "ALT"
 

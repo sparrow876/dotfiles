@@ -15,4 +15,4 @@ font_cjk    = "Noto Sans CJK JP"
 # (Segoe UI 9pt x 1.25 = 15px). The screen itself stays at 1x.
 font_px      = "15"      # Quickshell + rofi body text (pixels)
 font_px_small = "13"     # secondary text, tooltips
-font_pt      = "11.25"   # GTK/Qt apps (points; 11.25pt = 15px at 96 dpi)
+font_pt      = "11.25"   # rofi (points; 11.25pt = 15px at 96 dpi). GTK/Qt sizes are set in install.sh / theme/qt.sh

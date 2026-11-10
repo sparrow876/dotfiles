@@ -7,7 +7,6 @@ Claude never runs these. Copy one block at a time into a terminal and read the o
 Conventions:
 - `~/dotfiles` is this repo. Commands assume you start in it: `cd ~/dotfiles`.
 - **Undo** lines reverse the block directly above them.
-- Sections marked *(later)* belong to a later build step. Skip them until that step.
 
 **Scripts:** the same commands as scripts in `system/root-steps/`, one per stretch
 between reboots. Each calls `sudo` itself, skips what's already done, and is safe
@@ -197,7 +196,7 @@ kernel modules, video memory is saved by the kernel's suspend hooks, so the
 Don't enable them.
 Check: `PreserveVideoMemoryAllocations` reads `2` ("auto", the default since 595: on
 whenever `UseKernelSuspendNotifiers` is `1`) or `1` (forced on). Verified on this
-machine 2026-11-09: `2` + `1`, so memory is preserved. Suspend gets tested in step 14.
+machine 2026-11-09: `2` + `1`, so memory is preserved. Test suspend once after setup.
 
 Only if it reads `0`, or `2` with `UseKernelSuspendNotifiers: 0`:
 ```sh
@@ -222,7 +221,7 @@ sudo systemctl daemon-reload && sudo udevadm control --reload
 sudo systemctl enable --now platform-profile-performance.service
 cat /sys/firmware/acpi/platform_profile          # performance
 ```
-Undo: `sudo systemctl disable platform-profile-performance.service && sudo rm /etc/systemd/system/platform-profile-performance.service /etc/udev/rules.d/99-platform-profile.rules && sudo systemctl unmask power-profiles-daemon.service`
+Undo: `sudo systemctl disable platform-profile-performance.service && sudo rm /etc/systemd/system/platform-profile-performance.service /etc/udev/rules.d/99-platform-profile.rules && sudo systemctl daemon-reload && sudo udevadm control --reload && sudo systemctl unmask power-profiles-daemon.service && sudo systemctl start power-profiles-daemon.service`
 
 ---
 
@@ -241,6 +240,17 @@ Undo: `sudo mv /etc/pacman.conf.bak /etc/pacman.conf && sudo pacman -Syu`
 
 ## 5. Install all packages
 
+**5.0 First, the AUR helper `yay`** (a fresh Arch install doesn't have it; skip
+if `command -v yay` prints a path):
+```sh
+sudo pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay-bin.git ~/.local/src/yay-bin
+less ~/.local/src/yay-bin/PKGBUILD        # read it: it downloads yay's release from GitHub
+cd ~/.local/src/yay-bin && makepkg -si && cd ~/dotfiles
+```
+Undo: `sudo pacman -Rns yay-bin`.
+
+**5.1 Everything else:**
 ```sh
 ./install.sh --packages
 ```
@@ -250,7 +260,8 @@ that file. yay will show you the PKGBUILD diff; read it.
 **This machine has `pulseaudio` and `jack2` installed.** pacman will say they conflict
 with `pipewire-pulse` / `pipewire-jack` and ask to remove them: answer **y**. The
 default (N) cancels the whole install.
-Then the user-level part (no sudo): `./install.sh`.
+Then the user-level part (no sudo): `./install.sh`. (`3-system.sh` runs both for
+you; run `./install.sh` again only if you skipped that script or changed something.)
 Undo: remove what you don't want with `sudo pacman -Rns <pkg>`.
 
 ---
@@ -298,7 +309,7 @@ Default: block everything incoming, allow everything outgoing. Two exceptions, b
 
 ```sh
 SUBNET=$(ip -4 route | awk '/proto kernel/ && /dev wl/ {print $1; exit}')
-echo "$SUBNET"                                   # e.g. 10.139.165.0/24; stop if empty
+echo "$SUBNET"                                   # e.g. 192.168.1.0/24; stop if empty
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw logging low                             # blocked packets -> journalctl -k | grep UFW
@@ -310,8 +321,13 @@ sudo ufw status verbose
 ```
 The subnet is whatever network you're on now. On another network (e.g. home Wi-Fi),
 run the same `SUBNET=` + two `allow` lines there; rules for each subnet stay in place.
+Note: a rule is about the address range, not the network, so it also applies
+on any other Wi-Fi that happens to use the same range (cafés often use
+192.168.x.x). Remove rules you no longer need: `sudo ufw status numbered`, then
+`sudo ufw delete <number>`. Keep LocalSend's "Quick Save" off, so nobody can
+drop files on you without asking.
 
-**ACC LAN rules (later, once ACC is installed):** the exact ports come from your
+**ACC LAN rules (postponed on purpose, GAMING.md §7):** the exact ports come from your
 server machine's `cfg/configuration.json` (`udpPort`, `tcpPort`) plus ACC's LAN
 discovery port. I'll verify them and add the exact commands here then.
 
@@ -325,7 +341,7 @@ Undo: `sudo ufw disable && sudo systemctl disable ufw.service` (`sudo ufw reset`
 
 ---
 
-## 8. Login shell → zsh *(later, step 3)*
+## 8. Login shell → zsh
 
 ```sh
 chsh -s /usr/bin/zsh          # asks for your password; takes effect at next login
@@ -334,12 +350,11 @@ Undo: `chsh -s /usr/bin/bash`
 
 ---
 
-## 9. *(later)* Placeholders filled in by later steps
+## 9. Where the rest went
 
-- **Step 16:** `systemctl --user enable --now rclone-gdrive.service` (no sudo).
-- **Step 19:** done in §13 (gamemode group). No controller udev rules needed (the
-  8BitDo works through the kernel's xpad driver). ACC LAN firewall rules wait
-  until ACC is installed (§7).
+- Google Drive: §11. Gamemode group: §13. No controller udev rules are needed
+  (the 8BitDo works through the kernel's xpad driver). ACC LAN firewall rules:
+  postponed on purpose (§7, GAMING.md §7).
 
 ---
 

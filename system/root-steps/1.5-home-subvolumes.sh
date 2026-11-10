@@ -17,19 +17,29 @@ fi
 
 mksubvol() {
   local d="$1"
+  # Leftover from an earlier run whose copy failed: your files are still in .old
+  if [[ -e $d.old ]]; then
+    if [[ -d $d && $(stat -c %i "$d") == 256 ]]; then
+      echo "stop  $d.old still holds your files from an earlier run. Finish it with:"
+      echo "      cp -a --reflink=always \"$d.old/.\" \"$d/\" && rm -rf \"$d.old\""
+    else
+      echo "stop  $d.old exists from an earlier run; check it, then remove it and re-run"
+    fi
+    exit 1
+  fi
   if [[ -d $d && $(stat -c %i "$d") == 256 ]]; then
     echo "ok    $d (already a subvolume)"
     return
-  fi
-  if [[ -e $d.old ]]; then
-    echo "stop  $d.old exists from an earlier run; check it, then remove it and re-run"
-    exit 1
   fi
   [[ -e $d ]] && mv "$d" "$d.old"
   mkdir -p "$(dirname "$d")"
   btrfs subvolume create "$d" >/dev/null
   if [[ -d $d.old ]]; then
-    cp -a --reflink=always "$d.old/." "$d/"   # instant copy on btrfs; .old kept if it fails
+    # instant copy on btrfs; on failure .old is kept and the script stops
+    if ! cp -a --reflink=always "$d.old/." "$d/"; then
+      echo "stop  copying $d.old into the new subvolume failed; your files are still in $d.old"
+      exit 1
+    fi
     rm -rf "$d.old"
   fi
   echo "made  $d"

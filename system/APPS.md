@@ -21,7 +21,8 @@ from Zen). Sign in once; it stays signed in.
 - Dark mode: Outlook → Settings → General → Appearance → Dark (Chromium also
   asks sites for dark mode).
 - Notifications: allow them when Outlook asks (or the padlock → Notifications).
-- Window class `chrome-outlook.office.com__mail_-Default` (Hyprland rules).
+- Window class `chrome-outlook.office.com__mail_-Default` (taskbar matching and
+  notification clicks; no Hyprland rule needs it yet).
 
 ## Microsoft Teams (teams-for-linux)
 

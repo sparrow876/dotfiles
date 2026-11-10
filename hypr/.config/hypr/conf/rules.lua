@@ -98,7 +98,7 @@ hl.window_rule({
 })
 
 -- ---------------------------------------------------------------------------
--- Work & chat apps (Teams, Vesktop/Discord, Outlook, Claude)
+-- Work & chat apps (Teams, Vesktop/Discord)
 -- No focus stealing: misc.focus_on_activate = false (look.lua) already stops
 -- their notifications from raising/switching windows; clicking a notification
 -- focuses the app on purpose (services/Notifications.qml).

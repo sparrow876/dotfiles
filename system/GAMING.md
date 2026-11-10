@@ -3,8 +3,8 @@
 Steam games on this laptop: what's set up, how to launch games on the RTX 3050,
 the controller, and per-game notes. Root steps for gaming: `ROOT-STEPS.md` §13.
 
-Status (2026-11-09): general setup done and tested; **no games installed yet**.
-The per-game sections at the end are filled in once each game is installed.
+Status (2026-11-10): general setup done and tested. ACC is installed and runs;
+the other games aren't installed yet. Per-game sections are filled in as they are.
 
 ---
 

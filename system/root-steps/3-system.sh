@@ -100,6 +100,7 @@ for old in pulseaudio jack2; do
     echo "        remove it. Answer y (the default N cancels the whole install)."
   fi
 done
+command -v yay >/dev/null || { echo "stop  yay is not installed: do ROOT-STEPS.md 5.0 first, then re-run this script"; exit 1; }
 "$REPO/install.sh" --packages
 say "5 User-level setup (folders, pinned clones, theme files)"
 "$REPO/install.sh"
@@ -142,6 +143,6 @@ fi
 
 say "All done."
 echo "Show Claude the output above (especially any 'check' lines)."
-echo "Not done yet on purpose: step 8 (zsh as login shell) comes with build step 3."
+echo "Next: chsh -s /usr/bin/zsh (ROOT-STEPS §8), then qylock + 4-login.sh (§10)."
 echo
 echo "Log saved to: ${ROOTSTEP_LOGGING/#$HOME/\~}  (tell Claude you're done; it can read this)"

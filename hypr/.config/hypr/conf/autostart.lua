@@ -1,5 +1,4 @@
--- Started once when Hyprland starts. More services are added in later build
--- steps (bar, wallpaper, clipboard, idle, ...).
+-- Started once when Hyprland starts (not on `hyprctl reload`).
 --
 -- Already handled without anything here:
 --   xdg-desktop-portal(-hyprland/-gtk): started on demand over D-Bus
@@ -18,7 +17,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("awww-daemon")
     hl.exec_cmd(os.getenv("HOME") .. "/dotfiles/scripts/wallpaper.sh restore")
 
-    -- Bar, widgets and (later) notifications: ~/.config/quickshell/shell.qml.
+    -- Bar, widgets, notifications, overlays: ~/.config/quickshell/shell.qml.
     -- Quickshell reloads itself when a .qml file changes.
     hl.exec_cmd("qs")
 

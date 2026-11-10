@@ -63,19 +63,21 @@ Short version:
 2. `bash system/root-steps/1.5-home-subvolumes.sh` from a TTY (keeps caches,
    downloads, recordings and Steam out of snapshots).
 3. `bash system/root-steps/2-nvidia.sh`, then **reboot**.
-4. `bash system/root-steps/3-system.sh`: checks, performance profile,
-   multilib, **all packages** (`packages/*.txt`), timers, firewall.
-5. `./install.sh`: the user-level part (no sudo): folders, default wallpaper,
-   pinned clones (Oh My Zsh, plugins, qylock), theme files, stow links, Qt and
-   GTK settings.
+4. Install `yay` (ROOT-STEPS §5.0), then `bash system/root-steps/3-system.sh`:
+   checks, performance profile, multilib, **all packages** (`packages/*.txt`),
+   the user-level `./install.sh`, timers, firewall.
+5. `./install.sh` again only if you skipped step 4 or changed something: the
+   user-level part (no sudo): folders, default wallpaper, pinned clones (Oh My
+   Zsh, plugins, qylock), theme files, stow links, Qt and GTK settings.
 6. `chsh -s /usr/bin/zsh` (ROOT-STEPS §8).
 7. Lock + login screen: qylock's two scripts, then
    `bash system/root-steps/4-login.sh` (ROOT-STEPS §10), and reboot into SDDM.
-8. Optional: Google Drive and folder colors (§11), work/chat apps (§12),
+8. Laptop lid (lock when plugged in, suspend on battery): ROOT-STEPS §14.
+9. Optional: Google Drive and folder colors (§11), work/chat apps (§12),
    gaming (§13 + [system/GAMING.md](system/GAMING.md)).
 
-`install.sh` never uses `sudo`, never edits `/etc` and never runs third-party
-scripts. `./install.sh --help` lists its steps.
+`./install.sh` (without `--packages`) never uses `sudo`, never edits `/etc` and
+never runs third-party scripts. `./install.sh --help` lists its steps.
 
 ## Everyday use
 

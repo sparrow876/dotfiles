@@ -91,10 +91,14 @@ AUR helper: **yay** (not paru).
 | `quickshell/…/notifications/` | popups + center |
 | `quickshell/…/components/` | StyledText, Icon, Glyphs (all glyphs), Tooltip, Toggle, Slider, IconButton, TextButton, Card, Spinner, Separator, LevelBar, Graph, RingGauge, WheelSteps (scroll → whole steps) |
 | `quickshell/…/{osd,panel,powermenu,wallpaper,idle,cheatsheet}/` | one overlay each |
-| `scripts/` | shell helpers (update, wifi-enterprise, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, wallpaper, record, notify-file, theme-picker, theme-colors.sh (generated)) |
+| `scripts/` | shell helpers (update, wifi-enterprise, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, lid, wallpaper, record, notify-file, theme-picker, keybinds-to-md.sh + keybinds.jq, theme-colors.sh (generated)) |
 | `theme/` | palettes, style, templates, `render.sh`, `apply.sh`, README |
 | `system/` | ROOT-STEPS.md, root-steps scripts, units (platform profile, paccache), etc (reflector.conf, logind.conf.d/10-lid.conf) |
-| `systemd/.config/environment.d/` | env for D-Bus/systemd-started apps (`GSK_RENDERER`) |
+| `systemd/` | `environment.d/10-rice.conf` (env before Hyprland starts), `systemd/user/rclone-gdrive.service` |
+| `applications/` | `.desktop` files: Outlook web app, nvim in kitty |
+| `xdg/` | `hyprland-mimeapps.list` (default apps) |
+| `qt/` | qt5ct/qt6ct colour files (generated) |
+| `vesktop/` | Vesktop theme `rice.theme.css` (generated) |
 | `zsh/`, `kitty/`, `starship/`, `fastfetch/`, `lazygit/`, `bat/`, `rofi/`, `gtk/` | app configs (stowed) |
 | `nvim/` | Neovim (Nord): `init.lua`, `lua/{options,keymaps,autocmds}.lua`, `lua/plugins/*.lua` (one file per topic), `lazy-lock.json`; `CHEATSHEET.md` (not stowed) |
 | `zathura/` | zathurarc (Nord, SyncTeX, recolor on Ctrl+R) |
@@ -490,7 +494,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Workspaces scroll to cycle | removed | user request |
 | Cava wave in the bar (+ IdleScreen) | removed | 15–30 % CPU while playing; user scrapped it |
 | Text sizes | Windows-125 % (15 px UI, GTK 11.25 pt, kitty 13 pt, Nautilus 12 pt); bar 44 px | user request |
-| Theme | palette system + 5 themes (ALT+T) | user request |
+| Theme | palette system + 4 dark themes (ALT+T) | user request |
 | Replay toggled only from bar menu | ALT+Ctrl+R turns it on / saves; ALT+Ctrl+Shift+R toggles | indicator is hidden when idle |
 | Bluetooth PIN confirm dialog | not possible in Quickshell (no agent) → "Advanced…" (Blueman) | missing API |
 | Dim to ~30 % | 30 % of the *current* brightness | user usually at ~18 % |
@@ -513,14 +517,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   Possible later: a tiny BlueZ agent forwarding to Quickshell.
 - notify-send with an unknown icon name shows Papirus' grey ✕ instead of the
   bell fallback.
-- Per-game setup (Proton versions, launch options, Content Manager/CSP, ACC LAN
-  ufw rules + serverList.json) waits until the games are installed (GAMING.md §7).
-- Step 14 needs the user's qylock/SDDM runs + reboot before lock/SDDM/suspend
-  are verified.
-- Step 17 apps need the user's `yay` install + tests (call pop-out titles to
-  confirm for the `call-popouts` rule; Vesktop theme to check visually).
-- Build complete (steps 1–21). Open: per-game setup (GAMING.md §7), user's
-  rclone sign-in, call pop-out titles for the `call-popouts` rule.
+- Games: ACC installed and runs (standard launch options); its LAN ufw rules,
+  serverList.json and controller setup are postponed; MGSV, BeamNG and AC not
+  installed yet (GAMING.md §7).
+- Open items: rclone sign-in (`rclone config`), Teams/Vesktop call pop-out
+  titles for the `call-popouts` rule, Vesktop theme visual check, one
+  suspend/resume test with NVIDIA, docked lid-close test (scripts/lid.sh).
 - Notification history is capped at 100 (oldest dropped).
 
 ---
@@ -569,6 +571,18 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-10** — Review batch 4 (docs + root-step scripts): R15 ROOT-STEPS
+  §5.0 yay bootstrap + 3-system.sh stops without yay; README says
+  `./install.sh` (without --packages) never uses sudo. R16 README lid step.
+  R44 ufw subnet-rule caveats. R45 1.5-home-subvolumes.sh: re-run after a
+  failed copy stops with the finish command instead of "ok". R46 stale
+  "(later)/step N" notes (ROOT-STEPS, 3-system.sh, §6, GAMING.md). R47 README /
+  §5 no longer suggest running install.sh twice. R48 theme docs (4 dark themes,
+  Vesktop, wallpaper comment). R49 font_pt comment. R50 §3 undo complete.
+  R51 §2.2 map. R52 Outlook class wording. R53 stale Hyprland comments. R57
+  example subnet generic. Review complete: all 57 issues handled (R37 Qt5 and
+  R38 Teams X11 deliberately kept, see §5).
 
 - **2026-11-10** — Review batch 3 (scripts, configs, security): R14 kitty
   remote-control socket moved from abstract @socket to $XDG_RUNTIME_DIR (0700).

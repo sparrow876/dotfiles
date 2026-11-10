@@ -2,7 +2,8 @@
 # Outlook as a Chromium web app (no Linux app exists). Own profile in
 # ~/.local/share/webapps/outlook, so its sign-in/cookies are separate from
 # everything else. Chromium names the window after the URL + profile:
-# class "chrome-outlook.office.com__mail_-Default" (used by Hyprland rules).
+# class "chrome-outlook.office.com__mail_-Default" (StartupWMClass, and what a
+# notification click looks for).
 Type=Application
 Name=Outlook
 GenericName=Mail and calendar

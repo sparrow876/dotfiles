@@ -15,7 +15,7 @@ theme/apply.sh catppuccin-mocha    # switch + reload running apps
 | `current` | Name of the active palette |
 | `templates/**.tmpl` | Each app's color file with `{{placeholders}}` |
 | `render.sh` | Fills the templates from style + active palette |
-| `apply.sh` | Sets `current`, renders, reloads Hyprland/kitty/Quickshell/bat/GTK |
+| `apply.sh` | Sets `current`, renders (also the Vesktop theme and MangoHud), reloads Hyprland/kitty/Quickshell/bat/GTK |
 
 Included: **Blue Ice** (the original) and **Catppuccin Mocha / Macchiato /
 Frappé**, using Catppuccin's official palette. All themes are dark (light
