@@ -6,7 +6,8 @@
 [Unit]
 Description=Google Drive (rclone mount at ~/GoogleDrive)
 Documentation=man:rclone(1)
-After=default.target
+# No After=default.target: WantedBy=default.target already orders it, and both
+# together form a cycle that makes systemd drop the mount at login.
 
 [Service]
 Type=notify

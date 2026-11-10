@@ -19,6 +19,8 @@ PopupFrame {
 
     property date now: new Date()
     onOpened: { now = new Date(); Notifications.markRead() }
+    // Notifications that arrived while it was open were seen: no bell dot after closing
+    onShouldShowChanged: if (!shouldShow) Notifications.markRead()
     // Refresh "5 min ago" labels only while open
     Timer { running: center.visible; interval: 30000; repeat: true; onTriggered: center.now = new Date() }
 
@@ -208,7 +210,7 @@ PopupFrame {
                                     }
                                     StyledText {
                                         visible: text !== ""
-                                        text: item.n.body
+                                        text: Notifications.bodyText(item.n)
                                         textFormat: Text.StyledText
                                         color: Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.8)
                                         font.pixelSize: Theme.fontSizeSmall

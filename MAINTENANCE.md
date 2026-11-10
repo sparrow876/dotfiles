@@ -545,8 +545,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 ## 8. Recovery
 
 - Desktop won't start: Ctrl+Alt+F3, log in, `cd ~/dotfiles`, `claude`.
-- Bar gone: `pkill -x qs; hyprctl dispatch 'hl.dsp.exec_cmd("qs")'`,
-  then `qs log`. (From a TTY just log in again; autostart runs it.)
+- Bar gone: `pkill -x qs; hyprctl dispatch 'hl.dsp.exec_cmd("qs")'`, then
+  `qs log`. From a TTY, hyprctl needs the instance: `hyprctl -i 0 dispatch ...`.
+- Lock screen crashed/frozen: TTY (Ctrl+Alt+F3), `pkill -f
+  'quickshell-lockscreen/lock_shell\.qml'` (else lock.sh's "already locked"
+  check skips the relaunch), `hyprctl -i 0 dispatch
+  'hl.dsp.exec_cmd("~/dotfiles/scripts/lock.sh")'`, back with Ctrl+Alt+F1/F2,
+  unlock (`misc.allow_session_lock_restore` lets a new lock client take over).
+  Don't run lock.sh directly in the TTY. Last resort: `hyprctl -i 0 dispatch
+  'hl.dsp.exit()'`. Cause: `qs log` / journal.
 - Login screen broken: TTY, `sudo systemctl disable sddm.service && reboot`,
   then `start-hyprland` on tty1.
 - Bad update: roll back to the snap-pac "pre" snapshot (ROOT-STEPS §1.6; if
@@ -560,6 +567,26 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-10** — Code review batch 1 (high/medium; review = 12 area
+  reviewers + adversarial verification, plan in ~/.claude/plans). R1 rclone
+  unit ordering cycle (After=default.target removed: Drive never mounted after
+  reboot). R2 StyledText defaults to PlainText (MPRIS titles, SSIDs, BT names,
+  summaries were rendered as rich text incl. remote <img>); bodies keep markup
+  via Notifications.bodyText() with images stripped. R3 power menu ignores key
+  auto-repeat for activation (holding R rebooted without countdown). R4 udiskie
+  autostarted. R5 replaced notifications (replaces_id) re-announced via
+  signal hooks + Qt.callLater, history sorted by arrival time. R6 BarIcon
+  `open` false without a popup (coffee cup was always blue). R7 Chromium web-app
+  notifications focus their chrome-<host> window (Outlook). R8/R12/R13
+  wifi-enterprise.sh: optional server-name pin (+ TOFU offer), password via
+  `nmcli connection edit` stdin (not argv; editor trims edge spaces, those fall
+  back to argv), SSID sanitised. R9 lock-screen crash recovery documented.
+  R10/R11 scripts/lid.sh: lid close disables eDP-1 when another monitor is on
+  (runtime `hl.monitor` via `hyprctl dispatch 'function() ... end'`), hypridle
+  screens-on skips the panel of a closed lid. Also R17-R19 (notification times
+  + unread persist across reload as JSON string; transient expire; bell cleared
+  on center close).
 
 - **2026-11-09** — Lid: lock only when plugged in, suspend on battery (user
   request; a Steam download stopped on lid close). logind drop-in

@@ -182,7 +182,14 @@ Generated from the live Hyprland binds by `scripts/keybinds-to-md.sh README.md`
 - **Hyprland won't start / black screen**: press **Ctrl + Alt + F3**, log in,
   then `cd ~/dotfiles` and run `claude`. Everything needed to diagnose works
   without a desktop (Wi-Fi from a TTY: `nmtui`).
-- **Bar disappeared**: `pkill -x qs; hyprctl dispatch 'hl.dsp.exec_cmd("qs")'`.
+- **Bar disappeared**: `pkill -x qs; hyprctl dispatch 'hl.dsp.exec_cmd("qs")'`
+  (from a TTY add `-i 0`: `hyprctl -i 0 dispatch ...`).
+- **Lock screen crashed or frozen** (red screen / can't type): press
+  **Ctrl + Alt + F3**, log in, then
+  `pkill -f 'quickshell-lockscreen/lock_shell\.qml'` and
+  `hyprctl -i 0 dispatch 'hl.dsp.exec_cmd("~/dotfiles/scripts/lock.sh")'`.
+  Go back with **Ctrl + Alt + F1** (or F2) and unlock. Last resort, losing
+  unsaved work: `hyprctl -i 0 dispatch 'hl.dsp.exit()'`.
 - **An update broke something**: every package change has a "pre" snapshot.
   `snapper -c root list` shows them (the `update` command prints the right
   number); how to roll back, in plain English: ROOT-STEPS §1.6.

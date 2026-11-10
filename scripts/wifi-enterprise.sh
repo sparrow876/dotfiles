@@ -23,16 +23,20 @@ ask()  { local a; read -r -p "$1 [y/N] " a; [[ ${a,,} == y || ${a,,} == yes ]]; 
 iface=$(nmcli -t -f DEVICE,TYPE device | awk -F: '$2 == "wifi" {print $1; exit}')
 [[ -n $iface ]] || die "No Wi-Fi device found."
 
-say "${b}Set up \"$ssid\"${off} (WPA2/WPA3-Enterprise: PEAP + MSCHAPv2)"
-if nmcli -t -f NAME connection show | grep -qxF "$ssid"; then
-  ask "A saved connection \"$ssid\" exists. Replace it?" || { say "Kept the existing one."; exit 0; }
-  nmcli connection delete "$ssid" >/dev/null || die "Couldn't remove the old connection."
+# The SSID comes from the air (the Wi-Fi menu passes it in): never let it act as
+# an option, a path or terminal control codes
+shown=${ssid//[[:cntrl:]]/}
+safe=${ssid//[^A-Za-z0-9._-]/_}
+say "${b}Set up \"$shown\"${off} (WPA2/WPA3-Enterprise: PEAP + MSCHAPv2)"
+if nmcli -g NAME connection show | sed 's/\\:/:/g' | grep -qxF -- "$ssid"; then
+  ask "A saved connection \"$shown\" exists. Replace it?" || { say "Kept the existing one."; exit 0; }
+  nmcli connection delete id "$ssid" >/dev/null || die "Couldn't remove the old connection."
 fi
 
 hint=""; [[ $ssid == iiscwlan ]] && hint=" (your IISc email, name@iisc.ac.in)"
 read -r -p "Username$hint: " identity
 [[ -n $identity ]] || die "No username given."
-read -r -s -p "Password: " password; printf '\n'
+IFS= read -r -s -p "Password: " password; printf '\n'
 [[ -n $password ]] || die "No password given."
 
 # Server certificate check: without it, a fake access point with the same name
@@ -55,26 +59,40 @@ if [[ -n $ca && $ca != none ]]; then
     || die "$ca is not a certificate (PEM or DER)."
   say "${dim}$info${off}"
   # Keep a copy where it won't be cleaned up with Downloads
-  dest="$HOME/.local/share/certs/$ssid-ca.pem"
+  dest="$HOME/.local/share/certs/$safe-ca.pem"
   mkdir -p "${dest%/*}"
   openssl x509 -inform "$form" -in "$ca" -out "$dest" || die "Couldn't save the certificate."
   args+=(802-1x.ca-cert "$dest")
+  # The CA alone isn't enough if it's a public CA: also require the server's name
+  say "Server name to require, e.g. radius.example.edu (Enter = decide after connecting):"
+  read -r -p "> " domain
+  [[ -n $domain ]] && args+=(802-1x.domain-suffix-match "$domain")
 else
-  warn "${b}No certificate check${off}: anyone can pretend to be \"$ssid\" and catch your login."
+  warn "${b}No certificate check${off}: anyone can pretend to be \"$shown\" and catch your login."
   ask "Continue without it (you can add it later by running this again)?" || { say "Stopped. Nothing was changed."; exit 0; }
 fi
 
-# The password is passed straight to nmcli (not echoed, not logged)
-if ! nmcli connection add "${args[@]}" 802-1x.password "$password" >/dev/null; then
-  unset password; die "NetworkManager refused the settings (see the message above)."
+# Create the connection without the password, then hand the password to
+# nmcli's editor on stdin: it never appears in a process list (argv).
+# (The editor trims spaces at the ends of a value; only such a password goes
+# on the command line, for the split second nmcli runs.)
+nmcli connection add "${args[@]}" >/dev/null || { unset password; die "NetworkManager refused the settings (see the message above)."; }
+if [[ $password == [[:space:]]* || $password == *[[:space:]] ]]; then
+  nmcli connection modify id "$ssid" 802-1x.password "$password" >/dev/null; ok=$?
+else
+  printf 'set 802-1x.password %s\nsave persistent\nquit\n' "$password" | nmcli connection edit id "$ssid" >/dev/null 2>&1; ok=$?
 fi
 unset password
-printf '%s✓%s Saved "%s" (connects automatically when in range).\n' "$green" "$off" "$ssid"
+if ((ok != 0)); then
+  nmcli connection delete id "$ssid" >/dev/null 2>&1
+  die "Couldn't store the password; nothing was saved."
+fi
+printf '%s✓%s Saved "%s" (connects automatically when in range).\n' "$green" "$off" "$shown"
 
 start=$(date '+%F %T')
 say "Connecting…"
-if nmcli --wait 45 connection up "$ssid" >/dev/null 2>&1; then
-  printf '%s✓%s Connected to %s.\n' "$green" "$off" "$ssid"
+if nmcli --wait 45 connection up id "$ssid" >/dev/null 2>&1; then
+  printf '%s✓%s Connected to %s.\n' "$green" "$off" "$shown"
 else
   warn "Couldn't connect. The likely reasons:"
   journalctl -u NetworkManager -u wpa_supplicant --since "$start" --no-pager -o cat 2>/dev/null \
@@ -85,4 +103,12 @@ fi
 # The server's certificate as seen just now (to pin its name later if wanted)
 cert=$(journalctl -u wpa_supplicant --since "$start" --no-pager -o cat 2>/dev/null | grep -o "depth=0 subject='[^']*'" | tail -1)
 [[ -n $cert ]] && say "${dim}Server certificate: ${cert#depth=0 }${off}"
+# Name not pinned yet: offer to pin the name this server just showed (trust on
+# first use; only sensible if you're really at the right place right now)
+cn=$(sed -n "s/.*CN=\([^/,']*\).*/\1/p" <<<"$cert")
+if [[ -n ${dest:-} && -z ${domain:-} && -n $cn ]] \
+   && ask "Only accept this server name ($cn) from now on?"; then
+  nmcli connection modify id "$ssid" 802-1x.domain-suffix-match "$cn" >/dev/null \
+    && printf '%s✓%s Pinned to %s.\n' "$green" "$off" "$cn"
+fi
 read -r -p "Press Enter to close. " _

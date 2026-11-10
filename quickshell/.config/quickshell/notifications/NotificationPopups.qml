@@ -174,7 +174,7 @@ PanelWindow {
                         }
                         StyledText {
                             visible: text !== ""
-                            text: card.n.body
+                            text: Notifications.bodyText(card.n)
                             textFormat: Text.StyledText
                             color: Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.85)
                             font.pixelSize: Theme.fontSizeSmall + 1

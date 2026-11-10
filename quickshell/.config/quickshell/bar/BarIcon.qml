@@ -16,7 +16,7 @@ MouseArea {
     property real glyphSize: 18
     property bool badge: false         // small light-blue dot (e.g. "connected")
     default property alias extra: extraRow.data
-    readonly property bool open: Popups.isOpen(popup, screenName)
+    readonly property bool open: popup !== "" && Popups.isOpen(popup, screenName)
 
     implicitWidth: row.implicitWidth + 4
     implicitHeight: 28

@@ -144,11 +144,13 @@ PanelWindow {
             if (k === Qt.Key_Escape) { menu.pending >= 0 ? menu.cancel() : menu.close() }
             else if (k === Qt.Key_Left || k === Qt.Key_H) { menu.cancel(); menu.selected = (menu.selected + 5) % 6 }
             else if (k === Qt.Key_Right || k === Qt.Key_Tab) { menu.cancel(); menu.selected = (menu.selected + 1) % 6 }
-            else if (k === Qt.Key_Return || k === Qt.Key_Enter || k === Qt.Key_Space) menu.activate(menu.selected)
+            // Activation ignores key auto-repeat: holding Enter / R must not count
+            // as the confirming second press (it would reboot without the countdown)
+            else if (k === Qt.Key_Return || k === Qt.Key_Enter || k === Qt.Key_Space) { if (!event.isAutoRepeat) menu.activate(menu.selected) }
             else {
                 const letter = event.text.toUpperCase()
                 const i = menu.actions.findIndex(a => a.key === letter)
-                if (i >= 0) {
+                if (i >= 0 && !event.isAutoRepeat) {
                     if (i !== menu.pending) menu.cancel()
                     menu.activate(i)
                 }

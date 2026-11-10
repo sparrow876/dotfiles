@@ -32,4 +32,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("wl-paste --type text --watch cliphist -max-items 200 store")
     hl.exec_cmd("wl-paste --type image --watch cliphist -max-items 200 store")
     hl.exec_cmd("wl-clip-persist --clipboard regular")
+
+    -- USB sticks / SD cards mount automatically (notifications via the bar)
+    hl.exec_cmd("udiskie --automount --notify --no-tray")
 end)
