@@ -27,6 +27,9 @@ claude-desktop               # [c913337] Anthropic's OFFICIAL .deb from download
 ## Maintenance (step 20), reviewed 2026-11-09
 claude-code                  # [ec02864] Anthropic's official claude binary from downloads.claude.ai (sha256-pinned) -> /opt/claude-code; /usr/bin/claude wrapper turns off its self-updater (pacman updates it); no .install script. Needed for TTY recovery (README)
 
+## Your own additions, reviewed 2026-11-10
+ani-cli                      # [a26ced7] upstream v5.1 tag tarball from github.com/pystardust/ani-cli (sha256-pinned); installs one script + man page; .install only prints a disclaimer. Deps mpv, ffmpeg, fzf, curl
+
 ## Pending review in later steps (left commented on purpose)
 # game-devices-udev          # step 19: only if Steam doesn't see the 8BitDo controller
 # nordic-theme               # step 16: Nord GTK3 theme (last updated 2022; may pick another)

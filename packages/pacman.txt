@@ -147,6 +147,7 @@ zoxide
 fastfetch
 lazygit
 btop                 # task manager in the terminal (you added it 2026-11-09)
+bc                   # command-line calculator (you added it 2026-11-10)
 
 ## Neovim + LaTeX
 neovim
