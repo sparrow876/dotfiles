@@ -574,6 +574,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-11** — Tray: room for Pomoclock's wide icon (the user's pomodoro
+  app, `~/utilities/pomodoro`, not part of this repo). Its tray icon is a
+  170×27 pill; the 20×20 slot squashed it. Tray items with id
+  `io.github.pomoclock.Pomoclock` get a 170×27 slot drawn with a plain `Image`
+  at that `sourceSize` (IconImage always requests a square pixmap, which
+  Quickshell scales without keeping the aspect ratio). Other tray icons are
+  unchanged. File: `bar/Tray.qml`.
+
 - **2026-11-11** — Bluetooth headphones (ACCENTUM Plus) connected right after
   pairing but never again ("Connection refused (111)"); only forget + re-pair
   helped. Cause: no pairing agent was running (Quickshell has none; blueman-

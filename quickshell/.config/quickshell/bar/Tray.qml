@@ -26,19 +26,36 @@ Row {
         delegate: MouseArea {
             id: slot
             required property SystemTrayItem modelData
-            width: 20
-            height: 20
+            // Pomoclock draws its tray icon as a wide pill (170x27), so it gets
+            // a slot about six icons wide instead of the usual 20x20 square.
+            readonly property bool wide: modelData.id === "io.github.pomoclock.Pomoclock"
+            width: wide ? 170 : 20
+            height: wide ? 27 : 20
             anchors.verticalCenter: parent.verticalCenter
             hoverEnabled: true
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
             cursorShape: Qt.PointingHandCursor
 
             IconImage {
+                visible: !slot.wide
                 anchors.fill: parent
-                source: slot.modelData.icon
+                source: slot.wide ? "" : slot.modelData.icon
                 implicitSize: 20
                 mipmap: true
                 opacity: slot.containsMouse ? 1 : 0.9
+            }
+
+            // IconImage always requests a square image (and Quickshell scales
+            // tray pixmaps to the requested size, ignoring aspect), so the wide
+            // pill uses a plain Image that requests its true 170x27 shape.
+            Image {
+                visible: slot.wide
+                anchors.fill: parent
+                source: slot.wide ? slot.modelData.icon : ""
+                sourceSize: Qt.size(170, 27)
+                smooth: true
+                cache: false
+                opacity: slot.containsMouse ? 1 : 0.95
             }
 
             onClicked: event => {
