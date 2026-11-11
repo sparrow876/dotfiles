@@ -9,6 +9,11 @@ if [[ -o interactive && -n $KITTY_WINDOW_ID && -z $DROPTERM && -z $NVIM \
   fastfetch
 fi
 
+# --- PATH ----------------------------------------------------------------------
+# Programs installed with `cargo install` (Rust) land in ~/.cargo/bin
+typeset -U path
+path=("$HOME/.cargo/bin" $path)
+
 # --- Oh My Zsh -----------------------------------------------------------------
 # Cloned at a pinned commit by install.sh (no auto-updates: update by bumping the
 # commit in install.sh).

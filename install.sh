@@ -6,7 +6,7 @@
 #   ./install.sh --packages    install packages/pacman.txt + packages/aur.txt
 #                                (asks for your sudo password via pacman/yay)
 #   ./install.sh --all         --packages, then the user-level setup
-#   ./install.sh --only <step> run one step: dirs | wallpaper | clones | render | stow | qt | gsettings
+#   ./install.sh --only <step> run one step: dirs | wallpaper | clones | render | stow | qt | gsettings | rust
 #
 # It never enables services, edits /etc or runs third-party scripts.
 # Root-level steps live in system/ROOT-STEPS.md and are run by hand.
@@ -259,6 +259,19 @@ step_gsettings() {
   fi
 }
 
+step_rust() {
+  # rustup (packages/pacman.txt) only installs the installer; this downloads the
+  # stable Rust toolchain (rustc, cargo, rustfmt, clippy) + rust-analyzer for
+  # Neovim into ~/.rustup. Safe to re-run; `rustup update` updates it later.
+  if ! command -v rustup >/dev/null; then
+    warn "rustup not installed (packages/pacman.txt); skipping Rust"
+    return
+  fi
+  info "Rust: stable toolchain + rust-analyzer"
+  rustup default stable
+  rustup component add rust-analyzer rust-src
+}
+
 user_setup() {
   step_dirs
   step_wallpaper
@@ -267,6 +280,7 @@ user_setup() {
   step_stow
   step_qt
   step_gsettings
+  step_rust
   info "Done. Anything moved aside is in ${BACKUP_DIR/#$HOME/\~} (if it exists)."
 }
 

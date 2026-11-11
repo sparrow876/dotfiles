@@ -574,6 +574,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-11** — Added Rust support (user request). `rustup` in
+  `packages/pacman.txt`; new `install.sh --only rust` step (stable toolchain +
+  rust-analyzer + rust-src; also part of the normal `install.sh` run). Neovim:
+  rust-analyzer from rustup (not mason, so it matches the compiler), clippy on
+  save, rustfmt on save (skipped while no server runs), treesitter `rust`
+  parser. zsh: `~/.cargo/bin` on PATH. Docs: nvim/CHEATSHEET.md §6,
+  zsh/SHELL-CHEATSHEET.md. Files: `packages/pacman.txt`, `install.sh`,
+  `nvim/.config/nvim/lua/plugins/{lsp,treesitter}.lua`, `zsh/.zshrc`.
+
 - **2026-11-11** — Tray: room for Pomoclock's wide icon (the user's pomodoro
   app, `~/utilities/pomodoro`, not part of this repo). Its tray icon is a
   170×27 pill; the 20×20 slot squashed it. Tray items with id

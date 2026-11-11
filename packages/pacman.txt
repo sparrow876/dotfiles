@@ -161,6 +161,7 @@ texlive-basic
 texlive-latexextra
 texlive-fontsrecommended
 texlive-binextra     # includes latexmk
+rustup               # Rust: rustc, cargo, rustfmt, clippy, rust-analyzer (install.sh --only rust picks the toolchain)
 # biber              # only for biblatex bibliographies (\usepackage{biblatex}); pulls ~30 perl deps
 
 ## Media

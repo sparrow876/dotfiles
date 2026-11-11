@@ -21,6 +21,25 @@ return {
       })
       require("mason-lspconfig").setup({ ensure_installed = servers, automatic_enable = true })
 
+      -- Rust: rust-analyzer comes from rustup (matches the installed compiler),
+      -- not from mason. Checks the code with clippy (more hints than plain
+      -- `cargo check`) every time the file is saved.
+      vim.lsp.config("rust_analyzer", {
+        settings = { ["rust-analyzer"] = { check = { command = "clippy" } } },
+      })
+      vim.lsp.enable("rust_analyzer")
+      -- Rust files are formatted (rustfmt) on save, like `cargo fmt`
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        group = vim.api.nvim_create_augroup("rice-rust-format", { clear = true }),
+        pattern = "*.rs",
+        callback = function(args)
+          -- (silently skipped while rust-analyzer isn't running)
+          if #vim.lsp.get_clients({ bufnr = args.buf, method = "textDocument/formatting" }) > 0 then
+            vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 2000 })
+          end
+        end,
+      })
+
       vim.diagnostic.config({ virtual_text = true, severity_sort = true, float = { border = "rounded" } })
 
       -- Shortcuts that only exist when a language server is attached

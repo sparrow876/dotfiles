@@ -109,6 +109,18 @@ extract photos.zip        # also .tar.gz, .tar.xz, .7z, .rar, .zst, ...
 The system summary that greets you in a new kitty window (not in the dropdown
 terminal, Neovim's terminal or over SSH). Run `fastfetch` any time to see it again.
 
+### Rust: cargo and rustup
+`cargo` builds and runs Rust projects; `rustup` installs and updates Rust itself.
+```sh
+cargo new hello && cd hello   # new project (Cargo.toml + src/main.rs)
+cargo run                     # build and run it
+cargo build --release         # optimised build, in target/release/
+cargo clippy                  # extra hints about your code
+cargo fmt                     # format all files (Neovim also does this on save)
+cargo install ripgrep         # install a Rust program into ~/.cargo/bin (on PATH)
+rustup update                 # update Rust to the newest stable version
+```
+
 ---
 
 ## Handy aliases

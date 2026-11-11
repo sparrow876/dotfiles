@@ -79,7 +79,9 @@ Enter to open, `Esc` to close.
 
 ## 6. Code help (language servers)
 
-Installed for: Lua, LaTeX (texlab), Python (pyright), Bash, Markdown.
+Installed for: Lua, LaTeX (texlab), Python (pyright), Bash, Markdown, Rust
+(rust-analyzer from rustup; Rust files are formatted on save and checked with
+clippy; open a file inside a Cargo project, i.e. a folder with `Cargo.toml`).
 Errors show as coloured text at the end of the line and signs in the gutter.
 
 | Keys | Does |

@@ -1,7 +1,7 @@
 -- Treesitter: better syntax highlighting and indentation (main branch API).
 -- Parsers are compiled once (needs tree-sitter-cli + a C compiler).
 -- LaTeX is left to vimtex's own highlighting, as vimtex recommends.
-local parsers = { "lua", "vim", "vimdoc", "query", "bash", "python", "c",
+local parsers = { "lua", "vim", "vimdoc", "query", "bash", "python", "c", "rust",
                   "markdown", "markdown_inline", "json", "toml", "yaml", "bibtex", "diff", "gitcommit" }
 return {
   "nvim-treesitter/nvim-treesitter",
