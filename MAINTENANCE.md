@@ -574,6 +574,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-11** — MGSV binocular zoom (mouse wheel) dead on Proton 10/11/
+  Experimental (ValveSoftware/Proton #10200 → #743). Proton 9.0-4 is no longer
+  usable: with the current Steam client lsteamclient never loads → "failed to
+  load steam api", even on a fresh prefix. Fix: **GE-Proton11-12** (installed
+  by hand into `compatibilitytools.d`; ProtonUp-Qt 2.16 hung on the download)
+  with a fresh prefix: launches and the wheel works. File: `system/GAMING.md`.
+
 - **2026-11-11** — Tray right-click menu didn't close on an outside click: it
   relied on HyprlandFocusGrab, which didn't clear for it. Fix: it's always
   opened by a click, so it's now a grabbing popup (`grabFocus: true`, the

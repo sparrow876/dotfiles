@@ -165,20 +165,27 @@ the recommended Proton version and launch options here.
 
 ### Metal Gear Solid V: The Phantom Pain (Steam app 287700)
 
-- Windows-only game, runs with **Proton 11** (the "Proton Stable" default).
-  Starts out of the box (checked 2026-11-11).
-- ProtonDB: **Platinum**, 521 reports, strong confidence. Nothing open in
-  ValveSoftware/Proton #124 needs a workaround.
+- Windows-only game. Uses **GE-Proton11-12** (set 2026-11-11): Properties →
+  Compatibility → "Force the use of a specific Steam Play compatibility tool"
+  → GE-Proton11-12. Launches normally and the mouse wheel works.
+- Why not Valve's Proton: on **Proton 10/11/Experimental the mouse wheel
+  (binocular zoom) does nothing**, a Proton regression (ValveSoftware/Proton
+  #10200, merged into #743, no fix as of 2026-11-11). The old workaround,
+  Proton 9.0-4, **no longer starts the game** with the current Steam client
+  ("failed to load steam api"; Proton 9's Steam bridge never loads), even with
+  a fresh prefix.
+- ProtonDB: **Platinum**, 521 reports, strong confidence.
 - Launch options: just the standard line: `prime-run gamemoderun mangohud %command%`
   (without it the game runs on the Intel iGPU).
-- **Mouse wheel (binocular zoom) does nothing on Proton 10/11/Experimental**: a
-  Proton regression (ValveSoftware/Proton #10200, merged into #743, no fix yet as of
-  2026-11-11). Works on **Proton 9.0-4**: Properties → Compatibility → "Force the
-  use of a specific Steam Play compatibility tool" → Proton 9.0-4 (Steam downloads
-  it). **Before the first launch on 9.0-4, move the old prefix aside**
-  (`compatdata/287700` → `287700.bak`): a prefix made by Proton 11 and
-  downgraded gives "failed to load steam api" (happened 2026-11-11). Saves live in
-  Steam's `userdata/<id>/287700/local` (TPP_GAME_DATA*, TPP_CONFIG_DATA*), not in
-  the prefix, so a fresh prefix loses nothing. Try the current Proton again after
-  Proton updates (same prefix step in reverse).
+- Installing GE-Proton: ProtonUp-Qt (section 2) hung on this download, so it was
+  installed by hand (download the `-x86_64.tar.gz` + `.sha512sum` from
+  github.com/GloriousEggroll/proton-ge-custom/releases, `sha512sum -c`, unpack
+  into `~/.local/share/Steam/compatibilitytools.d/`, restart Steam).
+- **Switching Proton versions:** with Steam closed, move the game's prefix
+  aside first (`~/.local/share/Steam/steamapps/compatdata/287700` →
+  `287700.bak`), so the new version builds a fresh one; going back to an older
+  Proton on a newer prefix breaks things. Saves live in Steam's
+  `userdata/<id>/287700/local` (TPP_GAME_DATA*, TPP_CONFIG_DATA*), not in the
+  prefix, so a fresh prefix loses nothing. Once Valve fixes #743, the default
+  Proton can be tried again (same prefix step).
 
