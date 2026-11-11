@@ -1,8 +1,9 @@
 // Bluetooth menu: power toggle, scan (spinner), paired devices (click to
 // connect/disconnect, battery %, "⋯" -> Forget), available devices (click to pair,
 // then it's trusted and connected). "Advanced…" opens blueman-manager.
-// Pairing that needs a PIN/number confirmation can't be answered here (no
-// pairing agent in Quickshell); the menu says so and points to Advanced….
+// Quickshell has no pairing agent: blueman-applet (autostart.lua) is the agent.
+// It makes BlueZ save the pairing key, and shows PIN / "confirm this code"
+// requests as notifications (Confirm / Deny) or a small PIN dialog.
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -33,14 +34,14 @@ PopupFrame {
             const d = menu.pairingDevice
             if (d && d.paired) {
                 d.trusted = true
-                d.connect()
+                if (!d.connected) d.connect()
                 menu.pairingDevice = null
             }
         }
         function onPairingChanged() {
             const d = menu.pairingDevice
             if (d && !d.pairing && !d.paired) {
-                menu.pairError = `Couldn't pair with ${d.name}. If it asks for a PIN or a code confirmation, use Advanced….`
+                menu.pairError = `Couldn't pair with ${d.name}. Put it in pairing mode and try again, or use Advanced….`
                 menu.pairingDevice = null
             }
         }

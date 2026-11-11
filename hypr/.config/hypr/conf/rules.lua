@@ -56,6 +56,14 @@ hl.window_rule({
     center = true,
 })
 
+-- Bluetooth PIN entry dialog (blueman-applet, the pairing agent): small, centered
+hl.window_rule({
+    name   = "float-bluetooth-pin",
+    match  = { class = "^(org.blueman.Applet|blueman-applet)$" },
+    float  = true,
+    center = true,
+})
+
 -- Enterprise Wi-Fi setup (Wi-Fi menu → Set up…, scripts/wifi-enterprise.sh)
 hl.window_rule({
     name   = "float-center-wifi-setup",

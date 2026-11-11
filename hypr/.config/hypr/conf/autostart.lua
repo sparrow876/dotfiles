@@ -34,4 +34,10 @@ hl.on("hyprland.start", function()
 
     -- USB sticks / SD cards mount automatically (notifications via the bar)
     hl.exec_cmd("udiskie --automount --notify --no-tray")
+
+    -- Bluetooth pairing agent (blueman's background part; its tray icon and
+    -- connect pop-ups are off: install.sh step gsettings). Without an agent
+    -- BlueZ pairs WITHOUT saving the key, so devices fail to reconnect later.
+    -- Also answers PIN / "confirm this code" requests (as notifications).
+    hl.exec_cmd("systemctl --user start blueman-applet.service")
 end)

@@ -248,6 +248,10 @@ step_gsettings() {
   gsettings set $s font-name 'Noto Sans 11.25'
   gsettings set $s document-font-name 'Noto Sans 12'
   gsettings set $s monospace-font-name 'JetBrainsMono Nerd Font 11.25'
+  # blueman-applet runs only as the Bluetooth pairing agent (autostart.lua):
+  # no tray icon (the bar has one), no "connected" pop-ups
+  gsettings set org.blueman.general plugin-list \
+    "['!StatusIcon', '!StatusNotifierItem', '!ShowConnected', '!ConnectionNotifier']"
   # Nautilus "Open in Terminal" -> kitty (nautilus-open-any-terminal)
   if gsettings list-keys com.github.stunkymonkey.nautilus-open-any-terminal >/dev/null 2>&1; then
     gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty

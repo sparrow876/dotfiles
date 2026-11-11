@@ -498,7 +498,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Text sizes | Windows-125 % (15 px UI, GTK 11.25 pt, kitty 13 pt, Nautilus 12 pt); bar 44 px | user request |
 | Theme | palette system + 4 dark themes (ALT+T) | user request |
 | Replay toggled only from bar menu | ALT+Ctrl+R turns it on / saves; ALT+Ctrl+Shift+R toggles | indicator is hidden when idle |
-| Bluetooth PIN confirm dialog | not possible in Quickshell (no agent) → "Advanced…" (Blueman) | missing API |
+| Bluetooth PIN confirm dialog | blueman-applet is the pairing agent (no tray icon): code confirmations arrive as notifications with Confirm/Deny, PIN entry as a small dialog | Quickshell has no agent API |
 | Dim to ~30 % | 30 % of the *current* brightness | user usually at ~18 % |
 | Wallpapers never created | default palette gradient only if folder empty | no blank screen on fresh install |
 | Logout | `hyprshutdown` if installed | graceful app shutdown |
@@ -573,6 +573,20 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-11** — Bluetooth headphones (ACCENTUM Plus) connected right after
+  pairing but never again ("Connection refused (111)"); only forget + re-pair
+  helped. Cause: no pairing agent was running (Quickshell has none; blueman-
+  applet only ran while blueman-manager was open). BlueZ (AlwaysPairable=false,
+  the default) then turns the adapter's Bondable off, so pairing used "No
+  Bonding": btmon showed `Store hint: No`, `bluetoothctl info` showed
+  `Paired: yes, Bonded: no`, and the key vanished on disconnect. Fix: autostart
+  blueman-applet as the agent with its tray icon/connect pop-ups disabled
+  (gsettings plugin-list); its PIN dialog floats centered. Pairings made before
+  this fix must be done once more. Check: `bluetoothctl show` → `Pairable: yes`;
+  after pairing `bluetoothctl info <MAC>` → `Bonded: yes`. Files:
+  `hypr/conf/autostart.lua`, `hypr/conf/rules.lua`, `install.sh`,
+  `popups/BluetoothMenu.qml`.
 
 - **2026-11-11** — MGSV binocular zoom (mouse wheel) dead on Proton 10/11/
   Experimental (ValveSoftware/Proton #10200 → #743). Proton 9.0-4 is no longer
