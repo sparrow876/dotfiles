@@ -24,7 +24,11 @@ return {
       -- Rust: rust-analyzer comes from rustup (matches the installed compiler),
       -- not from mason. Checks the code with clippy (more hints than plain
       -- `cargo check`) every time the file is saved.
+      -- Arch's rustup keeps its rust-analyzer launcher in /usr/lib/rustup/bin
+      -- (off PATH, so it can't clash with the separate rust-analyzer package).
+      local ra = "/usr/lib/rustup/bin/rust-analyzer"
       vim.lsp.config("rust_analyzer", {
+        cmd = { vim.fn.executable(ra) == 1 and ra or "rust-analyzer" },
         settings = { ["rust-analyzer"] = { check = { command = "clippy" } } },
       })
       vim.lsp.enable("rust_analyzer")

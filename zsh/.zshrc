@@ -12,7 +12,8 @@ fi
 # --- PATH ----------------------------------------------------------------------
 # Programs installed with `cargo install` (Rust) land in ~/.cargo/bin
 typeset -U path
-path=("$HOME/.cargo/bin" $path)
+# Arch's rustup keeps the rust-analyzer launcher off PATH, in /usr/lib/rustup/bin
+path=("$HOME/.cargo/bin" $path /usr/lib/rustup/bin)
 
 # --- Oh My Zsh -----------------------------------------------------------------
 # Cloned at a pinned commit by install.sh (no auto-updates: update by bumping the

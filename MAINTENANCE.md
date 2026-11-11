@@ -579,7 +579,8 @@ root cause, fix, files.
   rust-analyzer + rust-src; also part of the normal `install.sh` run). Neovim:
   rust-analyzer from rustup (not mason, so it matches the compiler), clippy on
   save, rustfmt on save (skipped while no server runs), treesitter `rust`
-  parser. zsh: `~/.cargo/bin` on PATH. Docs: nvim/CHEATSHEET.md §6,
+  parser. Arch's rustup puts the rust-analyzer launcher in `/usr/lib/rustup/bin`
+  (off PATH): Neovim uses that path directly; zsh appends it to PATH. zsh: `~/.cargo/bin` on PATH. Docs: nvim/CHEATSHEET.md §6,
   zsh/SHELL-CHEATSHEET.md. Files: `packages/pacman.txt`, `install.sh`,
   `nvim/.config/nvim/lua/plugins/{lsp,treesitter}.lua`, `zsh/.zshrc`.
 
