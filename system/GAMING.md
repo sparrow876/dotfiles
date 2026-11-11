@@ -171,4 +171,12 @@ the recommended Proton version and launch options here.
   ValveSoftware/Proton #124 needs a workaround.
 - Launch options: just the standard line: `prime-run gamemoderun mangohud %command%`
   (without it the game runs on the Intel iGPU).
+- **Mouse wheel (binocular zoom) does nothing on Proton 10/11/Experimental**: a
+  Proton regression (ValveSoftware/Proton #10200, merged into #743, no fix yet as of
+  2026-11-11). Works on **Proton 9.0-4**: Properties → Compatibility → "Force the
+  use of a specific Steam Play compatibility tool" → Proton 9.0-4 (Steam downloads
+  it). Saves live in Steam Cloud / userdata, not in the Proton prefix. If the game
+  then won't start (prefix made by a newer Proton), delete
+  `~/.local/share/Steam/steamapps/compatdata/287700` and start again. Try the
+  current Proton again after Proton updates.
 
