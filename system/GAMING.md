@@ -175,8 +175,10 @@ the recommended Proton version and launch options here.
   Proton regression (ValveSoftware/Proton #10200, merged into #743, no fix yet as of
   2026-11-11). Works on **Proton 9.0-4**: Properties → Compatibility → "Force the
   use of a specific Steam Play compatibility tool" → Proton 9.0-4 (Steam downloads
-  it). Saves live in Steam Cloud / userdata, not in the Proton prefix. If the game
-  then won't start (prefix made by a newer Proton), delete
-  `~/.local/share/Steam/steamapps/compatdata/287700` and start again. Try the
-  current Proton again after Proton updates.
+  it). **Before the first launch on 9.0-4, move the old prefix aside**
+  (`compatdata/287700` → `287700.bak`): a prefix made by Proton 11 and
+  downgraded gives "failed to load steam api" (happened 2026-11-11). Saves live in
+  Steam's `userdata/<id>/287700/local` (TPP_GAME_DATA*, TPP_CONFIG_DATA*), not in
+  the prefix, so a fresh prefix loses nothing. Try the current Proton again after
+  Proton updates (same prefix step in reverse).
 
