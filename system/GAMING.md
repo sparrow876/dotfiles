@@ -67,6 +67,13 @@ says *Intel Graphics*, `prime-run` is missing from the launch options.
 (Also: `nvidia-smi` in a terminal lists the game while it runs.)
 
 **Is GameMode on?** While the game runs: `gamemoded -s` → "gamemode is active".
+Harmless log noise (checked 2026-11-11 with MGSV; GameMode did switch on for the
+whole session and off when the game quit): `gamemodeauto: dlopen failed -
+libgamemode.so` in Proton logs (processes inside Steam's game container can't
+see the library; the launcher process outside it registers instead and the game
+inherits its priority), and "Refused to renice … prio was (-10)" / "Skipping
+ioprio" in `journalctl --user -u gamemoded` (child processes already inherited
+the boost).
 
 ## 4. MangoHud (the overlay)
 
