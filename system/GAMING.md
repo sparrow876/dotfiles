@@ -3,8 +3,8 @@
 Steam games on this laptop: what's set up, how to launch games on the RTX 3050,
 the controller, and per-game notes. Root steps for gaming: `ROOT-STEPS.md` §13.
 
-Status (2026-11-10): general setup done and tested. ACC is installed and runs;
-the other games aren't installed yet. Per-game sections are filled in as they are.
+Status (2026-11-11): general setup done and tested. ACC and MGSV are installed
+and run; BeamNG and Assetto Corsa aren't installed yet. Per-game sections are filled in as they are.
 
 ---
 
@@ -147,7 +147,7 @@ the recommended Proton version and launch options here.
 
 | Game | Planned | Status |
 |------|---------|--------|
-| Metal Gear Solid V: The Phantom Pain | Proton; launch options from ProtonDB | not installed |
+| Metal Gear Solid V: The Phantom Pain | see below | **installed 2026-11-11**, runs |
 | BeamNG.drive | compare the native Linux build with Proton, pick the better one | not installed |
 | Assetto Corsa | Proton + Content Manager + Custom Shaders Patch (community setup script: I read it and summarize it, you run it); controller via Content Manager | not installed |
 | Assetto Corsa Competizione | see below | **installed 2026-11-10**, runs |
@@ -162,4 +162,13 @@ the recommended Proton version and launch options here.
   `prime-run gamemoderun mangohud %command%`
 - Still to do: LAN server (ports + ufw rule from your subnet only, ROOT-STEPS §7;
   `serverList.json` fallback) and controller setup in ACC's settings.
+
+### Metal Gear Solid V: The Phantom Pain (Steam app 287700)
+
+- Windows-only game, runs with **Proton 11** (the "Proton Stable" default).
+  Starts out of the box (checked 2026-11-11).
+- ProtonDB: **Platinum**, 521 reports, strong confidence. Nothing open in
+  ValveSoftware/Proton #124 needs a workaround.
+- Launch options: just the standard line: `prime-run gamemoderun mangohud %command%`
+  (without it the game runs on the Intel iGPU).
 

@@ -519,9 +519,9 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   Possible later: a tiny BlueZ agent forwarding to Quickshell.
 - notify-send with an unknown icon name shows Papirus' grey ✕ instead of the
   bell fallback.
-- Games: ACC installed and runs (standard launch options); its LAN ufw rules,
-  serverList.json and controller setup are postponed; MGSV, BeamNG and AC not
-  installed yet (GAMING.md §7).
+- Games: ACC and MGSV installed and run (standard launch options); ACC's LAN
+  ufw rules, serverList.json and controller setup are postponed; BeamNG and AC
+  not installed yet (GAMING.md §7).
 - Open items: rclone sign-in (`rclone config`), Teams/Vesktop call pop-out
   titles for the `call-popouts` rule, Vesktop theme visual check, one
   suspend/resume test with NVIDIA, docked lid-close test (scripts/lid.sh).
