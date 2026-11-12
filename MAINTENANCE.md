@@ -574,6 +574,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — Nuclear 1.54 (Tauri rewrite) has no track download feature:
+  none in the player source (the "download" strings are its yt-dlp
+  self-installer), old download issues closed as legacy-Electron only, a
+  2026-10 discussion requesting it is unanswered. Nuclear keeps its own yt-dlp
+  nightly in ~/.local/share/com.nuclearplayer/ytdlp/, so the system `yt-dlp`
+  isn't needed for it (kept for mpv + manual downloads; comment fixed).
+
 - **2026-11-12** — Nuclear in the bar's music widget. Nuclear (Tauri/WebKitGTK)
   shows up in MPRIS only via WebKit's generic bridge: "Nuclear Player", status
   stuck at Paused. Its MediaSession plugin (rkben/nuclear-plugin-mediasession

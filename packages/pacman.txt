@@ -169,7 +169,7 @@ rustup               # Rust: rustc, cargo, rustfmt, clippy, rust-analyzer (insta
 ## Media
 mpv
 mpv-mpris
-yt-dlp               # YouTube audio for Nuclear's YouTube plugin; mpv also uses it to play YouTube links
+yt-dlp               # mpv plays YouTube links with it; downloads audio/video from links (Nuclear ships its own copy)
 cava
 cmatrix
 
