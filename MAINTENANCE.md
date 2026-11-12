@@ -574,6 +574,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — Nuclear in the bar's music widget. Nuclear (Tauri/WebKitGTK)
+  shows up in MPRIS only via WebKit's generic bridge: "Nuclear Player", status
+  stuck at Paused. Its MediaSession plugin (rkben/nuclear-plugin-mediasession
+  v0.1.0, read: ~150 lines, only navigator.mediaSession + Nuclear API; sha256
+  matches the registry) feeds real metadata/state into that bridge. Bar:
+  tooltip shows "Nuclear" instead of the raw identity. Nuclear also serves MPD
+  on 127.0.0.1:6600 and its MCP server on 127.0.0.1:8800/mcp (useful for
+  checking what it plays). Files: `services/Media.qml`, `bar/MediaModule.qml`.
+
 - **2026-11-12** — `yt-dlp` added to pacman.txt (Media): needed by Nuclear's
   YouTube streaming plugin; mpv uses it for YouTube URLs too. No Apple Music
   integration exists for Nuclear (none in NuclearPlayer/plugin-registry).
