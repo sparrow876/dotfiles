@@ -574,6 +574,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — fastfetch picture card gets a styled look (user request):
+  gradient map onto the palette (base → blue → lightblue → text), 2 px
+  chromatic split, CRT scanlines, vignette, bloom, grain, then rounded corners
+  + outline. All colors come from the active palette, so ALT+T re-tints it
+  (apply.sh reruns the script, ~0.9 s). File: `scripts/fastfetch-logo.sh`.
+
 - **2026-11-12** — fastfetch in a half-width kitty: stray "4" / "f" at the left
   edge next to the picture, and gpu/battery rows pushed down. Cause: kitty opens
   full-size, fastfetch prints (line wrap is off), then Hyprland tiles the window
