@@ -1,6 +1,4 @@
-// The media player shown in the bar (MPRIS: Zen/Firefox, mpv, Nuclear, ...).
-// Nuclear needs its "Media Controls" plugin (nuclear-plugin-mediasession) for
-// real track info; without it WebKit reports "Nuclear Player" / Paused.
+// The media player shown in the bar (MPRIS: Zen/Firefox, mpv, Spotify, ...).
 // Picks the player that's playing; if none is, the one that played last.
 pragma Singleton
 import QtQuick
@@ -30,9 +28,6 @@ Singleton {
     readonly property string title: player?.trackTitle ?? ""
     readonly property string artist: player?.trackArtist ?? ""
     readonly property string label: artist && title ? `${artist} — ${title}` : (title || artist)
-    // Player name for the tooltip; some apps report a raw program name
-    readonly property var prettyNames: ({ "nuclear-music-player": "Nuclear" })
-    readonly property string playerName: prettyNames[player?.identity ?? ""] ?? (player?.identity ?? "")
 
     function toggle() { if (player?.canTogglePlaying) player.togglePlaying() }
     function next() { if (player?.canGoNext) player.next() }

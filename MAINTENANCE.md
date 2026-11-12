@@ -574,6 +574,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — Nuclear removed at the user's request: `nuclear-player-bin`
+  out of aur.txt, bar Nuclear tweaks reverted (Media.qml / MediaModule.qml as
+  before 23a48c1). yt-dlp stays (comment updated). fastfetch back to the
+  original small Arch logo (`arch_small`, plain `fastfetch` in .zshrc); the
+  picture card files were deleted, `scripts/fastfetch-logo.sh` kept (the
+  apply.sh hook only runs while the config uses logo.png). The shorter
+  cpu/disk lines stay. Uninstall + data cleanup: user runs (see chat).
+
 - **2026-11-12** — Nuclear 1.54 (Tauri rewrite) has no track download feature:
   none in the player source (the "download" strings are its yt-dlp
   self-installer), old download issues closed as legacy-Electron only, a

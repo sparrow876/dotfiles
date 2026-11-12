@@ -29,7 +29,6 @@ claude-code                  # [ec02864] Anthropic's official claude binary from
 
 ## Your own additions, reviewed 2026-11-10
 ani-cli                      # [a26ced7] upstream v5.1 tag tarball from github.com/pystardust/ani-cli (sha256-pinned); installs one script + man page; .install only prints a disclaimer. Deps mpv, ffmpeg, fzf, curl
-nuclear-player-bin           # [c8b54d2] 2026-11-12, maintained by Nuclear's author (nukeop); official v1.54.2 .deb from github.com/nukeop/nuclear (sha256-pinned, checked) -> /usr/bin/nuclear-music-player + .desktop + icon; payload only (the stray .install in the AUR repo isn't used). Deps webkit2gtk-4.1, gst-plugins-base/good, gst-libav
 
 ## Pending review in later steps (left commented on purpose)
 # game-devices-udev          # step 19: only if Steam doesn't see the 8BitDo controller

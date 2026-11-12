@@ -88,7 +88,7 @@ MouseArea {
 
     Tooltip {
         target: root
-        text: Media.hasTrack ? `${Media.label}\n${Media.playerName} · click: play/pause · scroll: next/previous`
+        text: Media.hasTrack ? `${Media.label}\n${Media.player?.identity ?? ""} · click: play/pause · scroll: next/previous`
                              : "Nothing playing"
     }
 }
