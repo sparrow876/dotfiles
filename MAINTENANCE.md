@@ -574,6 +574,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — Wallpaper thumbnails could show the wrong picture after
+  renaming files (user removed w6/w7/w10 and renumbered: w9.png → w7.png kept
+  the deleted w7's thumbnail). Cause: thumbs were rebuilt only when the
+  picture's mtime was newer than the thumbnail, and `mv` keeps mtime. Fix: also
+  rebuild when the picture's ctime (updated by rename) is newer. File:
+  `scripts/wallpaper.sh`.
+
 - **2026-11-12** — Wallpaper reel showed w10, w11, w12 before w1: the file list
   used plain `sort`, which in the en_US locale ignores the dot and compares
   "w10png" < "w1jpg". Fix: `sort -V` (natural order). File:

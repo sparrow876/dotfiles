@@ -50,7 +50,10 @@ case "${1:-}" in
       name=$(basename "$f")
       thumb="$cache/$name.jpg"
       keep["$name.jpg"]=1
-      if [[ ! -s $thumb || $f -nt $thumb ]]; then
+      # Rebuild when missing or older than the picture. Compare the change time
+      # (ctime) too: renaming a file keeps its modified time but updates ctime,
+      # so a wallpaper renamed onto an old name (w9 -> w7) gets a new thumbnail.
+      if [[ ! -s $thumb || $f -nt $thumb ]] || (( $(stat -c %Z "$f") > $(stat -c %Y "$thumb") )); then
         changed=$((changed + 1))
         magick "$f[0]" -auto-orient -thumbnail '720x405^' -gravity center -extent 720x405 -quality 85 "$thumb" 2>/dev/null &
         # a few in parallel, not hundreds
