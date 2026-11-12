@@ -574,6 +574,11 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — Reactor animation removed again at the user's request
+  (reverted 89e13e7: fastfetch-reactor.py deleted, reactor.png deleted,
+  python-pillow dropped from pacman.txt). fastfetch is back to the r1 picture
+  card (`logo.png`, scripts/fastfetch-logo.sh) exactly as before.
+
 - **2026-11-12** — fastfetch logo → animated ASCII art (user request): two
   cooling towers + reactor dome in neutral grey, red glow pulsing inside, red
   steam rising, rings from the core (nf-md-radioactive U+F043C; ☢ isn't in

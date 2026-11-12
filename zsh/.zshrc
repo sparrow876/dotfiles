@@ -6,8 +6,8 @@
 # Neovim's terminal (NVIM), not over SSH, not in nested shells.
 if [[ -o interactive && -n $KITTY_WINDOW_ID && -z $DROPTERM && -z $NVIM \
       && -z $SSH_CONNECTION && $SHLVL -eq 1 ]]; then
-  # animated reactors (scripts/fastfetch-reactor.py), or the small Arch logo without them
-  if [[ -r ~/.config/fastfetch/reactor.png ]]; then
+  # picture card (scripts/fastfetch-logo.sh), or the small Arch logo without one
+  if [[ -r ~/.config/fastfetch/logo.png ]]; then
     fastfetch
   else
     fastfetch --logo-type builtin --logo arch_small --logo-padding-top 1

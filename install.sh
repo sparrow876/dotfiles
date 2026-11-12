@@ -161,12 +161,6 @@ step_clones() {
 step_render() {
   info "Rendering theme files from the active theme"
   "$REPO/theme/render.sh" >/dev/null
-  # fastfetch's animated reactor logo (a generated picture, not in git)
-  if python3 -c 'import PIL' 2>/dev/null; then
-    "$REPO/scripts/fastfetch-reactor.py" >/dev/null || warn "fastfetch reactor logo not made"
-  else
-    warn "python-pillow missing: fastfetch shows the small Arch logo"
-  fi
 }
 
 step_qt() {
