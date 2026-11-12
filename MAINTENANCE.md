@@ -574,6 +574,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — Nuclear music player (user request): `nuclear-player-bin`
+  added to aur.txt after reading the PKGBUILD [c8b54d2] and the .deb it
+  downloads (checksum matches; 3 files: binary, Nuclear.desktop, icon; no
+  maintainer scripts). Tauri app (WebKitGTK); window class
+  `nuclear-music-player`.
+
 - **2026-11-12** — Reactor animation removed again at the user's request
   (reverted 89e13e7: fastfetch-reactor.py deleted, reactor.png deleted,
   python-pillow dropped from pacman.txt). fastfetch is back to the r1 picture
