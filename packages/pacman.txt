@@ -117,6 +117,7 @@ rofimoji             # emoji picker with recents, copies + types via wtype
 ## Files
 nautilus
 nautilus-python      # runs nautilus/ extensions ("Copy as Path", lock folders); also needed by nautilus-open-any-terminal
+python-pillow        # draws fastfetch's animated reactor logo (scripts/fastfetch-reactor.py)
 zenity               # password dialogs for Nautilus "Lock with Password…" (scripts/lockdir-gui.sh)
 gvfs
 gvfs-mtp

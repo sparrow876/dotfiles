@@ -55,7 +55,10 @@ fi
 pkill -USR1 -x kitty 2>/dev/null || true               # kitty re-reads colors.conf
 "$ROOT/theme/qt.sh" >/dev/null || true                  # Qt apps (next launch)
 command -v bat >/dev/null && bat cache --build >/dev/null 2>&1 || true
-"$ROOT/scripts/fastfetch-logo.sh" >/dev/null 2>&1 || true   # fastfetch card outline
+# fastfetch picture card outline (only while fastfetch uses the card)
+if grep -q 'logo\.png' "$ROOT/fastfetch/.config/fastfetch/config.jsonc" 2>/dev/null; then
+  "$ROOT/scripts/fastfetch-logo.sh" >/dev/null 2>&1 || true
+fi
 touch "$ROOT/quickshell/.config/quickshell/Theme.qml"  # Quickshell hot-reloads
 if command -v gsettings >/dev/null && [[ -n ${DBUS_SESSION_BUS_ADDRESS:-} ]]; then
   # every theme is dark
