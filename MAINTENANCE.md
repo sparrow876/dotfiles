@@ -574,6 +574,10 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — `yt-dlp` added to pacman.txt (Media): needed by Nuclear's
+  YouTube streaming plugin; mpv uses it for YouTube URLs too. No Apple Music
+  integration exists for Nuclear (none in NuclearPlayer/plugin-registry).
+
 - **2026-11-12** — Nuclear music player (user request): `nuclear-player-bin`
   added to aur.txt after reading the PKGBUILD [c8b54d2] and the .deb it
   downloads (checksum matches; 3 files: binary, Nuclear.desktop, icon; no
