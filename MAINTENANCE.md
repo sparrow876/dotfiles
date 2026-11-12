@@ -574,6 +574,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — fastfetch in a half-width kitty: stray "4" / "f" at the left
+  edge next to the picture, and gpu/battery rows pushed down. Cause: kitty opens
+  full-size, fastfetch prints (line wrap is off), then Hyprland tiles the window
+  and kitty re-wraps the long cpu ("… @ 4.40 GHz") and disk ("… - btrfs") lines;
+  the wrapped rest starts under the picture. Fix: shorter cpu/disk formats
+  (values ≤ ~44 chars, fits ~92 columns). File: fastfetch template.
+
 - **2026-11-12** — Nautilus "Copy as Path" (user request): nautilus-python
   extension in new stow package `nautilus/` (selected files → full paths, one
   per line; empty space → "Copy Folder Path"; Gdk clipboard). `nautilus-python`

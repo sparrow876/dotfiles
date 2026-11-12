@@ -30,11 +30,15 @@
         { "type": "uptime",   "key": "uptime" },
         { "type": "packages", "key": "pkgs" },
         { "type": "shell",    "key": "shell" },
-        { "type": "cpu",      "key": "cpu",    "temp": false },
+        // Lines are kept short (<= ~44 chars) so a half-width kitty doesn't
+        // re-wrap them: kitty opens full-size, fastfetch prints, then Hyprland
+        // tiles the window and kitty re-wraps long lines (stray letters at the
+        // left edge, rows pushed down). {name~27} drops "12th Gen Intel(R) Core(TM) ".
+        { "type": "cpu",      "key": "cpu",    "temp": false, "format": "{name~27} ({cores-physical}c/{cores-logical}t) @ {freq-max}" },
         // PCI detection lists both GPUs without waking the RTX 3050
         { "type": "gpu",      "key": "gpu",    "detectionMethod": "pci", "hideType": "none", "format": "{vendor} {name}" },
         { "type": "memory",   "key": "memory" },
-        { "type": "disk",     "key": "disk",   "folders": "/" },
+        { "type": "disk",     "key": "disk",   "folders": "/", "format": "{size-percentage-bar} {size-used} / {size-total} ({size-percentage})" },
         { "type": "battery",  "key": "battery" },
         "break",
         { "type": "colors", "symbol": "circle", "paddingLeft": 0 }
