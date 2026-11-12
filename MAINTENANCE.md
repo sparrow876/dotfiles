@@ -574,6 +574,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — fastfetch picture switched to ~/Pictures/Random/r1.jpg (user
+  request; crop `1040x1193+500+40`). Bright line-art washed out under the old
+  fixed contrast + bloom: the script now measures the card's mean brightness and
+  darkens midtones (gamma) until it's ~45 % (never brightens dark pictures);
+  bloom gentler (threshold 80 %, 0.25). r3 (crop `820x941+440+0`) still looks
+  the same. File: `scripts/fastfetch-logo.sh`.
+
 - **2026-11-12** — fastfetch picture card gets a styled look (user request):
   gradient map onto the palette (base → blue → lightblue → text), 2 px
   chromatic split, CRT scanlines, vignette, bloom, grain, then rounded corners

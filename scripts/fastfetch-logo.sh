@@ -64,17 +64,23 @@ magick -size 1x3 xc:white -fill gray82 -draw 'point 0,2' -write mpr:row +delete 
        -size "${W}x${H}" tile:mpr:row "$work/scan.png"
 magick -size "${W}x${H}" radial-gradient:white-gray25 -level 0,80% "$work/vignette.png"
 
-magick "$SRC" "${crop[@]}" \
-  -resize "${W}x${H}^" -gravity center -extent "${W}x${H}" +repage \
-  -colorspace gray -auto-level -sigmoidal-contrast 5,45% \
-  "$work/ramp.png" -clut -write mpr:toned \
+magick "$SRC" "${crop[@]}" -resize "${W}x${H}^" -gravity center \
+       -extent "${W}x${H}" +repage "$work/card.png"
+# Bright pictures (e.g. white line-art) would wash out: darken the midtones
+# until the average brightness is ~45 % (gamma), never brighten dark ones.
+mean="$(magick "$work/card.png" -colorspace gray -auto-level -format '%[fx:mean]' info:)"
+gamma="$(awk -v m="$mean" 'BEGIN { g = (m > 0.45 && m < 1) ? log(m) / log(0.45) : 1; printf "%.3f", g }')"
+
+magick "$work/card.png" \
+  -colorspace gray -auto-level -gamma "$gamma" -sigmoidal-contrast 4,45% \
+  "$work/ramp.png" -clut \
   \( -clone 0 -channel R -separate +channel -roll +2+0 \) \
   \( -clone 0 -channel G -separate +channel \) \
   \( -clone 0 -channel B -separate +channel -roll -2+0 \) \
   -delete 0 -set colorspace sRGB -combine \
   "$work/scan.png" -compose Multiply -composite \
   "$work/vignette.png" -compose Multiply -composite \
-  \( +clone -threshold 70% -blur 0x10 -evaluate multiply 0.35 \) -compose Screen -composite \
+  \( +clone -threshold 80% -blur 0x10 -evaluate multiply 0.25 \) -compose Screen -composite \
   \( -size "${W}x${H}" xc:gray50 -seed 7 +noise Gaussian -colorspace gray -evaluate multiply 0.9 \) \
   -compose SoftLight -composite \
   \( +clone -alpha extract -fill black -colorize 100 -fill white \
