@@ -574,6 +574,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — New `scripts/lockdir.sh` (aliases `lockdir` / `unlockdir`,
+  user request): folder → `NAME.locked` (tar+zstd, gpg symmetric AES-256,
+  s2k SHA512 ×65M, `--no-symkey-cache`, password via fd 3), verified with
+  `tar -d` against the folder before the folder is removed; unlock extracts
+  into a hidden temp dir first. Caveat: /home snapper snapshots keep the
+  plaintext until they expire. Docs: zsh/SHELL-CHEATSHEET.md.
+
 - **2026-11-12** — Wallpaper thumbnails could show the wrong picture after
   renaming files (user removed w6/w7/w10 and renumbered: w9.png → w7.png kept
   the deleted w7's thumbnail). Cause: thumbs were rebuilt only when the

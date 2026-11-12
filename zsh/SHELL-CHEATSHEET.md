@@ -133,6 +133,7 @@ rustup update                 # update Rust to the newest stable version
 | `..` / `...` | go up one / two folders |
 | `dots` | `cd ~/dotfiles` |
 | `update` | update the whole system safely (below) |
+| `lockdir` / `unlockdir` | password-protect a folder / open it again (below) |
 
 ### `update`: keeping the system up to date
 
@@ -144,6 +145,19 @@ whether to reboot or log out, and checks config files, unneeded packages,
 failed services and firmware.
 
 `update --check` does all of that except the upgrade itself (changes nothing).
+
+### `lockdir`: password-protect a folder
+
+```sh
+lockdir ~/Documents/private              # -> ~/Documents/private.locked, folder removed
+unlockdir ~/Documents/private.locked     # asks the password, folder comes back
+```
+`lockdir` packs the folder into one encrypted file (GnuPG, AES-256) and removes
+the readable folder, but only after checking the locked file decrypts back to
+exactly the same files. **There's no way back without the password.**
+`unlockdir` restores the folder and removes the `.locked` file, so run
+`lockdir` again when you're done. Older /home snapshots keep the readable folder
+until they expire.
 
 Git aliases from Oh My Zsh's git plugin, the most useful ones:
 
