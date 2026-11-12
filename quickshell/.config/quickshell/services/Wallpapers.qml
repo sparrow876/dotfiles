@@ -13,7 +13,7 @@ Singleton {
     readonly property string thumbDir: (Quickshell.env("XDG_CACHE_HOME") || Quickshell.env("HOME") + "/.cache") + "/wallpaper-thumbs"
     readonly property string script: Quickshell.env("HOME") + "/dotfiles/scripts/wallpaper.sh"
 
-    property var files: []          // file names, sorted
+    property var files: []          // file names, natural order (w1, w2, ..., w10)
     property string current: ""     // file name of the current wallpaper
     property int thumbsVersion: 0   // bumps when thumbnails were (re)built
 
@@ -34,7 +34,7 @@ Singleton {
     Process {
         id: lister
         command: ["sh", "-c", `cd "${root.dir}" 2>/dev/null || exit 0
-            find . -maxdepth 1 -type f \\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \\) -printf '%f\\n' | sort
+            find . -maxdepth 1 -type f \\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \\) -printf '%f\\n' | sort -V   # natural order: w2 before w10
             printf '@current=%s\\n' "$(basename "$(readlink current 2>/dev/null)" 2>/dev/null)"`]
         stdout: StdioCollector {
             onStreamFinished: {

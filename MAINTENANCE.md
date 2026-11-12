@@ -574,6 +574,11 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — Wallpaper reel showed w10, w11, w12 before w1: the file list
+  used plain `sort`, which in the en_US locale ignores the dot and compares
+  "w10png" < "w1jpg". Fix: `sort -V` (natural order). File:
+  `services/Wallpapers.qml`.
+
 - **2026-11-12** — fastfetch picture switched to ~/Pictures/Random/r1.jpg (user
   request; crop `1040x1193+500+40`). Bright line-art washed out under the old
   fixed contrast + bloom: the script now measures the card's mean brightness and
