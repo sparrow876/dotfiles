@@ -116,7 +116,8 @@ rofimoji             # emoji picker with recents, copies + types via wtype
 
 ## Files
 nautilus
-nautilus-python      # runs nautilus/ extensions ("Copy as Path"); also needed by nautilus-open-any-terminal
+nautilus-python      # runs nautilus/ extensions ("Copy as Path", lock folders); also needed by nautilus-open-any-terminal
+zenity               # password dialogs for Nautilus "Lock with Password…" (scripts/lockdir-gui.sh)
 gvfs
 gvfs-mtp
 file-roller

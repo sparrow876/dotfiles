@@ -1,0 +1,3 @@
+#!/bin/sh
+# unlockdir FILE.locked = lockdir --unlock FILE.locked (scripts/lockdir.sh)
+exec "$(dirname "$(realpath "$0")")/../../../scripts/lockdir.sh" --unlock "$@"

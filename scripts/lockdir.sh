@@ -2,9 +2,11 @@
 # Password-protect a folder: pack it into one encrypted file, then remove the
 # readable folder. Unlock gives the folder back exactly as it was.
 #
-#   lockdir.sh FOLDER             ->  FOLDER.locked   (asks for a new password twice)
-#   lockdir.sh --unlock FILE.locked ->  FOLDER         (asks for the password)
-#   (aliases: lockdir / unlockdir)
+#   lockdir FOLDER              ->  FOLDER.locked   (asks for a new password twice)
+#   unlockdir FILE.locked       ->  FOLDER          (asks for the password)
+#   (= lockdir --unlock FILE.locked; both on PATH via ~/.local/bin)
+#   --password-stdin            read the password from stdin (one line, no
+#                               repeat), for scripts/lockdir-gui.sh (Nautilus)
 #
 # How: tar + zstd packs the folder, GnuPG encrypts it with the password
 # (AES-256, slow key derivation so guessing passwords is expensive). The
@@ -22,14 +24,20 @@
 set -euo pipefail
 
 die() { printf 'lockdir: %s\n' "$*" >&2; exit 1; }
-usage() { sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
+usage() { sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
 
+PASSWORD_STDIN=0
 tmp=""   # temp file/folder, removed on exit (global: the EXIT trap runs after the function returns)
 GPG=(gpg --quiet --batch --no-symkey-cache --pinentry-mode loopback --passphrase-fd 3)
 
 ask_password() {   # ask_password VAR [confirm]
   local -n _pw=$1
   local again
+  if ((PASSWORD_STDIN)); then
+    IFS= read -r _pw || true
+    [[ -n $_pw ]] || die "empty password"
+    return
+  fi
   [[ -t 0 ]] || die "needs a terminal to ask for the password"
   IFS= read -rs -p "Password: " _pw; echo >&2
   [[ -n $_pw ]] || die "empty password"
@@ -67,7 +75,7 @@ lock() {
 
   rm -rf -- "$dir"
   echo "Locked: ${out/#$HOME/\~}  (the readable folder was removed)"
-  echo "Unlock: lockdir.sh --unlock '${out/#$HOME/\~}'"
+  echo "Unlock: unlockdir '${out/#$HOME/\~}'"
   echo "Note: older /home snapshots still hold the readable folder until they expire."
 }
 
@@ -92,6 +100,7 @@ unlock() {
   echo "Unlocked: ${dest/#$HOME/\~}  (the .locked file was removed; lock it again when done)"
 }
 
+if [[ ${1:-} == --password-stdin ]]; then PASSWORD_STDIN=1; shift; fi
 case "${1:-}" in
   ""|-h|--help) usage ;;
   --unlock)     [[ -n ${2:-} ]] || usage 1; unlock "$2" ;;

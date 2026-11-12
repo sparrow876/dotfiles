@@ -574,6 +574,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — Folder locking in Nautilus + on PATH (user request).
+  Right-click folder → "Lock with Password…", `.locked` file → "Unlock…"
+  (`nautilus/…/extensions/lock_folder.py` → `scripts/lockdir-gui.sh`: zenity
+  password form / progress / errors, notify-send on success; password piped to
+  `lockdir.sh --password-stdin`). New stow package `bin/` puts `lockdir` and
+  `unlockdir` in `~/.local/bin` (added to NO_FOLD_DIRS, so it stays a real
+  folder; zsh aliases removed). zenity listed in pacman.txt; float-zenity
+  window rule. Needs `nautilus -q` once.
+
 - **2026-11-12** — New `scripts/lockdir.sh` (aliases `lockdir` / `unlockdir`,
   user request): folder → `NAME.locked` (tar+zstd, gpg symmetric AES-256,
   s2k SHA512 ×65M, `--no-symkey-cache`, password via fd 3), verified with

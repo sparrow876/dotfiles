@@ -23,6 +23,3 @@ alias dots='cd ~/dotfiles'
 
 # System update with Arch news, snapshots and checks (scripts/update.sh)
 alias update='~/dotfiles/scripts/update.sh'
-# Password-protect a folder (encrypted .locked file) / get it back
-alias lockdir='~/dotfiles/scripts/lockdir.sh'
-alias unlockdir='~/dotfiles/scripts/lockdir.sh --unlock'

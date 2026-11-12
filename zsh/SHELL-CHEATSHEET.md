@@ -133,7 +133,6 @@ rustup update                 # update Rust to the newest stable version
 | `..` / `...` | go up one / two folders |
 | `dots` | `cd ~/dotfiles` |
 | `update` | update the whole system safely (below) |
-| `lockdir` / `unlockdir` | password-protect a folder / open it again (below) |
 
 ### `update`: keeping the system up to date
 
@@ -147,6 +146,10 @@ failed services and firmware.
 `update --check` does all of that except the upgrade itself (changes nothing).
 
 ### `lockdir`: password-protect a folder
+
+Also in Nautilus: right-click a folder → **Lock with Password…**, right-click
+the `.locked` file → **Unlock…** (password dialogs). In the terminal
+(commands in `~/.local/bin`, so they work everywhere, also in scripts):
 
 ```sh
 lockdir ~/Documents/private              # -> ~/Documents/private.locked, folder removed

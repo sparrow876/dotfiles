@@ -64,6 +64,14 @@ hl.window_rule({
     center = true,
 })
 
+-- Small dialogs from scripts (zenity: lock-folder passwords, progress, errors)
+hl.window_rule({
+    name   = "float-zenity",
+    match  = { class = "^(zenity|org.gnome.Zenity)$" },
+    float  = true,
+    center = true,
+})
+
 -- Enterprise Wi-Fi setup (Wi-Fi menu → Set up…, scripts/wifi-enterprise.sh)
 hl.window_rule({
     name   = "float-center-wifi-setup",

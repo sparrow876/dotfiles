@@ -41,6 +41,7 @@ STOW_PACKAGES=(
   mangohud    # step 19: in-game overlay (generated from the theme)
   gamemode    # step 19: gamemoderun settings
   thumbnailers  # PDF thumbnails in Nautilus (pdftoppm)
+  bin         # commands on PATH (~/.local/bin): lockdir, unlockdir
   nautilus    # Nautilus right-click "Copy as Path" (nautilus-python extension)
 )
 
@@ -63,7 +64,7 @@ SHARED_DIRS=(".config/systemd" ".config/environment.d" ".local" ".config/autosta
 # there that must never end up in the repo (e.g. Nautilus bookmarks).
 NO_FOLD_DIRS=(".config/gtk-3.0" ".config/gtk-4.0" ".config/systemd/user" ".config/environment.d" ".local/share/applications"
               ".config/qt5ct" ".config/qt6ct" ".config/qt5ct/colors" ".config/qt6ct/colors"
-              ".config/vesktop" ".config/vesktop/themes")
+              ".config/vesktop" ".config/vesktop/themes" ".local/bin")
 # ---------------------------------------------------------------------------
 
 c_blue=$'\e[38;2;127;179;255m'; c_warn=$'\e[38;2;242;198;109m'; c_err=$'\e[38;2;239;111;122m'; c_off=$'\e[0m'
