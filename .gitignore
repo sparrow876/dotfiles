@@ -27,6 +27,8 @@ node_modules/
 *~
 .qmlls.ini
 fastfetch/**/cache/
+# fastfetch picture choice (scripts/fastfetch-logo.sh); its PNGs are ignored below
+fastfetch/.config/fastfetch/logo.crop
 kitty/.config/kitty/*.socket
 nvim/.config/nvim/.netrwhist
 lazygit/.config/lazygit/state.yml

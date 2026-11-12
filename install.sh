@@ -41,6 +41,7 @@ STOW_PACKAGES=(
   mangohud    # step 19: in-game overlay (generated from the theme)
   gamemode    # step 19: gamemoderun settings
   thumbnailers  # PDF thumbnails in Nautilus (pdftoppm)
+  nautilus    # Nautilus right-click "Copy as Path" (nautilus-python extension)
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.

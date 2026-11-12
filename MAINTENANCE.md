@@ -574,6 +574,21 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-12** — Nautilus "Copy as Path" (user request): nautilus-python
+  extension in new stow package `nautilus/` (selected files → full paths, one
+  per line; empty space → "Copy Folder Path"; Gdk clipboard). `nautilus-python`
+  listed explicitly in pacman.txt. Needs `nautilus -q` once to load.
+- **2026-11-12** — fastfetch shows a picture card instead of the Arch logo (user
+  request, ~/Pictures/Random/r3.png). `scripts/fastfetch-logo.sh IMAGE [CROP]`
+  copies it to `~/.config/fastfetch/logo-source.png` and makes `logo.png`
+  (558×640 = 30×15 kitty cells at 13 pt, rounded corners, outline in the theme's
+  lightblue; `theme/apply.sh` rebuilds it on theme switch). Crop for r3:
+  `820x941+440+0`. Shown with logo type `kitty-direct`. Pictures are gitignored
+  (`*.png`, `logo.crop`); without logo.png, .zshrc falls back to arch_small.
+  If the kitty font size changes, adjust width/height in the fastfetch
+  template. Files: `scripts/fastfetch-logo.sh`, fastfetch template,
+  `zsh/.zshrc`, `theme/apply.sh`, `.gitignore`.
+
 - **2026-11-11** — Added Rust support (user request). `rustup` in
   `packages/pacman.txt`; new `install.sh --only rust` step (stable toolchain +
   rust-analyzer + rust-src; also part of the normal `install.sh` run). Neovim:

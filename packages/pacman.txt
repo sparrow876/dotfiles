@@ -116,6 +116,7 @@ rofimoji             # emoji picker with recents, copies + types via wtype
 
 ## Files
 nautilus
+nautilus-python      # runs nautilus/ extensions ("Copy as Path"); also needed by nautilus-open-any-terminal
 gvfs
 gvfs-mtp
 file-roller
