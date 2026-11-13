@@ -582,7 +582,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
-- **2026-11-13** — New lock/login theme `lockscreen/themes/strawberry-milk`
+- **2026-11-13** — Lock/login theme tweaks (user request): renamed
+  strawberry-milk → `pastel-pink` (folder, SDDM theme name, root-step 6, docs);
+  removed the bow emoji, hearts (floating, avatar badge, password dots, ♡ in
+  texts) and flowers, leaving 12 faint sparkles; corner radius card 44 → 20,
+  pills/buttons fully round → 14 (avatar stays a circle). Previews with four
+  wallpapers rendered off-screen to ~/Pictures/lockscreen-previews/.
+
+- **2026-11-13** — New lock/login theme `lockscreen/themes/pastel-pink`
   (user request: pastel pink, cute; may differ from the rice palette). Own QML
   in qylock's theme format (sddm/userModel/sessionModel/config contract; reads
   the shim's `sddm.lastError`); bundled Fredoka + Quicksand (OFL); bg.jpg =

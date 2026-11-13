@@ -1,12 +1,12 @@
-// strawberry-milk: pastel pink lock screen + SDDM login screen.
+// pastel-pink: pastel pink lock screen + SDDM login screen.
 // Written for this repo in qylock's theme format, so the same file runs in:
 //  - the lock screen: qylock's lock_shell.qml + its PAM shim provide `sddm`,
 //    `userModel`, `sessionModel`, `config` (scripts/lock.sh points it here)
-//  - SDDM's greeter (copied to /usr/share/sddm/themes/strawberry-milk by
+//  - SDDM's greeter (copied to /usr/share/sddm/themes/pastel-pink by
 //    system/root-steps/6-login-theme.sh), which provides the same objects.
-// Pieces: pastel background (bg.jpg + pink wash, or a gradient), drifting
-// hearts and sparkles, a frosted card with clock, avatar, greeting and a
-// heart-dotted password pill, plus round restart / power-off buttons.
+// Pieces: pastel background (bg.jpg + pink wash, or a gradient), a few faint
+// drifting sparkles, a frosted card with clock, avatar, greeting and a
+// password pill, plus round restart / power-off buttons.
 import QtQuick
 import Qt5Compat.GraphicalEffects
 
@@ -19,7 +19,7 @@ Item {
     readonly property bool isLockScreen: typeof sddm === "undefined" || sddm.hostName === undefined
     readonly property var cfg: typeof config !== "undefined" ? config : ({})
 
-    // Palette: strawberry milk
+    // Palette: pastel pink
     readonly property color milk:      "#fff5f9"
     readonly property color blush:     "#ffd6e7"
     readonly property color petal:     "#ffb3cf"
@@ -62,7 +62,7 @@ Item {
             root.busy = false
             busyGuard.stop()
             const why = (typeof sddm.lastError === "string" && sddm.lastError !== "") ? sddm.lastError : ""
-            root.errorText = why !== "" ? why.toLowerCase() + " ♡" : "oops, wrong password ♡ try again"
+            root.errorText = why !== "" ? why.toLowerCase() : "oops, wrong password, try again"
             pass.text = ""
             shake.restart()
             pass.forceActiveFocus()
@@ -70,7 +70,7 @@ Item {
         function onLoginSucceeded() { busyGuard.stop() }
     }
     // Never stay "busy" forever if no answer comes back
-    Timer { id: busyGuard; interval: 25000; onTriggered: { root.busy = false; root.errorText = "no answer, try again ♡" } }
+    Timer { id: busyGuard; interval: 25000; onTriggered: { root.busy = false; root.errorText = "no answer, try again" } }
 
     Timer { interval: 1000; running: true; repeat: true; onTriggered: root.now = new Date() }
     Timer { interval: 300; running: true; onTriggered: pass.forceActiveFocus() }
@@ -104,13 +104,13 @@ Item {
         }
     }
 
-    // ---- drifting hearts & sparkles -----------------------------------------
+    // ---- faint drifting sparkles ---------------------------------------------
     Repeater {
-        model: 18
+        model: 12
         delegate: Text {
             id: bit
             required property int index
-            readonly property var glyphs: ["♡", "♥", "✦", "✿", "⋆", "♡"]
+            readonly property var glyphs: ["✦", "⋆"]
             readonly property real seed: ((index * 7919) % 97) / 97
             text: glyphs[index % glyphs.length]
             color: index % 3 === 0 ? root.milk : (index % 3 === 1 ? root.petal : root.lavender)
@@ -126,7 +126,7 @@ Item {
                 NumberAnimation { target: bit; property: "y"; from: root.height + 40; to: -60
                                   duration: 14000 + bit.seed * 12000 }
                 SequentialAnimation {
-                    NumberAnimation { target: bit; property: "opacity"; from: 0; to: 0.55 + bit.seed * 0.35; duration: 2500 }
+                    NumberAnimation { target: bit; property: "opacity"; from: 0; to: 0.35 + bit.seed * 0.3; duration: 2500 }
                     PauseAnimation  { duration: 9000 + bit.seed * 9000 }
                     NumberAnimation { target: bit; property: "opacity"; to: 0; duration: 2500 }
                 }
@@ -145,13 +145,13 @@ Item {
         anchors.top: parent.top; anchors.topMargin: 56 * root.s
         anchors.horizontalCenter: parent.horizontalCenter
         width: dateText.implicitWidth + 56 * root.s; height: 52 * root.s
-        radius: height / 2
+        radius: 14 * root.s
         color: Qt.rgba(1, 1, 1, 0.55)
         border.color: Qt.rgba(1, 1, 1, 0.8); border.width: 1.5 * root.s
         Text {
             id: dateText
             anchors.centerIn: parent
-            text: "✿  " + Qt.formatDate(root.now, "dddd, d MMMM").toLowerCase() + "  ✿"
+            text: Qt.formatDate(root.now, "dddd, d MMMM").toLowerCase()
             font.family: softFont.name; font.pixelSize: 22 * root.s; font.weight: Font.DemiBold
             color: root.plum
         }
@@ -172,16 +172,9 @@ Item {
         Rectangle {
             id: card
             anchors.fill: parent
-            radius: 44 * root.s
+            radius: 20 * root.s
             color: Qt.rgba(1, 0.97, 0.985, 0.72)
             border.color: Qt.rgba(1, 1, 1, 0.9); border.width: 2 * root.s
-
-            // little bow on top
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom: parent.top; anchors.bottomMargin: -26 * root.s
-                text: "🎀"; font.pixelSize: 54 * root.s
-            }
 
             Column {
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -206,7 +199,7 @@ Item {
 
                 Item { width: 1; height: 6 * root.s }
 
-                // avatar: a pink circle with the first letter and a heart badge
+                // avatar: a pink circle with the first letter
                 Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: 118 * root.s; height: 118 * root.s
@@ -219,28 +212,16 @@ Item {
                         border.color: root.milk; border.width: 5 * root.s
                         Text {
                             anchors.centerIn: parent
-                            text: root.userName.length > 0 ? root.userName.charAt(0).toUpperCase() : "♡"
+                            text: root.userName.length > 0 ? root.userName.charAt(0).toUpperCase() : ""
                             font.family: roundFont.name; font.pixelSize: 58 * root.s; font.weight: Font.DemiBold
                             color: root.milk
-                        }
-                    }
-                    Rectangle {
-                        width: 38 * root.s; height: width; radius: width / 2
-                        anchors.right: parent.right; anchors.bottom: parent.bottom
-                        color: root.milk
-                        Text { anchors.centerIn: parent; text: "♥"; color: root.rose; font.pixelSize: 22 * root.s }
-                        SequentialAnimation on scale {
-                            loops: Animation.Infinite
-                            NumberAnimation { to: 1.18; duration: 420; easing.type: Easing.OutQuad }
-                            NumberAnimation { to: 1.0;  duration: 420; easing.type: Easing.InQuad }
-                            PauseAnimation  { duration: 1300 }
                         }
                     }
                 }
 
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "hi, " + root.userName.toLowerCase() + " ♡"
+                    text: "hi, " + root.userName.toLowerCase()
                     font.family: roundFont.name; font.pixelSize: 34 * root.s; font.weight: Font.Medium
                     color: root.berry
                 }
@@ -253,7 +234,7 @@ Item {
 
                 Item { width: 1; height: 12 * root.s }
 
-                // password pill + heart button
+                // password pill + go button
                 Item {
                     id: passRow
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -269,7 +250,7 @@ Item {
                     Rectangle {
                         id: pill
                         anchors.left: parent.left; anchors.right: goButton.left; anchors.rightMargin: 12 * root.s
-                        height: parent.height; radius: height / 2
+                        height: parent.height; radius: 14 * root.s
                         color: root.milk
                         border.width: 2.5 * root.s
                         border.color: root.errorText !== "" ? root.berry : (pass.activeFocus ? root.rose : root.blush)
@@ -280,7 +261,7 @@ Item {
                             anchors.fill: parent
                             anchors.leftMargin: 28 * root.s; anchors.rightMargin: 28 * root.s
                             verticalAlignment: TextInput.AlignVCenter
-                            echoMode: TextInput.Password; passwordCharacter: "♥"
+                            echoMode: TextInput.Password; passwordCharacter: "•"
                             font.family: softFont.name; font.pixelSize: 24 * root.s; font.letterSpacing: 4 * root.s
                             color: root.rose; selectionColor: root.petal
                             clip: true; focus: true
@@ -293,7 +274,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.left: parent.left; anchors.leftMargin: 30 * root.s
                             visible: pass.text.length === 0
-                            text: root.busy ? "checking… ♡" : "password ♡"
+                            text: root.busy ? "checking…" : "password"
                             font.family: softFont.name; font.pixelSize: 21 * root.s; font.weight: Font.DemiBold
                             color: root.petal
                         }
@@ -302,14 +283,14 @@ Item {
                     Rectangle {
                         id: goButton
                         anchors.right: parent.right
-                        width: parent.height; height: parent.height; radius: width / 2
+                        width: parent.height; height: parent.height; radius: 14 * root.s
                         color: goMa.containsMouse ? root.berry : root.rose
                         Behavior on color { ColorAnimation { duration: 150 } }
                         Text {
                             anchors.centerIn: parent
-                            text: root.busy ? "♡" : "➜"
+                            text: "➜"
                             color: root.milk; font.pixelSize: 28 * root.s
-                            RotationAnimation on rotation { running: root.busy; from: 0; to: 360; duration: 1200; loops: Animation.Infinite }
+                            opacity: root.busy ? 0.5 : 1
                         }
                         MouseArea { id: goMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.login() }
                     }
@@ -334,12 +315,12 @@ Item {
         visible: !root.isLockScreen && sessions.count > 1
         anchors.left: parent.left; anchors.bottom: parent.bottom
         anchors.margins: 40 * root.s
-        width: sessText.implicitWidth + 48 * root.s; height: 56 * root.s; radius: height / 2
+        width: sessText.implicitWidth + 48 * root.s; height: 56 * root.s; radius: 14 * root.s
         color: sessMa.containsMouse ? Qt.rgba(1, 1, 1, 0.85) : Qt.rgba(1, 1, 1, 0.6)
         Text {
             id: sessText
             anchors.centerIn: parent
-            text: "✿ " + (sessions.currentItem ? sessions.currentItem.label.toLowerCase() : "session")
+            text: (sessions.currentItem ? sessions.currentItem.label.toLowerCase() : "session")
             font.family: softFont.name; font.pixelSize: 20 * root.s; font.weight: Font.DemiBold
             color: root.plum
         }
@@ -362,7 +343,7 @@ Item {
             delegate: Rectangle {
                 id: btn
                 required property var modelData
-                width: 60 * root.s; height: width; radius: width / 2
+                width: 60 * root.s; height: width; radius: 14 * root.s
                 color: btnMa.containsMouse ? root.milk : Qt.rgba(1, 1, 1, 0.6)
                 border.color: btnMa.containsMouse ? root.rose : "transparent"; border.width: 2 * root.s
                 Text {

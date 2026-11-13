@@ -1,6 +1,6 @@
 # Lock screen + login screen (qylock)
 
-**Theme: `themes/strawberry-milk`** (this repo's own, MIT): pastel pink, floating
+**Theme: `themes/pastel-pink`** (this repo's own, MIT): pastel pink, floating
 hearts and sparkles, a frosted card with clock, avatar, greeting and a
 heart-dotted password field. Written in qylock's theme format so the same files
 run in the lock screen (`scripts/lock.sh` points qylock's lock screen at it)

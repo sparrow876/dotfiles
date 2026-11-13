@@ -4,14 +4,14 @@
 # The lock screen is qylock's Quickshell session lock (lock_shell.qml + its
 # PAM shim, installed by ~/.local/src/qylock/quickshell.sh, ROOT-STEPS 10,
 # patched by lockscreen/apply-patches.sh) showing a theme:
-#   default             this repo's lockscreen/themes/strawberry-milk
+#   default             this repo's lockscreen/themes/pastel-pink
 #   lock.sh <name>      a theme from this repo's lockscreen/themes/, else one of
 #                       qylock's (~/.local/src/qylock/themes, e.g. winter)
 #   LOCK_THEME=<name>   same, from the environment
 # (qylock's own lock.sh is not used: it always picks "winter".)
 qs_lock="$HOME/.local/share/quickshell-lockscreen"
 repo_themes="$HOME/dotfiles/lockscreen/themes"
-theme="${1:-${LOCK_THEME:-strawberry-milk}}"
+theme="${1:-${LOCK_THEME:-pastel-pink}}"
 
 # Already locked? Don't start a second lock screen.
 # (anchored to the start of the command line, so e.g. `nvim .../lock_shell.qml`
@@ -29,7 +29,7 @@ if [[ -f $repo_themes/$theme/Main.qml ]]; then
 elif [[ -f $qs_lock/themes_link/$theme/Main.qml ]]; then
   theme_path="$qs_lock/themes_link/$theme"
 else
-  theme="strawberry-milk"; theme_path="$repo_themes/$theme"
+  theme="pastel-pink"; theme_path="$repo_themes/$theme"
 fi
 
 # The idle screen (4 min) would keep animating behind the lock screen all
