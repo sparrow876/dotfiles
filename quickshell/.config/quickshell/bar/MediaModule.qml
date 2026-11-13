@@ -4,7 +4,7 @@
 //   nothing: ♪                            (small muted icon)
 // Click = play/pause, scroll = next / previous track.
 // Long titles are cut at 420px (less if the bar is crowded: Bar.qml sets maxWidth)
-// with a soft fade instead of "…" (full title in the tooltip). Hovering scrolls
+// with a soft fade instead of "…". Hovering scrolls
 // a cut title to its end and back (loops while hovered); moving the mouse away
 // rolls it smoothly back to the start.
 import QtQuick
@@ -124,7 +124,10 @@ MouseArea {
 
     Tooltip {
         target: root
-        text: Media.hasTrack ? `${Media.label}\n${Media.player?.identity ?? ""} · click: play/pause · scroll: next/previous`
+        // The title is in the bar (and scrolls on hover): just the player + keys
+        readonly property var niceNames: ({ "Mozilla zen": "Zen", "Mozilla Firefox": "Firefox" })
+        readonly property string playerName: niceNames[Media.player?.identity ?? ""] ?? (Media.player?.identity || "Player")
+        text: Media.hasTrack ? `${playerName} · click: play/pause · scroll: skip`
                              : "Nothing playing"
     }
 }

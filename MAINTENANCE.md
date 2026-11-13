@@ -584,6 +584,11 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — Music tooltip no longer repeats the title (it's in the bar and
+  scrolls on hover): now "<player> · click: play/pause · scroll: skip", with
+  tidy names for MPRIS identities like "Mozilla zen" → Zen. File:
+  `bar/MediaModule.qml`.
+
 - **2026-11-13** — Music title scrolls on hover (user request): only when it's
   cut off; loop = 0.5 s pause, glide to the end (45 px/s, InOutSine), 1.2 s
   pause, glide back, 0.8 s pause. Mouse away → rolls back to the start
