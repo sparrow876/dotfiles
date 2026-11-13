@@ -1,10 +1,6 @@
 # Lock screen + login screen (qylock)
 
 **Theme: qylock's "winter"** on both the lock screen and the SDDM login screen.
-`themes/pastel-pink` (this repo's own, MIT, qylock theme format) was tried on
-2026-11-13 and dropped; it stays available: `scripts/lock.sh pastel-pink`, and
-`system/root-steps/6-login-theme.sh` would install it for SDDM. Its `bg.jpg`
-(wallhaven 3z86od) is not in git; without it a pink gradient is shown.
 
 The lock screen itself (session lock + PAM) and the winter theme come from
 [qylock](https://github.com/Darkkal44/qylock) by Darkkal44 (**GPL-3.0**).

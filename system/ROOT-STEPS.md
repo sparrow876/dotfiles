@@ -486,32 +486,3 @@ folder, mounts them right away and tests trashing in Downloads. Each folder
 keeps its trash in `<folder>/.Trash-<uid>`; Nautilus's Trash shows all of them.
 
 Undo: `sudo cp /etc/fstab.before-trash-mounts /etc/fstab && sudo systemctl daemon-reload`, then reboot.
-
-
-## 16. Login screen: "pastel-pink" theme (optional, not in use)
-
-**Not in use:** the lock and login screens stay on qylock's winter (user's
-choice, 2026-11-13). Only run this to switch SDDM to the pastel theme. To go
-back: `sudo cp /etc/sddm.conf.d/theme.conf.before-pastel-pink
-/etc/sddm.conf.d/theme.conf` (or `printf '[Theme]\nCurrent=winter\n' | sudo
-tee /etc/sddm.conf.d/theme.conf`).
-
-
-The lock screen and the SDDM login screen use this repo's own theme,
-`lockscreen/themes/pastel-pink` (pastel pink; background `bg.jpg` from
-wallhaven, not in git; without it a pink gradient is used). The lock screen
-needs no root step (`scripts/lock.sh` points qylock's lock screen at it; run
-`lockscreen/apply-patches.sh` once for the login fix). SDDM can't read your
-home folder, so the theme is copied:
-
-```sh
-bash ~/dotfiles/system/root-steps/6-login-theme.sh
-```
-
-- Copies the theme to `/usr/share/sddm/themes/pastel-pink` and sets
-  `Current=pastel-pink` in `/etc/sddm.conf.d/theme.conf` (backup
-  `theme.conf.before-pastel-pink`). Re-run after changing the theme.
-- Preview first without logging out:
-  `sddm-greeter-qt6 --test-mode --theme ~/dotfiles/lockscreen/themes/pastel-pink`
-- **Undo:** `sudo cp /etc/sddm.conf.d/theme.conf.before-pastel-pink /etc/sddm.conf.d/theme.conf`
-  (back to winter).

@@ -582,6 +582,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — pastel-pink theme deleted completely (user request):
+  `lockscreen/themes/`, `system/root-steps/6-login-theme.sh`, ROOT-STEPS §16,
+  its local bg.jpg and preview images. `scripts/lock.sh` only knows qylock's
+  themes again (default winter); 4-login.sh checks winter only. The entries
+  below describe what it was.
+
 - **2026-11-13** — Back to qylock's **winter** (user didn't like the pastel
   theme). `scripts/lock.sh` defaults to winter again (still runs
   lock_shell.qml itself; `lock.sh pastel-pink` keeps the other theme

@@ -5,12 +5,10 @@
 # PAM shim, installed by ~/.local/src/qylock/quickshell.sh, ROOT-STEPS 10,
 # patched by lockscreen/apply-patches.sh) showing a theme:
 #   default             qylock's "winter" (same as the SDDM login screen)
-#   lock.sh <name>      a theme from this repo's lockscreen/themes/ (e.g.
-#                       pastel-pink), else one of qylock's (~/.local/src/qylock/themes)
+#   lock.sh <name>      another qylock theme (~/.local/src/qylock/themes)
 #   LOCK_THEME=<name>   same, from the environment
 # (qylock's own lock.sh is not used: it ignores its theme setting.)
 qs_lock="$HOME/.local/share/quickshell-lockscreen"
-repo_themes="$HOME/dotfiles/lockscreen/themes"
 theme="${1:-${LOCK_THEME:-winter}}"
 
 # Already locked? Don't start a second lock screen.
@@ -24,9 +22,7 @@ if [[ ! -f $qs_lock/lock_shell.qml ]]; then
   exit 1
 fi
 
-if [[ -f $repo_themes/$theme/Main.qml ]]; then
-  theme_path="$repo_themes/$theme"
-elif [[ -f $qs_lock/themes_link/$theme/Main.qml ]]; then
+if [[ -f $qs_lock/themes_link/$theme/Main.qml ]]; then
   theme_path="$qs_lock/themes_link/$theme"
 else
   theme="winter"; theme_path="$qs_lock/themes_link/$theme"

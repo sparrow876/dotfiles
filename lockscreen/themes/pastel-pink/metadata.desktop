@@ -1,8 +1,0 @@
-[SddmGreeterTheme]
-Name=pastel-pink
-Description=Pastel pink lock + login screen (dotfiles; qylock theme format)
-Author=dotfiles
-Type=sddm-theme
-MainScript=Main.qml
-ConfigFile=theme.conf
-QtVersion=6
