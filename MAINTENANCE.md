@@ -507,7 +507,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Theme | palette system + 4 dark themes (ALT+T) | user request |
 | Replay toggled only from bar menu | ALT+Ctrl+R turns it on / saves; ALT+Ctrl+Shift+R toggles | indicator is hidden when idle |
 | Bluetooth PIN confirm dialog | blueman-applet is the pairing agent (no tray icon): code confirmations arrive as notifications with Confirm/Deny, PIN entry as a small dialog | Quickshell has no agent API |
-| Bar right side order | recording · **brightness** · tray (drag to reorder, Pomoclock pinned last) · idle · Wi-Fi · … | user request 2026-11-13; brief had tray · recording · idle |
+| Bar right side order | tray (drag to reorder, Pomoclock pinned last) · idle · recording · Wi-Fi · Bluetooth · audio · **brightness** · battery · bell · clock | user request 2026-11-13; brief had tray · recording · idle · … (no brightness) |
+| Music position | centred when it fits, else slid into the gap between workspaces and tray, using all of it (max 420 px title) | the wide Pomoclock pill left only ~160 px around the centre |
 | Dim to ~30 % | 30 % of the *current* brightness | user usually at ~18 % |
 | Wallpapers never created | default palette gradient only if folder empty | no blank screen on fresh install |
 | Logout | `hyprshutdown` if installed | graceful app shutdown |
@@ -582,6 +583,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-13** — Bar follow-up: tray drag flickered/jittered: the drag offset
+  was measured in the icon's own coordinates while the icon moved under the
+  cursor (feedback). Now measured with `mapToItem(root, …)` (8 px threshold,
+  onCanceled reset). Layout: tray leftmost of the right group (Pomoclock last,
+  then the coffee cup), recording after the cup, brightness moved next to
+  audio. Music squeezed to ~160 px (centred with `2 × min(gap)`): now
+  `x = clamp(centred, gapLeft, gapRight − width)`, `maxWidth = gap`. Files:
+  `bar/Bar.qml`, `bar/Tray.qml`.
 
 - **2026-11-13** — Bar (user request): **brightness** control left of the tray
   (sun glyph by level + level bar; scroll ±5%, middle-click full ↔ previous;

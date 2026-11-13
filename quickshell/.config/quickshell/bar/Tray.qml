@@ -90,21 +90,24 @@ Row {
             z: dragging ? 10 : 0
 
             // --- drag to reorder ---------------------------------------------
-            property real pressX: 0
+            property real pressX: 0          // in the tray's coordinates (stable while the icon moves)
             property real dragX: 0
             property bool dragging: false
             property bool justDragged: false
             transform: Translate { x: slot.dragging ? slot.dragX : 0 }
 
             onPressed: event => {
-                pressX = event.x; dragX = 0; justDragged = false
+                pressX = slot.mapToItem(root, event.x, event.y).x; dragX = 0; justDragged = false
             }
             onPositionChanged: event => {
                 if (!pressed || !movable || !(pressedButtons & Qt.LeftButton)) return
-                const dx = event.x - pressX
-                if (!dragging && Math.abs(dx) > 6) dragging = true
+                // mapToItem includes the drag offset, so this is the real
+                // cursor position: no jitter from the icon moving under it
+                const dx = slot.mapToItem(root, event.x, event.y).x - pressX
+                if (!dragging && Math.abs(dx) > 8) dragging = true
                 if (dragging) dragX = dx
             }
+            onCanceled: { dragging = false; dragX = 0 }
             onReleased: {
                 if (!dragging) return
                 // Drop position = how many other movable icons sit left of our centre

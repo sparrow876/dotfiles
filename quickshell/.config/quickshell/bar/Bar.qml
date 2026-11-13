@@ -4,8 +4,10 @@
 //
 //   left:   workspaces 一 二 三 四 五 六
 //   center: music (artist — title, play/pause)
-//   right:  recording · brightness · tray (Pomoclock last) · idle · Wi-Fi ·
-//           Bluetooth · audio · battery · bell · clock
+//   right:  tray (drag to reorder, Pomoclock last) · idle · recording · Wi-Fi ·
+//           Bluetooth · audio · brightness · battery · bell · clock
+// The music sits in the middle when there's room, otherwise it slides into the
+// free space between the workspaces and the tray and uses all of it.
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -50,11 +52,13 @@ PanelWindow {
         }
 
         MediaModule {
-            anchors.centerIn: parent
-            // Centered, so it may use twice the smaller gap to its neighbours
-            // (keeps a long title from running under the tray / icons)
-            maxWidth: 2 * Math.min(background.width / 2 - (workspaces.x + workspaces.width),
-                                   rightGroup.x - background.width / 2) - 40
+            id: media
+            readonly property real gapLeft: workspaces.x + workspaces.width + 24
+            readonly property real gapRight: rightGroup.x - 24
+            anchors.verticalCenter: parent.verticalCenter
+            maxWidth: Math.max(0, gapRight - gapLeft)
+            // centred on the bar if it fits, else pushed into the free gap
+            x: Math.max(gapLeft, Math.min(background.width / 2 - width / 2, gapRight - width))
         }
 
         RowLayout {
@@ -64,20 +68,20 @@ PanelWindow {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 12
 
-            RecordingIcon { id: recording; barWindow: bar }
-            Separator { visible: recording.visible }
-            BrightnessIcon { id: brightness; barWindow: bar }
-            Separator { visible: brightness.visible }
             Tray { id: tray; barWindow: bar }
             Separator { visible: tray.visible }
             IdleInhibitIcon {}
             Separator {}
+            RecordingIcon { id: recording; barWindow: bar }
+            Separator { visible: recording.visible }
             NetworkIcon { barWindow: bar }
             Separator {}
             BluetoothIcon { id: bt; barWindow: bar }
             Separator { visible: bt.visible }
             AudioIcon { barWindow: bar }
             Separator {}
+            BrightnessIcon { id: brightness; barWindow: bar }
+            Separator { visible: brightness.visible }
             Battery { id: battery }
             Separator { visible: battery.visible }
             Bell { barWindow: bar }
