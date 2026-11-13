@@ -94,38 +94,42 @@ MouseArea {
                 }
             }
 
-            function reset() { lap.stop(); finish.stop(); startDelay.stop(); marquee.x = 0 }
-            // Run from wherever we are to the end of the lap, then decide:
-            // still hovered -> next lap; not hovered -> stop at the start.
-            function runToLapEnd() {
-                finish.from = marquee.x
-                finish.duration = Math.max(1, (cycle + marquee.x) / speed * 1000)
-                finish.restart()
-            }
+            // State: "idle" (at the start), "loop" (hovered), "finishing" (mouse
+            // left: run on to the end of this lap, then stop at the start).
+            // Driven by FrameAnimation from the real time between frames, so the
+            // speed never changes when the compositor sends frames less often
+            // (a NumberAnimation advances per frame and visibly slowed down).
+            property string mode: "idle"
+            property real offset: 0                                 // 0 .. cycle
+            property real ramp: 0                                   // 0 -> 1 ease-in at the start
+            onOffsetChanged: marquee.x = -offset
+
+            function reset() { mode = "idle"; startDelay.stop(); offset = 0; ramp = 0 }
             onHoveredChanged: {
                 if (hovered) {
-                    if (marquee.x === 0 && !finish.running) startDelay.restart()
+                    if (mode === "finishing") mode = "loop"
+                    else if (mode === "idle") startDelay.restart()
                 } else {
                     startDelay.stop()
-                    if (lap.running) { lap.stop(); runToLapEnd() }   // finish this lap, then stop
+                    if (mode === "loop") mode = "finishing"
                 }
             }
             onOverflowingChanged: if (!overflowing) reset()
 
-            Timer { id: startDelay; interval: 350; onTriggered: titleBox.runToLapEnd() }
-            NumberAnimation {
-                id: finish
-                target: marquee; property: "x"; to: -titleBox.cycle
-                onFinished: {
-                    marquee.x = 0                     // the copy is now where the title was
-                    if (titleBox.hovered) lap.restart()
+            Timer { id: startDelay; interval: 350; onTriggered: { titleBox.ramp = 0; titleBox.mode = "loop" } }
+            FrameAnimation {
+                running: titleBox.mode !== "idle"
+                onTriggered: {
+                    const dt = Math.min(frameTime, 0.05)            // ignore long stalls
+                    titleBox.ramp = Math.min(1, titleBox.ramp + dt / 0.4)
+                    const easeIn = titleBox.ramp * titleBox.ramp * (3 - 2 * titleBox.ramp)
+                    let next = titleBox.offset + dt * titleBox.speed * easeIn
+                    if (next >= titleBox.cycle) {
+                        next -= titleBox.cycle                      // the copy took the title's place
+                        if (titleBox.mode === "finishing") { titleBox.mode = "idle"; next = 0 }
+                    }
+                    titleBox.offset = next
                 }
-            }
-            NumberAnimation {
-                id: lap
-                target: marquee; property: "x"; from: 0; to: -titleBox.cycle
-                duration: titleBox.cycle / titleBox.speed * 1000
-                loops: Animation.Infinite
             }
 
             layer.enabled: overflowing

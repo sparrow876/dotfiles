@@ -584,6 +584,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — Marquee slowed down after the mouse left the bar. Cause: Qt
+  animations advance a fixed step per rendered frame; with the cursor gone the
+  compositor delivers the bar's frames less regularly, so "animation time"
+  ran slower than real time. Fix: FrameAnimation integrating real `frameTime`
+  (capped at 50 ms) at a constant 55 px/s, 0.4 s smoothstep ease-in at the
+  start; states idle / loop / finishing (finish the lap, stop at the start).
+  File: `bar/MediaModule.qml`.
+
 - **2026-11-13** — Music title scrolling reworked (user request): one-way
   marquee (title + 48 px gap + copy, endless left scroll at 55 px/s, linear,
   0.35 s delay on hover); on mouse-out it finishes the current lap and stops
