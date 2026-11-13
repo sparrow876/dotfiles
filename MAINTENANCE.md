@@ -584,6 +584,11 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — Marquee smoothness: steps use an exponentially smoothed
+  frame time (α 0.1) so uneven frame delivery doesn't show as uneven motion;
+  the moving strip's layer is rendered at 2× with mipmaps so sub-pixel
+  positions don't shimmer (still crisp at rest). File: `bar/MediaModule.qml`.
+
 - **2026-11-13** — Marquee: left-edge fade popped off when the title snapped
   home (it faded the incoming start, then switched off at once). Now the left
   fade strength = min(offset, cycle − offset) / 40 px, so it eases in as the

@@ -76,6 +76,10 @@ MouseArea {
                 height: parent.height
                 layer.enabled: titleBox.overflowing
                 layer.smooth: true
+                // 2x texture + mipmaps: sub-pixel steps look evenly soft instead of
+                // the letters shimmering between sharp and blurry each frame
+                layer.textureSize: Qt.size(Math.ceil(width * 2), Math.ceil(height * 2))
+                layer.mipmap: true
                 Row {
                     id: strip
                     spacing: titleBox.gap
@@ -102,9 +106,10 @@ MouseArea {
             property string mode: "idle"
             property real offset: 0                                 // 0 .. cycle
             property real ramp: 0                                   // 0 -> 1 ease-in at the start
+            property real avgDt: 1 / 144                            // smoothed frame time
             onOffsetChanged: marquee.x = -offset
 
-            function reset() { mode = "idle"; startDelay.stop(); offset = 0; ramp = 0 }
+            function reset() { mode = "idle"; startDelay.stop(); offset = 0; ramp = 0; avgDt = 1 / 144 }
             onHoveredChanged: {
                 if (hovered) {
                     if (mode === "finishing") mode = "loop"
@@ -120,7 +125,10 @@ MouseArea {
             FrameAnimation {
                 running: titleBox.mode !== "idle"
                 onTriggered: {
-                    const dt = Math.min(frameTime, 0.05)            // ignore long stalls
+                    // Even steps: move by a smoothed frame time (frames don't arrive
+                    // at perfectly even intervals; stalls over 50 ms are ignored)
+                    titleBox.avgDt += (Math.min(frameTime, 0.05) - titleBox.avgDt) * 0.1
+                    const dt = titleBox.avgDt
                     titleBox.ramp = Math.min(1, titleBox.ramp + dt / 0.4)
                     const easeIn = titleBox.ramp * titleBox.ramp * (3 - 2 * titleBox.ramp)
                     let next = titleBox.offset + dt * titleBox.speed * easeIn
