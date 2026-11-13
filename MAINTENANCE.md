@@ -582,6 +582,18 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — New lock/login theme `lockscreen/themes/strawberry-milk`
+  (user request: pastel pink, cute; may differ from the rice palette). Own QML
+  in qylock's theme format (sddm/userModel/sessionModel/config contract; reads
+  the shim's `sddm.lastError`); bundled Fredoka + Quicksand (OFL); bg.jpg =
+  wallhaven 5ym379 (SFW search, not in git; gradient fallback). Previewed
+  off-screen with `qml` + stub sddm object (QT_QPA_PLATFORM=offscreen,
+  grabToImage). `scripts/lock.sh` now runs qylock's lock_shell.qml itself with
+  QS_THEME_PATH → this theme (qylock's lock.sh hard-codes winter); optional
+  theme name argument. SDDM: `system/root-steps/6-login-theme.sh` (ROOT-STEPS
+  §16) copies it to /usr/share/sddm/themes and selects it; 4-login.sh checks
+  accept either theme.
+
 - **2026-11-13** — Lock screen after opening the lid (on AC, locked ~1 h): no
   error on a wrong password, then nothing unlocked; user rebooted from the lock
   screen. Not SDDM: qylock's Quickshell lock looks the same. The journal shows

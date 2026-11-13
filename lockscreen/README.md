@@ -1,7 +1,19 @@
 # Lock screen + login screen (qylock)
 
-Both the lock screen and the SDDM login screen use the **"winter"** theme from
-[qylock](https://github.com/Darkkal44/qylock) by Darkkal44 (**GPL-3.0**).
+**Theme: `themes/strawberry-milk`** (this repo's own, MIT): pastel pink, floating
+hearts and sparkles, a frosted card with clock, avatar, greeting and a
+heart-dotted password field. Written in qylock's theme format so the same files
+run in the lock screen (`scripts/lock.sh` points qylock's lock screen at it)
+and in SDDM (copied by `system/root-steps/6-login-theme.sh`, ROOT-STEPS §16).
+- `bg.jpg`: background picture, **not in git** (wallhaven 5ym379, pastel pink
+  clouds: https://wallhaven.cc/w/5ym379). Any 16:9 picture works; without one
+  it shows a pink gradient. `theme.conf` `wash=` sets how pink it's tinted.
+- Fonts: Fredoka + Quicksand (SIL Open Font License, `fonts/OFL-*.txt`).
+- Other themes: `scripts/lock.sh <name>` (this folder or qylock's, e.g. winter).
+
+The lock screen itself (session lock + PAM) comes from
+[qylock](https://github.com/Darkkal44/qylock) by Darkkal44 (**GPL-3.0**); its
+"winter" theme was used before 2026-11-13.
 
 - `install.sh` clones qylock to `~/.local/src/qylock` at a pinned commit (see
   `CLONES` in `install.sh`). Nothing from qylock is copied into this repo.

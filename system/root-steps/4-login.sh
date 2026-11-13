@@ -25,12 +25,12 @@ PROBLEMS=0
 say "Checking qylock is installed"
 [[ -x $HOME/.local/share/quickshell-lockscreen/lock.sh ]] && ok "lock screen installed" \
   || bad "lock screen missing: run ~/.local/src/qylock/quickshell.sh first"
-[[ $(cat "$HOME/.config/qylock/theme" 2>/dev/null) == winter ]] && ok "lock theme: winter" \
-  || bad "lock theme is '$(cat "$HOME/.config/qylock/theme" 2>/dev/null)' (expected winter)"
-[[ -d /usr/share/sddm/themes/winter ]] && ok "SDDM theme installed" \
-  || bad "SDDM theme missing: run ~/.local/src/qylock/sddm.sh first"
-grep -qs '^Current=winter' /etc/sddm.conf.d/theme.conf && ok "SDDM theme selected" \
-  || bad "/etc/sddm.conf.d/theme.conf doesn't select winter"
+# Themes: the lock screen uses the repo's strawberry-milk (scripts/lock.sh);
+# SDDM uses it once ROOT-STEPS 16 (6-login-theme.sh) ran, winter before that.
+[[ -d /usr/share/sddm/themes/winter || -d /usr/share/sddm/themes/strawberry-milk ]] && ok "SDDM theme installed" \
+  || bad "SDDM theme missing: run ~/.local/src/qylock/sddm.sh (and root-steps/6-login-theme.sh)"
+grep -qsE '^Current=(winter|strawberry-milk)' /etc/sddm.conf.d/theme.conf && ok "SDDM theme selected ($(grep -m1 '^Current=' /etc/sddm.conf.d/theme.conf | cut -d= -f2))" \
+  || bad "/etc/sddm.conf.d/theme.conf selects neither winter nor strawberry-milk"
 grep -qE '^-?(auth|session).*pam_gnome_keyring' /etc/pam.d/sddm && ok "keyring unlocks at login (pam_gnome_keyring in /etc/pam.d/sddm)" \
   || bad "pam_gnome_keyring missing from /etc/pam.d/sddm"
 [[ -f /usr/share/wayland-sessions/hyprland.desktop ]] && ok "Hyprland session entry present" \
