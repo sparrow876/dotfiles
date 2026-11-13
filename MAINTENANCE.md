@@ -584,6 +584,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — Marquee: left-edge fade popped off when the title snapped
+  home (it faded the incoming start, then switched off at once). Now the left
+  fade strength = min(offset, cycle − offset) / 40 px, so it eases in as the
+  title leaves and is already zero when the next lap's start arrives. File:
+  `bar/MediaModule.qml`.
+
 - **2026-11-13** — Marquee slowed down after the mouse left the bar. Cause: Qt
   animations advance a fixed step per rendered frame; with the cursor gone the
   compositor delivers the bar's frames less regularly, so "animation time"

@@ -145,11 +145,15 @@ MouseArea {
             Rectangle {
                 id: fadeMaskRect
                 anchors.fill: parent
-                // right edge always fades (more text follows); left edge while scrolled
-                readonly property bool fadeLeft: marquee.x < -1
+                // Right edge always fades (more text follows). The left edge fades
+                // while scrolled, but weaker the closer the title's start is to
+                // its home position (both when it leaves and when the next lap's
+                // start comes back), so it's gone exactly when the title slots in.
+                readonly property real fadeLeft: Math.max(0, Math.min(1,
+                    Math.min(titleBox.offset, titleBox.cycle - titleBox.offset) / 40))
                 gradient: Gradient {
                     orientation: Gradient.Horizontal
-                    GradientStop { position: 0.0;  color: fadeMaskRect.fadeLeft ? "transparent" : "white" }
+                    GradientStop { position: 0.0;  color: Qt.rgba(1, 1, 1, 1 - fadeMaskRect.fadeLeft) }
                     GradientStop { position: 0.1;  color: "white" }
                     GradientStop { position: 0.75; color: "white" }
                     GradientStop { position: 1.0;  color: "transparent" }
