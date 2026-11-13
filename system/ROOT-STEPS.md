@@ -488,7 +488,14 @@ keeps its trash in `<folder>/.Trash-<uid>`; Nautilus's Trash shows all of them.
 Undo: `sudo cp /etc/fstab.before-trash-mounts /etc/fstab && sudo systemctl daemon-reload`, then reboot.
 
 
-## 16. Login screen: pastel "pastel-pink" theme
+## 16. Login screen: "pastel-pink" theme (optional, not in use)
+
+**Not in use:** the lock and login screens stay on qylock's winter (user's
+choice, 2026-11-13). Only run this to switch SDDM to the pastel theme. To go
+back: `sudo cp /etc/sddm.conf.d/theme.conf.before-pastel-pink
+/etc/sddm.conf.d/theme.conf` (or `printf '[Theme]\nCurrent=winter\n' | sudo
+tee /etc/sddm.conf.d/theme.conf`).
+
 
 The lock screen and the SDDM login screen use this repo's own theme,
 `lockscreen/themes/pastel-pink` (pastel pink; background `bg.jpg` from

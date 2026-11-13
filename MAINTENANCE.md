@@ -582,6 +582,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — Back to qylock's **winter** (user didn't like the pastel
+  theme). `scripts/lock.sh` defaults to winter again (still runs
+  lock_shell.qml itself; `lock.sh pastel-pink` keeps the other theme
+  reachable). SDDM had been switched at 18:57 by the pre-rename
+  6-login-theme.sh (`Current=strawberry-milk`, theme in
+  /usr/share/sddm/themes/strawberry-milk, backup theme.conf.before-strawberry
+  = winter): user restores that (root). The PAM shim patch stays: it fixes the
+  empty-Enter hang for winter too.
+
 - **2026-11-13** — pastel-pink theme: background → wallhaven 3z86od (sakura
   branch, pink moon; user's pick; 2560×1440 JPEG, not in git); font →
   JetBrainsMono Nerd Font only (bundled Fredoka/Quicksand removed).

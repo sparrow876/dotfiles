@@ -1,18 +1,13 @@
 # Lock screen + login screen (qylock)
 
-**Theme: `themes/pastel-pink`** (this repo's own, MIT): pastel pink, a few faint
-sparkles, a frosted card with clock, avatar, greeting and a password field. Written in qylock's theme format so the same files
-run in the lock screen (`scripts/lock.sh` points qylock's lock screen at it)
-and in SDDM (copied by `system/root-steps/6-login-theme.sh`, ROOT-STEPS §16).
-- `bg.jpg`: background picture, **not in git** (wallhaven 3z86od, sakura branch
-  over a pink moon: https://wallhaven.cc/w/3z86od, scaled to 2560×1440). Any 16:9 picture works; without one
-  it shows a pink gradient. `theme.conf` `wash=` sets how pink it's tinted.
-- Font: JetBrainsMono Nerd Font only (the system font; nothing bundled).
-- Other themes: `scripts/lock.sh <name>` (this folder or qylock's, e.g. winter).
+**Theme: qylock's "winter"** on both the lock screen and the SDDM login screen.
+`themes/pastel-pink` (this repo's own, MIT, qylock theme format) was tried on
+2026-11-13 and dropped; it stays available: `scripts/lock.sh pastel-pink`, and
+`system/root-steps/6-login-theme.sh` would install it for SDDM. Its `bg.jpg`
+(wallhaven 3z86od) is not in git; without it a pink gradient is shown.
 
-The lock screen itself (session lock + PAM) comes from
-[qylock](https://github.com/Darkkal44/qylock) by Darkkal44 (**GPL-3.0**); its
-"winter" theme was used before 2026-11-13.
+The lock screen itself (session lock + PAM) and the winter theme come from
+[qylock](https://github.com/Darkkal44/qylock) by Darkkal44 (**GPL-3.0**).
 
 - `install.sh` clones qylock to `~/.local/src/qylock` at a pinned commit (see
   `CLONES` in `install.sh`). Nothing from qylock is copied into this repo.
