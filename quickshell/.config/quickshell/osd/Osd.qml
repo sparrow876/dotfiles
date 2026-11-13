@@ -63,6 +63,7 @@ PanelWindow {
     Connections {
         target: Brightness
         function onCurrentChanged() {
+            if (Popups.current === "brightness") return   // the popup already shows it
             const v = Brightness.value
             osd.show(Glyphs.brightnessLevels[v < 0.34 ? 0 : v < 0.67 ? 1 : 2], v, "", false)
         }

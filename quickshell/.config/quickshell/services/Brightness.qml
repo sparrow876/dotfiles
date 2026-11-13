@@ -6,6 +6,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.components
 
 Singleton {
     id: root
@@ -15,6 +16,26 @@ Singleton {
     property int current: 0
     readonly property real value: max > 0 ? current / max : 0
     readonly property bool available: device !== "" && max > 0
+    readonly property int percent: Math.round(value * 100)
+    readonly property string glyph: Glyphs.brightnessLevels[value < 0.34 ? 0 : value < 0.67 ? 1 : 2]
+
+    // Set brightness (0..1). Never fully black: at least 1%. Calls while a
+    // slider is dragged are merged, so brightnessctl runs at most every 40 ms.
+    property real pending: -1
+    function set(v) {
+        pending = Math.max(0.01, Math.min(1, v))
+        if (!setTimer.running) setTimer.start()
+    }
+    function step(n) { set(Math.round(value * 20 + n) / 20) }   // n x 5%, snapped to 5% steps
+    Timer {
+        id: setTimer
+        interval: 40
+        onTriggered: {
+            if (root.pending < 0) return
+            Quickshell.execDetached(["brightnessctl", "-q", "-n2", "set", Math.round(root.pending * 100) + "%"])
+            root.pending = -1
+        }
+    }
 
     // Find the backlight device once (intel_backlight on this laptop)
     Process {

@@ -507,6 +507,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Theme | palette system + 4 dark themes (ALT+T) | user request |
 | Replay toggled only from bar menu | ALT+Ctrl+R turns it on / saves; ALT+Ctrl+Shift+R toggles | indicator is hidden when idle |
 | Bluetooth PIN confirm dialog | blueman-applet is the pairing agent (no tray icon): code confirmations arrive as notifications with Confirm/Deny, PIN entry as a small dialog | Quickshell has no agent API |
+| Bar right side order | recording · **brightness** · tray (drag to reorder, Pomoclock pinned last) · idle · Wi-Fi · … | user request 2026-11-13; brief had tray · recording · idle |
 | Dim to ~30 % | 30 % of the *current* brightness | user usually at ~18 % |
 | Wallpapers never created | default palette gradient only if folder empty | no blank screen on fresh install |
 | Logout | `hyprshutdown` if installed | graceful app shutdown |
@@ -581,6 +582,18 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-13** — Bar (user request): **brightness** control left of the tray
+  (sun glyph by level + level bar; scroll ±5%, middle-click full ↔ previous;
+  click → `popups/BrightnessMenu.qml`: % header, slider with ±5% sun buttons,
+  10/25/50/75/100 presets; the brightness OSD stays quiet while it's open).
+  `Brightness.set()` coalesces slider moves (40 ms) into `brightnessctl -q -n2
+  set N%`, min 1%. **Tray order**: drag an icon and drop it; order saved by
+  SNI Id in `Quickshell.statePath("tray-order.json")` (FileView + JsonAdapter;
+  absent apps keep their slot), Pomoclock (`io.github.pomoclock.Pomoclock`)
+  always last before the coffee cup; recording indicator moved left of
+  brightness. Files: `bar/{Bar,Tray,BrightnessIcon}.qml`,
+  `popups/BrightnessMenu.qml`, `services/Brightness.qml`, `osd/Osd.qml`.
 
 - **2026-11-13** — pastel-pink theme deleted completely (user request):
   `lockscreen/themes/`, `system/root-steps/6-login-theme.sh`, ROOT-STEPS §16,
