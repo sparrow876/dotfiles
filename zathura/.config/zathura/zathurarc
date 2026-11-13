@@ -25,10 +25,13 @@ set window-title-basename   true
 set synctex                 true
 set synctex-edit-modifier   ctrl
 
-# Recolor (Ctrl+R): page becomes Nord dark, images keep their colours.
+# Recolor (Ctrl+R): page becomes Nord dark. Images are recoloured too
+# (reverse-video off): some LaTeX PDFs draw bullets etc. as tiny images, and
+# keeping image colours turned those into white dots with a dark ring. Photos
+# look odd in dark mode; Ctrl+R switches back to the normal page.
 set recolor                 false
 set recolor-keephue         true
-set recolor-reverse-video   true
+set recolor-reverse-video   false
 set recolor-lightcolor      "#2E3440"
 set recolor-darkcolor       "#ECEFF4"
 

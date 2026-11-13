@@ -574,6 +574,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — zathura dark mode (Ctrl+R): itemize bullets showed as white
+  dots with a dark ring in a pdfTeX lecture-notes PDF. Cause: that PDF draws
+  every bullet as a 34×34 stencil image (`pdfimages -list`: 146 identical
+  images), and `recolor-reverse-video true` keeps image colours, so the
+  bullets were excluded from recolouring. Fix: `recolor-reverse-video false`
+  (images recoloured too; Ctrl+R for photos). File: `zathura/.../zathurarc`.
+
 - **2026-11-12** — Nuclear removed at the user's request: `nuclear-player-bin`
   out of aur.txt, bar Nuclear tweaks reverted (Media.qml / MediaModule.qml as
   before 23a48c1). yt-dlp stays (comment updated). fastfetch back to the
