@@ -16,18 +16,22 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
 - **Hyprland 0.57** (Lua config) on the Intel iGPU; games and heavy apps on the
   RTX 3050 through `prime-run`. Smooth, no-bounce animations, sensible floating
   rules, tearing for games.
-- **Quickshell bar**: workspaces 一 二 三 四 五 六, music with play/pause,
-  tray, recording and stay-awake indicators, Wi-Fi / Bluetooth / audio menus
-  that really connect, pair and switch devices, battery, notifications, clock
-  + calendar.
+- **Quickshell bar**: workspaces 一 二 三 四 五 六; music with play/pause (a
+  cut-off title scrolls smoothly on hover); tray with a drag-to-reorder order
+  that's remembered; stay-awake and recording indicators; Wi-Fi / Bluetooth /
+  audio menus that really connect, pair and switch devices; a brightness
+  control (scroll, or click for a slider with presets); battery,
+  notifications, clock + calendar.
 - **Overlays**: on-screen volume/brightness, notification popups + center with
   Do Not Disturb (automatic during fullscreen games), system stats panel,
   power menu, wallpaper reel (slanted cards, angled transition), keybind
   cheat sheet, idle screen.
 - **Lock + login**: [qylock](https://github.com/Darkkal44/qylock) "winter" for
-  SDDM and the lock screen; hypridle dims → idle screen → locks → screen off,
-  and suspends after 20 min **on battery only**. Closing the lid locks when
-  plugged in and suspends on battery.
+  SDDM and the lock screen, with a small patch to its login code (no more hang
+  after pressing Enter on an empty password; shows why a login failed, e.g.
+  the 10-minute lockout after 3 wrong passwords). hypridle dims → idle screen
+  → locks → screen off, and suspends after 20 min **on battery only**. Closing
+  the lid locks when plugged in and suspends on battery.
 - **Rofi** launcher, clipboard history with image thumbnails, emoji picker.
 - **Capture**: screenshots (frozen screen, annotate with satty), color picker,
   OCR, screen recording with a 60 s instant-replay buffer.
@@ -36,11 +40,18 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
   **ALT + T**: Blue Ice (default), Catppuccin Mocha / Macchiato / Frappé.
   Neovim, Nautilus and zathura stay Nord.
 - **Shell**: kitty, zsh + Oh My Zsh, starship, eza, bat, ripgrep, fd, fzf,
-  zoxide, lazygit, fastfetch, a dropdown terminal (ALT + `).
+  zoxide, lazygit, fastfetch, a dropdown terminal (ALT + `), `lockdir` /
+  `unlockdir` to password-protect a folder (GnuPG AES-256).
 - **Neovim**: Nord, LSP, Telescope, Treesitter, LaTeX with live preview in
-  zathura (SyncTeX both ways).
-- **Apps**: Zen, Nautilus (with Google Drive via rclone), Outlook web app,
-  Teams, Vesktop, Claude desktop, LocalSend, Steam + MangoHud + GameMode.
+  zathura (SyncTeX both ways), Rust (rust-analyzer, rustfmt + clippy on save).
+- **Nautilus**: Nord, Google Drive via rclone, PDF thumbnails, Move to Trash
+  everywhere, and right-click **Copy as Path** and **Lock with Password… /
+  Unlock…** for folders.
+- **Apps**: Zen, Outlook web app, Teams, Vesktop, Claude desktop, LocalSend,
+  Steam + MangoHud + GameMode (GE-Proton where a game needs it).
+- **Bluetooth**: devices pair from the bar menu and stay paired (blueman's
+  agent runs in the background; PIN / code confirmations arrive as
+  notifications).
 - **Safety net**: btrfs snapshots before/after every package change (snapper +
   snap-pac), a careful `update` command, firewall, and a maintenance log.
 
@@ -73,20 +84,30 @@ Short version:
 7. Lock + login screen: qylock's two scripts, then
    `bash system/root-steps/4-login.sh` (ROOT-STEPS §10), and reboot into SDDM.
 8. Laptop lid (lock when plugged in, suspend on battery): ROOT-STEPS §14.
-9. Optional: Google Drive and folder colors (§11), work/chat apps (§12),
-   gaming (§13 + [system/GAMING.md](system/GAMING.md)).
+9. Move to Trash in Downloads / Recordings / .cache / Steam (their own btrfs
+   subvolumes): `bash system/root-steps/5-trash-mounts.sh` (ROOT-STEPS §15).
+10. Optional: Google Drive and folder colors (§11), work/chat apps (§12),
+    gaming (§13 + [system/GAMING.md](system/GAMING.md)), Rust
+    (`./install.sh --only rust` after `rustup` is installed).
 
 `./install.sh` (without `--packages`) never uses `sudo`, never edits `/etc` and
-never runs third-party scripts. `./install.sh --help` lists its steps.
+never runs third-party scripts. `./install.sh --help` lists its steps. It also
+applies this repo's lock-screen patch to the qylock clone
+(`lockscreen/apply-patches.sh`), so run qylock's `quickshell.sh` after it.
 
 ## Everyday use
 
 - **ALT + /** shows every shortcut (searchable). The full table is below.
 - **ALT + T** switches the theme. **ALT + W** picks a wallpaper (drop images in
-  `~/Pictures/Wallpapers`).
+  `~/Pictures/Wallpapers`; they're listed in natural order: w1, w2, …, w10).
+- **Bar**: drag tray icons to reorder them; scroll on the sun for brightness
+  (click for the slider); hover a long song title to read it all.
 - **`update`** in a terminal updates the system safely: Arch news first (stops
   if something needs a manual step), then `yay -Syu`, then checks. `update
   --check` changes nothing. See [zsh/SHELL-CHEATSHEET.md](zsh/SHELL-CHEATSHEET.md).
+- **`lockdir <folder>`** turns a folder into one password-protected file;
+  **`unlockdir <folder>.locked`** brings it back (also in Nautilus's
+  right-click menu).
 - Games: launch options `prime-run gamemoderun mangohud %command%`
   ([system/GAMING.md](system/GAMING.md)).
 
@@ -213,14 +234,16 @@ More in [MAINTENANCE.md](MAINTENANCE.md) §8.
 | [theme/README.md](theme/README.md) | palettes and how to add a theme |
 | [system/GAMING.md](system/GAMING.md) | Steam, launch options, controller, per-game notes |
 | [system/APPS.md](system/APPS.md) | Outlook, Teams, Vesktop, Claude, Google Drive, LocalSend |
-| [lockscreen/README.md](lockscreen/README.md) | how the qylock lock/login screen is set up |
+| [lockscreen/README.md](lockscreen/README.md) | how the qylock lock/login screen is set up, and its patch |
 
 ## Repository layout
 
 ```
 hypr/ quickshell/ rofi/ kitty/ zsh/ starship/ fastfetch/ lazygit/ bat/
 nvim/ zathura/ gtk/ qt/ xdg/ applications/ systemd/ vesktop/ mangohud/ gamemode/
+thumbnailers/ nautilus/ bin/
                       stow packages: each mirrors $HOME (e.g. kitty/.config/kitty/)
+lockscreen/           qylock notes + GPL patch for its login code
 theme/                palettes, style, templates, render.sh, apply.sh
 scripts/              screenshot, OCR, recording, clipboard, lock, update, ...
 packages/             pacman.txt, aur.txt (PKGBUILDs reviewed), base.txt
@@ -244,7 +267,7 @@ starship, fastfetch, eza, bat, ripgrep, fd, fzf, zoxide, lazygit ·
 mason, blink.cmp, neo-tree, lualine, bufferline, which-key, gitsigns,
 toggleterm, vimtex · zathura ·
 grim, slurp, satty, hyprpicker, tesseract, gpu-screen-recorder, cliphist ·
-MangoHud, GameMode · rclone ·
+MangoHud, GameMode, GE-Proton · rclone · blueman · nautilus-python · GnuPG ·
 [Catppuccin](https://catppuccin.com) palettes (MIT) ·
 [Nord](https://www.nordtheme.com) ·
 Papirus icons · Bibata cursor · JetBrains Mono Nerd Font.
