@@ -584,6 +584,11 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — 3-finger workspace swipe made non-natural (user request),
+  matching the touchpad's non-natural scrolling:
+  `gestures.workspace_swipe_invert = false` (Hyprland default true). File:
+  `hypr/conf/input.lua`.
+
 - **2026-11-13** — Marquee: returning title's first letters dimmed then
   brightened (left fade weakened while the start was already inside the 40 px
   fade zone). Now the fade is a function of the outgoing title only: builds

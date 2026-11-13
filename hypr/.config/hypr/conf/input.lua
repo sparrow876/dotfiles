@@ -15,6 +15,10 @@ hl.config({
     gestures = {
         workspace_swipe_distance = 300,   -- px of swipe for a full workspace change
         workspace_swipe_cancel_ratio = 0.3,
+        -- false = non-natural, like the touchpad scrolling above: swipe right
+        -- -> next workspace. (true, Hyprland's default, moves the workspaces
+        -- with the fingers.) User choice, 2026-11-13.
+        workspace_swipe_invert = false,
     },
 })
 
