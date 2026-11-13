@@ -584,6 +584,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — Music title scrolling reworked (user request): one-way
+  marquee (title + 48 px gap + copy, endless left scroll at 55 px/s, linear,
+  0.35 s delay on hover); on mouse-out it finishes the current lap and stops
+  at the start (re-hover continues). Stutter cause: StyledText uses
+  NativeRendering (glyphs snapped to whole pixels → 1-px steps every few
+  frames at 144 Hz). Fix: the moving strip is a layer (texture rendered once,
+  layer.smooth) slid at sub-pixel x. File: `bar/MediaModule.qml`.
+
 - **2026-11-13** — Music tooltip no longer repeats the title (it's in the bar and
   scrolls on hover): now "<player> · click: play/pause · scroll: skip", with
   tidy names for MPRIS identities like "Mozilla zen" → Zen. File:
