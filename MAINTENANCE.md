@@ -483,6 +483,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   `quickshell -p lock_shell.qml` (WlSessionLock + PAM). Its `hyprctl keyword`
   call is harmless in Lua mode (`allow_session_lock_restore` is set in look.lua).
 - SDDM's Arch PAM file already has `pam_gnome_keyring` (auth + session).
+- **Patched** (GPL patch `lockscreen/patches/qylock-lockscreen.patch`, applied
+  by `lockscreen/apply-patches.sh`, also run by install.sh step clones): the
+  lock screen's PAM shim. Re-run after qylock's `quickshell.sh`; `--revert`
+  before bumping the pinned commit. The lock screen uses PAM service `login`
+  → system-auth → pam_faillock (defaults: 3 failures in 15 min → 10 min lock,
+  `faillock --user $USER --reset` clears it; needs root).
+- qylock's `lock.sh` ignores `~/.config/qylock/theme` (always "winter" unless a
+  theme is passed as the first argument; `scripts/lock.sh` passes "$@").
 
 ---
 
@@ -573,6 +581,19 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-13** — Lock screen after opening the lid (on AC, locked ~1 h): no
+  error on a wrong password, then nothing unlocked; user rebooted from the lock
+  screen. Not SDDM: qylock's Quickshell lock looks the same. The journal shows
+  no PAM activity at all after the lid opened (a wrong password at 16:00 was
+  logged normally). Cause (qylock shim): Enter on an empty box calls
+  pam.start() with no password; PAM asks for one, the shim only answers when it
+  has one, so the conversation waits forever and every later login() hits an
+  active PamContext (start() fails silently). Fix: GPL patch to the shim (skip
+  empty, answer/restart a waiting conversation, onError + 20 s watchdog, pass
+  PAM's message, e.g. faillock lockout) + winter theme shows it. Files:
+  `lockscreen/patches/qylock-lockscreen.patch`, `lockscreen/apply-patches.sh`,
+  `lockscreen/README.md`, `install.sh`. User runs apply-patches.sh.
 
 - **2026-11-13** — zathura dark mode (Ctrl+R): itemize bullets showed as white
   dots with a dark ring in a pdfTeX lecture-notes PDF. Cause: that PDF draws

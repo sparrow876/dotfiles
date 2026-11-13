@@ -156,6 +156,9 @@ step_clones() {
     IFS='|' read -r name url commit dest <<<"$entry"
     clone_pinned "$name" "$url" "$commit" "$dest"
   done
+  # This repo's fixes for qylock's lock screen (GPL patch, lockscreen/patches).
+  # Before changing qylock's pinned commit: lockscreen/apply-patches.sh --revert
+  "$REPO/lockscreen/apply-patches.sh" || warn "qylock patches didn't apply (lockscreen/apply-patches.sh)"
 }
 
 step_render() {

@@ -1,0 +1,137 @@
+qylock lock-screen fixes for this rice (applied by lockscreen/apply-patches.sh).
+Derived from qylock by Darkkal44 (https://github.com/Darkkal44/qylock),
+licensed GPL-3.0; this patch is under GPL-3.0 too (not this repo's MIT license).
+Base: qylock c2933f27b655a999911e6699e1b2c67e59cbd428.
+
+quickshell-lockscreen/shim/SddmShim.qml (the lock screen's login code):
+- An empty password (Enter pressed to wake the screen) no longer starts PAM.
+  Before, that PAM conversation waited forever for an answer and every later
+  attempt was silently ignored ("already running"): no error, and even the
+  right password didn't unlock (2026-11-13).
+- A new attempt while PAM still waits answers it or restarts PAM.
+- PAM errors and a 20 s timeout end an attempt with an error instead of hanging.
+- PAM's own message (e.g. faillock: "The account is locked due to 3 failed
+  logins ...") is passed to the theme as sddm.lastError.
+themes/winter/Main.qml:
+- Shows sddm.lastError when there is one (else "ACCESS DENIED"); the error
+  line wraps. SDDM's own login screen has no lastError, so it's unchanged.
+
+diff --color -ru a/quickshell-lockscreen/shim/SddmShim.qml b/quickshell-lockscreen/shim/SddmShim.qml
+--- a/quickshell-lockscreen/shim/SddmShim.qml	2026-11-13 18:41:25.448867185 +0530
++++ b/quickshell-lockscreen/shim/SddmShim.qml	2026-11-13 18:41:42.839732943 +0530
+@@ -159,23 +159,68 @@
+         }
+     }
+ 
++    // Patched by ~/dotfiles/lockscreen/patches (GPL-3.0, like qylock):
++    // - an empty password (Enter pressed to wake the screen) never starts PAM:
++    //   that conversation waited forever for an answer, and every later attempt
++    //   was ignored because PAM was "already running" (no error, no unlock)
++    // - a new attempt while PAM still waits answers it, or restarts PAM
++    // - PAM errors and a 20 s timeout end the attempt with an error instead of
++    //   hanging; PAM's own message (e.g. faillock's "account is locked ...
++    //   minutes left") is passed to the theme as sddm.lastError
+     property var sddm: QtObject {
+         signal loginFailed()
+         signal loginSucceeded()
++        property string lastError: ""
+ 
+         function login(user, password, sessionIndex) {
++            if (!password) return;
++            lastError = "";
++            if (pam.active) {
++                if (pam.responseRequired) {
++                    pam.pendingPassword = "";
++                    pam.respond(password);
++                    watchdog.restart();
++                    return;
++                }
++                pam.abort();
++            }
+             pam.user = user;
+             pam.pendingPassword = password;
+-            pam.start();
++            pam.infoMessage = "";
++            Qt.callLater(shim.startPam);
+         }
+ 
+         function reboot() { Quickshell.execDetached(["bash", "-c", "if [ -d /run/systemd/system ]; then systemctl reboot; else loginctl reboot; fi"]); }
+         function powerOff() { Quickshell.execDetached(["bash", "-c", "if [ -d /run/systemd/system ]; then systemctl poweroff; else loginctl poweroff; fi"]); }
+     }
+ 
++    function startPam() {
++        if (pam.active) pam.abort();
++        if (pam.start()) {
++            watchdog.restart();
++        } else {
++            fail("Couldn't start the password check, try again");
++        }
++    }
++
++    function fail(text) {
++        watchdog.stop();
++        pam.pendingPassword = "";
++        if (pam.active) pam.abort();
++        sddm.lastError = text || "";
++        sddm.loginFailed();
++    }
++
++    Timer {
++        id: watchdog
++        interval: 20000
++        onTriggered: shim.fail("The password check didn't answer, try again")
++    }
++
+     PamContext {
+         id: pam
+         property string pendingPassword: ""
++        property string infoMessage: ""
+ 
+         onResponseRequiredChanged: {
+             if (responseRequired && pendingPassword !== "") {
+@@ -184,13 +229,22 @@
+             }
+         }
+ 
++        // Non-prompt messages, e.g. faillock: "The account is locked due to 3
++        // failed logins. (9 minutes left to unlock)"
++        onPamMessage: {
++            if (!responseRequired && message !== "") infoMessage = message;
++        }
++
++        onError: (error) => shim.fail("Password check error, try again")
++
+         onCompleted: (result) => {
++            watchdog.stop();
+             if (result === PamResult.Success) {
++                shim.sddm.lastError = "";
+                 shim.sddm.loginSucceeded();
+                 Quickshell.execDetached(["loginctl", "unlock-session"]);
+-                // Notify success handlers
+             } else {
+-                shim.sddm.loginFailed();
++                shim.fail(infoMessage);
+             }
+         }
+     }
+diff --color -ru a/themes/winter/Main.qml b/themes/winter/Main.qml
+--- a/themes/winter/Main.qml	2026-11-13 18:41:25.452902634 +0530
++++ b/themes/winter/Main.qml	2026-11-13 18:41:53.754918444 +0530
+@@ -46,7 +46,8 @@
+         target: typeof sddm !== "undefined" ? sddm : null
+         function onLoginFailed() {
+             root.loginError = true
+-            errText.text = "ACCESS DENIED"
++            // dotfiles patch: show PAM's reason (e.g. faillock lockout) when the lock screen has one
++            errText.text = (sddm.lastError ? sddm.lastError.toUpperCase() : "ACCESS DENIED")
+             passInput.text = ""
+             errorShake.start()
+             passInput.forceActiveFocus()
+@@ -232,6 +233,7 @@
+                     font.family: mainFont.name
+                     font.pixelSize: 10 * s
+                     font.letterSpacing: 2 * s
++                    wrapMode: Text.WordWrap   // dotfiles patch: longer PAM messages
+                 }
+             } // closes Column
+         } // closes login Area

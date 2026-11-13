@@ -11,8 +11,16 @@ Both the lock screen and the SDDM login screen use the **"winter"** theme from
 - The lock command is `scripts/lock.sh` (SUPER + L, the power menu, hypridle
   and before suspend), which starts qylock's
   `~/.local/share/quickshell-lockscreen/lock.sh` unless already locked.
-- The theme is used unmodified. If a color patch is ever added to this folder,
-  it is derived from qylock and must keep qylock's GPL-3.0 license notice
-  (this repo's MIT license doesn't cover it).
+- **Fixes:** `patches/qylock-lockscreen.patch` (GPL-3.0, derived from qylock;
+  this repo's MIT license doesn't cover it) fixes the lock screen's login
+  code: Enter on an empty password box used to start a password check that
+  never finished, after which no password worked (2026-11-13). It also shows
+  PAM's reason on failure (e.g. faillock's 10-minute lockout after 3 wrong
+  passwords) instead of only "ACCESS DENIED". Applied by `apply-patches.sh`
+  (also run by `install.sh`): patches the clone, then refreshes the installed
+  lock screen's copy. Re-run it after re-running qylock's `quickshell.sh`;
+  `apply-patches.sh --revert` undoes it (do that before changing the pinned
+  commit). SDDM's login screen is not affected by the bug and not patched.
+- Apart from that the theme is used unmodified.
 
 Crash recovery and a broken login screen: README.md → Recovery.
