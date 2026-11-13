@@ -34,8 +34,7 @@ Item {
     property string errorText: ""
     property var now: new Date()
 
-    FontLoader { id: roundFont; source: "fonts/Fredoka.ttf" }
-    FontLoader { id: softFont;  source: "fonts/Quicksand.ttf" }
+    readonly property string fontName: "JetBrainsMono Nerd Font"
 
     // Read user / session names from the models (works for SDDM and the shim)
     ListView { id: users; model: typeof userModel !== "undefined" ? userModel : null; currentIndex: root.userIndex
@@ -152,7 +151,7 @@ Item {
             id: dateText
             anchors.centerIn: parent
             text: Qt.formatDate(root.now, "dddd, d MMMM").toLowerCase()
-            font.family: softFont.name; font.pixelSize: 22 * root.s; font.weight: Font.DemiBold
+            font.family: root.fontName; font.pixelSize: 22 * root.s; font.weight: Font.DemiBold
             color: root.plum
         }
     }
@@ -192,7 +191,7 @@ Item {
                     Text {
                         id: clock
                         text: Qt.formatTime(root.now, "HH:mm")
-                        font.family: roundFont.name; font.pixelSize: 118 * root.s; font.weight: Font.Medium
+                        font.family: root.fontName; font.pixelSize: 118 * root.s; font.weight: Font.Medium
                         color: root.rose
                     }
                 }
@@ -213,7 +212,7 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text: root.userName.length > 0 ? root.userName.charAt(0).toUpperCase() : ""
-                            font.family: roundFont.name; font.pixelSize: 58 * root.s; font.weight: Font.DemiBold
+                            font.family: root.fontName; font.pixelSize: 58 * root.s; font.weight: Font.DemiBold
                             color: root.milk
                         }
                     }
@@ -222,13 +221,13 @@ Item {
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "hi, " + root.userName.toLowerCase()
-                    font.family: roundFont.name; font.pixelSize: 34 * root.s; font.weight: Font.Medium
+                    font.family: root.fontName; font.pixelSize: 34 * root.s; font.weight: Font.Medium
                     color: root.berry
                 }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: root.isLockScreen ? "welcome back, type your password to unlock" : "type your password to log in"
-                    font.family: softFont.name; font.pixelSize: 18 * root.s; font.weight: Font.DemiBold
+                    font.family: root.fontName; font.pixelSize: 18 * root.s; font.weight: Font.DemiBold
                     color: root.plum; opacity: 0.75
                 }
 
@@ -262,7 +261,7 @@ Item {
                             anchors.leftMargin: 28 * root.s; anchors.rightMargin: 28 * root.s
                             verticalAlignment: TextInput.AlignVCenter
                             echoMode: TextInput.Password; passwordCharacter: "•"
-                            font.family: softFont.name; font.pixelSize: 24 * root.s; font.letterSpacing: 4 * root.s
+                            font.family: root.fontName; font.pixelSize: 24 * root.s; font.letterSpacing: 4 * root.s
                             color: root.rose; selectionColor: root.petal
                             clip: true; focus: true
                             enabled: !root.busy
@@ -275,7 +274,7 @@ Item {
                             anchors.left: parent.left; anchors.leftMargin: 30 * root.s
                             visible: pass.text.length === 0
                             text: root.busy ? "checking…" : "password"
-                            font.family: softFont.name; font.pixelSize: 21 * root.s; font.weight: Font.DemiBold
+                            font.family: root.fontName; font.pixelSize: 21 * root.s; font.weight: Font.DemiBold
                             color: root.petal
                         }
                         MouseArea { anchors.fill: parent; cursorShape: Qt.IBeamCursor; onClicked: pass.forceActiveFocus() }
@@ -303,7 +302,7 @@ Item {
                     wrapMode: Text.WordWrap
                     text: root.errorText !== "" ? root.errorText
                           : ((typeof keyboard !== "undefined" && keyboard.capsLock) ? "caps lock is on ⇪" : "")
-                    font.family: softFont.name; font.pixelSize: 18 * root.s; font.weight: Font.Bold
+                    font.family: root.fontName; font.pixelSize: 18 * root.s; font.weight: Font.Bold
                     color: root.berry
                 }
             }
@@ -321,7 +320,7 @@ Item {
             id: sessText
             anchors.centerIn: parent
             text: (sessions.currentItem ? sessions.currentItem.label.toLowerCase() : "session")
-            font.family: softFont.name; font.pixelSize: 20 * root.s; font.weight: Font.DemiBold
+            font.family: root.fontName; font.pixelSize: 20 * root.s; font.weight: Font.DemiBold
             color: root.plum
         }
         MouseArea {
@@ -349,7 +348,7 @@ Item {
                 Text {
                     anchors.centerIn: parent
                     text: btn.modelData.glyph
-                    font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 26 * root.s
+                    font.family: root.fontName; font.pixelSize: 26 * root.s
                     color: root.berry
                 }
                 Text {
@@ -357,7 +356,7 @@ Item {
                     anchors.bottom: parent.top; anchors.bottomMargin: 8 * root.s
                     visible: btnMa.containsMouse
                     text: btn.modelData.tip
-                    font.family: softFont.name; font.pixelSize: 16 * root.s; font.weight: Font.Bold
+                    font.family: root.fontName; font.pixelSize: 16 * root.s; font.weight: Font.Bold
                     color: root.plum
                 }
                 MouseArea {

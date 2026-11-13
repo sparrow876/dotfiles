@@ -1,14 +1,13 @@
 # Lock screen + login screen (qylock)
 
-**Theme: `themes/pastel-pink`** (this repo's own, MIT): pastel pink, floating
-hearts and sparkles, a frosted card with clock, avatar, greeting and a
-heart-dotted password field. Written in qylock's theme format so the same files
+**Theme: `themes/pastel-pink`** (this repo's own, MIT): pastel pink, a few faint
+sparkles, a frosted card with clock, avatar, greeting and a password field. Written in qylock's theme format so the same files
 run in the lock screen (`scripts/lock.sh` points qylock's lock screen at it)
 and in SDDM (copied by `system/root-steps/6-login-theme.sh`, ROOT-STEPS §16).
-- `bg.jpg`: background picture, **not in git** (wallhaven 5ym379, pastel pink
-  clouds: https://wallhaven.cc/w/5ym379). Any 16:9 picture works; without one
+- `bg.jpg`: background picture, **not in git** (wallhaven 3z86od, sakura branch
+  over a pink moon: https://wallhaven.cc/w/3z86od, scaled to 2560×1440). Any 16:9 picture works; without one
   it shows a pink gradient. `theme.conf` `wash=` sets how pink it's tinted.
-- Fonts: Fredoka + Quicksand (SIL Open Font License, `fonts/OFL-*.txt`).
+- Font: JetBrainsMono Nerd Font only (the system font; nothing bundled).
 - Other themes: `scripts/lock.sh <name>` (this folder or qylock's, e.g. winter).
 
 The lock screen itself (session lock + PAM) comes from

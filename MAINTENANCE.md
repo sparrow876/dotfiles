@@ -582,6 +582,10 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — pastel-pink theme: background → wallhaven 3z86od (sakura
+  branch, pink moon; user's pick; 2560×1440 JPEG, not in git); font →
+  JetBrainsMono Nerd Font only (bundled Fredoka/Quicksand removed).
+
 - **2026-11-13** — Lock/login theme tweaks (user request): renamed
   strawberry-milk → `pastel-pink` (folder, SDDM theme name, root-step 6, docs);
   removed the bow emoji, hearts (floating, avatar badge, password dots, ♡ in
