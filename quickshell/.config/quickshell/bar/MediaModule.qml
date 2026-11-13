@@ -65,6 +65,7 @@ MouseArea {
             readonly property real gap: 48                          // px between the copies
             readonly property real cycle: title.implicitWidth + gap // one full lap
             readonly property real speed: 55                        // px per second
+            readonly property real fadeZone: 40                     // px of left-edge fade
             readonly property bool hovered: root.containsMouse && overflowing
 
             // The text is drawn once into a texture (layer) and that texture
@@ -153,16 +154,17 @@ MouseArea {
             Rectangle {
                 id: fadeMaskRect
                 anchors.fill: parent
-                // Right edge always fades (more text follows). The left edge fades
-                // while scrolled, but weaker the closer the title's start is to
-                // its home position (both when it leaves and when the next lap's
-                // start comes back), so it's gone exactly when the title slots in.
-                readonly property real fadeLeft: Math.max(0, Math.min(1,
-                    Math.min(titleBox.offset, titleBox.cycle - titleBox.offset) / 40))
+                // Right edge always fades (more text follows). Left edge: builds up
+                // over the first 40 px as the title scrolls out; once the title's
+                // end has passed the edge only the empty gap is under it, so it
+                // switches off there (invisibly) and the next copy slides in with
+                // no fade at all. Needs gap > fadeZone.
+                readonly property real fadeLeft: titleBox.offset <= title.implicitWidth
+                    ? Math.min(1, titleBox.offset / titleBox.fadeZone) : 0
                 gradient: Gradient {
                     orientation: Gradient.Horizontal
                     GradientStop { position: 0.0;  color: Qt.rgba(1, 1, 1, 1 - fadeMaskRect.fadeLeft) }
-                    GradientStop { position: 0.1;  color: "white" }
+                    GradientStop { position: Math.min(0.45, titleBox.fadeZone / Math.max(1, titleBox.width)); color: "white" }
                     GradientStop { position: 0.75; color: "white" }
                     GradientStop { position: 1.0;  color: "transparent" }
                 }

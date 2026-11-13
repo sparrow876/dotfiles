@@ -584,6 +584,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — Marquee: returning title's first letters dimmed then
+  brightened (left fade weakened while the start was already inside the 40 px
+  fade zone). Now the fade is a function of the outgoing title only: builds
+  over offset 0…40 px, and switches off once offset > title width (only the
+  48 px gap is under the zone then, so the switch is invisible); the next copy
+  enters unfaded. Invariant: gap (48) > fadeZone (40). File:
+  `bar/MediaModule.qml`.
+
 - **2026-11-13** — Marquee smoothness: steps use an exponentially smoothed
   frame time (α 0.1) so uneven frame delivery doesn't show as uneven motion;
   the moving strip's layer is rendered at 2× with mipmaps so sub-pixel
