@@ -21,6 +21,12 @@ set scroll-page-aware       true
 set selection-clipboard     clipboard  # selecting text copies it (Ctrl+V pastes)
 set window-title-basename   true
 
+# :open completion (Tab): only folders and openable documents in the folder
+# being typed. Recent files were listed first and pushed those out of view.
+set show-recent             0
+set show-directories        true
+set n-completion-items      20
+
 # SyncTeX: vimtex starts zathura with the right inverse-search command itself.
 set synctex                 true
 set synctex-edit-modifier   ctrl

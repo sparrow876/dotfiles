@@ -584,6 +584,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — zathura `:open` Tab completion seemed to offer only recent
+  files: zathura (completion.c list_files_for_cc) adds the "Recent files"
+  group (show-recent, default 10) before the "Files" group (folders +
+  supported documents of the typed folder) and shows 15 items, so recents
+  filled the list. Now `show-recent 0`, `n-completion-items 20`. Relative
+  names complete from zathura's cwd (~ when started from apps). File:
+  `zathura/.config/zathura/zathurarc`.
+
 - **2026-11-13** — 3-finger workspace swipe made non-natural (user request),
   matching the touchpad's non-natural scrolling:
   `gestures.workspace_swipe_invert = false` (Hyprland default true). File:
