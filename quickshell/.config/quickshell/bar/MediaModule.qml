@@ -4,7 +4,9 @@
 //   nothing: ♪                            (small muted icon)
 // Click = play/pause, scroll = next / previous track.
 // Long titles are cut at 420px (less if the bar is crowded: Bar.qml sets maxWidth)
-// with a soft fade instead of "…" (full title in the tooltip).
+// with a soft fade instead of "…" (full title in the tooltip). Hovering scrolls
+// a cut title to its end and back (loops while hovered); moving the mouse away
+// rolls it smoothly back to the start.
 import QtQuick
 import Qt5Compat.GraphicalEffects
 import qs
@@ -62,7 +64,36 @@ MouseArea {
                 text: Media.label
                 color: Media.isPlaying ? Theme.text : Theme.muted
                 Behavior on color { ColorAnimation { duration: 200 } }
+                onTextChanged: { scrollAnim.stop(); backAnim.stop(); x = 0 }   // new track: start at the beginning
             }
+
+            // --- scroll on hover -----------------------------------------------
+            readonly property real overflow: Math.max(0, title.implicitWidth - width)
+            readonly property real speed: 45                       // px per second
+            readonly property bool hovered: root.containsMouse && overflowing
+            onHoveredChanged: {
+                if (hovered) {
+                    backAnim.stop()
+                    scrollAnim.restart()
+                } else {
+                    scrollAnim.stop()
+                    backAnim.duration = Math.max(150, -title.x / (speed * 2.5) * 1000)
+                    backAnim.restart()
+                }
+            }
+            onOverflowingChanged: if (!overflowing) { scrollAnim.stop(); backAnim.stop(); title.x = 0 }
+            SequentialAnimation {
+                id: scrollAnim
+                loops: Animation.Infinite
+                PauseAnimation { duration: 500 }
+                NumberAnimation { target: title; property: "x"; to: -titleBox.overflow
+                                  duration: titleBox.overflow / titleBox.speed * 1000; easing.type: Easing.InOutSine }
+                PauseAnimation { duration: 1200 }
+                NumberAnimation { target: title; property: "x"; to: 0
+                                  duration: titleBox.overflow / titleBox.speed * 1000; easing.type: Easing.InOutSine }
+                PauseAnimation { duration: 800 }
+            }
+            NumberAnimation { id: backAnim; target: title; property: "x"; to: 0; easing.type: Easing.OutCubic }
 
             layer.enabled: overflowing
             // (QtQuick.Effects' MultiEffect mask didn't apply here; OpacityMask does)
@@ -75,12 +106,17 @@ MouseArea {
             visible: false
             layer.enabled: true
             Rectangle {
+                id: fadeMaskRect
                 anchors.fill: parent
+                // fade the left edge once scrolled, the right edge until the end shows
+                readonly property bool fadeLeft: title.x < -1
+                readonly property bool fadeRight: title.x > -titleBox.overflow + 1
                 gradient: Gradient {
                     orientation: Gradient.Horizontal
-                    GradientStop { position: 0.0; color: "white" }
+                    GradientStop { position: 0.0;  color: fadeMaskRect.fadeLeft ? "transparent" : "white" }
+                    GradientStop { position: 0.1;  color: "white" }
                     GradientStop { position: 0.75; color: "white" }
-                    GradientStop { position: 1.0; color: "transparent" }
+                    GradientStop { position: 1.0;  color: fadeMaskRect.fadeRight ? "transparent" : "white" }
                 }
             }
         }

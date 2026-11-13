@@ -584,6 +584,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-13** — Music title scrolls on hover (user request): only when it's
+  cut off; loop = 0.5 s pause, glide to the end (45 px/s, InOutSine), 1.2 s
+  pause, glide back, 0.8 s pause. Mouse away → rolls back to the start
+  (OutCubic, ~2.5× faster) instead of jumping; new track resets to the start.
+  Fade mask follows: left edge fades once scrolled, right edge until the end
+  shows. File: `bar/MediaModule.qml`.
+
 - **2026-11-13** — Bar follow-up: tray drag flickered/jittered: the drag offset
   was measured in the icon's own coordinates while the icon moved under the
   cursor (feedback). Now measured with `mapToItem(root, …)` (8 px threshold,
