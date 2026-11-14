@@ -584,6 +584,11 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — More fonts (user picked: full language coverage, popular
+  UI/document fonts, Microsoft-compatible): 16 official packages added to
+  pacman.txt (~550 MB). UI fonts stay as set (gsettings / Theme.qml), so
+  nothing changes look by itself.
+
 - **2026-11-14** — Tauon Music Box removed again (user request): out of
   pacman.txt and the README; user uninstalls (`pacman -Rns` also drops its
   ~25 Python/lib deps, incl. python-mutagen, which only rmpc's optional

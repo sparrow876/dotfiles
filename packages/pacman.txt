@@ -137,6 +137,25 @@ ttf-jetbrains-mono-nerd
 noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
+# More fonts (2026-11-14): every script/language, common UI and document
+# fonts, and metric-compatible stand-ins for Microsoft fonts (documents and
+# web pages keep their layout). About 550 MB.
+noto-fonts-extra             # all remaining Noto scripts and weights
+inter-font
+ttf-roboto
+ttf-opensans
+ttf-fira-sans
+adobe-source-sans-fonts
+adobe-source-serif-fonts
+adobe-source-code-pro-fonts
+ttf-ibm-plex
+ttf-ubuntu-font-family
+cantarell-fonts
+otf-font-awesome             # icon font used by many web pages / apps
+ttf-liberation               # = Arial, Times New Roman, Courier New
+ttf-carlito                  # = Calibri
+ttf-caladea                  # = Cambria
+ttf-croscore                 # Arimo, Tinos, Cousine (ChromeOS core fonts)
 
 ## Terminal + shell + CLI tools
 kitty
