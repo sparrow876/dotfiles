@@ -584,6 +584,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — rmpc opaque like the reference (user request): theme
+  background / header / modal colour #202636 (sampled from the screenshot;
+  fixed, not palette) — kitty's background_opacity only affects the default
+  background, so these cells are solid; launcher runs kitty with
+  `-o background_opacity=1 -o "background=#202636"` so the padding matches
+  (`#` must be quoted in .desktop Exec). Files: rice.ron.tmpl,
+  `applications/.../rmpc.desktop`.
+
 - **2026-11-14** — More fonts (user picked: full language coverage, popular
   UI/document fonts, Microsoft-compatible): 16 official packages added to
   pacman.txt (~550 MB). UI fonts stay as set (gsettings / Theme.qml), so
