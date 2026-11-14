@@ -34,6 +34,16 @@
         vertical_align: Center,
         horizontal_align: Center,
     ),
+    // Audio visualiser (the Cava pane in the Queue tab). rmpc starts cava itself
+    // while the pane is visible; it listens to everything playing (PipeWire).
+    cava: (
+        framerate: 60,
+        autosens: true,
+        sensitivity: 100,
+        input: (method: Pipewire, source: "auto"),
+        smoothing: (noise_reduction: 77, monstercat: false, waves: false),
+        eq: [],
+    ),
     keybinds: (
         global: {
             "q":          Quit,
@@ -161,6 +171,12 @@
                                     borders: "LEFT | RIGHT | TOP",
                                     border_symbols: Rounded,
                                     pane: Pane(AlbumArt)
+                                ),
+                                (
+                                    size: "9",
+                                    borders: "LEFT | RIGHT | TOP",
+                                    border_symbols: Inherited(parent: Rounded, top_left: "├", top_right: "┤",),
+                                    pane: Pane(Cava)
                                 ),
                                 (
                                     size: "7",

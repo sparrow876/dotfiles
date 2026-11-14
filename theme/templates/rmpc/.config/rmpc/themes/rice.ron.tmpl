@@ -308,4 +308,18 @@
             ]
         )
     },
+    // Cava pane: bars rising from the bottom, palette gradient (dark -> light)
+    cava: (
+        bar_symbols: ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'],
+        inverted_bar_symbols: ['▔', '🮂', '🮃', '▀', '🮄', '🮅', '🮆', '█'],
+        bg_color: None,
+        bar_width: 1,
+        bar_spacing: 1,
+        orientation: Bottom,
+        bar_color: Gradient({
+              0: "{{blue}}",
+             50: "{{lightblue}}",
+            100: "{{ice}}",
+        }),
+    ),
 )

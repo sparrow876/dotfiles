@@ -584,6 +584,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — rmpc gets cava (user request): rmpc 0.11's built-in Cava
+  pane (src/ui/panes/cava.rs), 9 rows under the album art in the Queue tab.
+  config.ron `cava: (...)`: 60 fps, autosens, input PipeWire "auto" (whatever
+  is playing). Theme template `cava: (...)`: bars from the bottom, gradient
+  blue → lightblue → ice (follows ALT+T). rmpc writes /tmp/rmpc/cava-<uid>.conf
+  and runs `cava -p` only while the pane is on screen. Checked in a hidden pty:
+  config/theme accepted, cava started, no errors. (Killing rmpc with a signal
+  can orphan its cava; quitting with q is fine.)
+
 - **2026-11-14** — rmpc + MPD verified after install: mpd + mpd-mpris user
   services active/enabled; 112 songs indexed; PipeWire output; `rmpc debuginfo`
   reads config.ron + themes/rice.ron and connects (MPD 0.24); the bar shows MPD
