@@ -584,6 +584,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — rmpc + MPD verified after install: mpd + mpd-mpris user
+  services active/enabled; 112 songs indexed; PipeWire output; `rmpc debuginfo`
+  reads config.ron + themes/rice.ron and connects (MPD 0.24); the bar shows MPD
+  (MPRIS identity is already "MPD", so no name mapping). First-start "Failed to
+  open …/database / …/state" in the journal is normal (files created after).
+  Album art: rmpc resolves the kitty protocol only inside a real kitty window.
+
 - **2026-11-14** — rmpc + MPD (user request; all official packages: mpd,
   rmpc 0.11.0, mpd-mpris). New stow packages `mpd/` (mpd.conf: ~/Music,
   ~/.local/share/mpd + ~/.local/state/mpd, 127.0.0.1:6600, PipeWire,
@@ -594,7 +601,7 @@ root cause, fix, files.
   `applications/rmpc.desktop` runs it in kitty (class rmpc, icon mpd).
   install.sh: dirs + stow packages. User services: ROOT-STEPS §16 (user runs
   `systemctl --user enable --now mpd mpd-mpris`). Bar: MPRIS name "Music
-  Player Daemon" → MPD. Not verified yet: configs parse (needs the packages).
+  Player Daemon" → MPD (dropped again: not needed).
 
 - **2026-11-14** — `tauon-music-box` added to pacman.txt (Media; official
   extra repo, so no PKGBUILD review). Uses MPRIS (bar widget, media keys) and
