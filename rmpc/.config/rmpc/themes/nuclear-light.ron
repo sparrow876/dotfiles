@@ -30,9 +30,9 @@
         playlist: "P",
         marker: "M",
         ellipsis: "...",
-        song_style: None,
-        dir_style: None,
-        playlist_style: None,
+        song_style: (fg: "#000000"),
+        dir_style: (fg: "#000000", modifiers: "Bold"),
+        playlist_style: (fg: "#000000"),
     ),
     level_styles: (
         info: (fg: "#bd3964", bg: "#000000"),
@@ -51,13 +51,13 @@
     ),
     scrollbar: (
         symbols: ["│", "█", "▲", "▼"],
-        track_style: (),
-        ends_style: (),
+        track_style: (fg: "#674d53"),
+        ends_style: (fg: "#674d53"),
         thumb_style: (fg: "#bd3964"),
     ),
     tab_bar: (
         active_style: (fg: "#000000", bg: "#ff9cb4", modifiers: "Bold"),
-        inactive_style: (),
+        inactive_style: (fg: "#674d53"),
     ),
     lyrics: (
         timestamp: false
@@ -65,46 +65,46 @@
     browser_song_format: [
         (
             kind: Group([
-                (kind: Property(Track)),
+                (kind: Property(Track), style: (fg: "#000000")),
                 (kind: Text(" ")),
             ])
         ),
         (
             kind: Group([
-                (kind: Property(Artist)),
+                (kind: Property(Artist), style: (fg: "#000000")),
                 (kind: Text(" - ")),
-                (kind: Property(Title)),
+                (kind: Property(Title), style: (fg: "#000000")),
             ]),
-            default: (kind: Property(Filename))
+            default: (kind: Property(Filename), style: (fg: "#000000"))
         ),
     ],
     song_table_format: [
         (
-            prop: (kind: Property(Artist),
-                default: (kind: Text("Unknown"))
+            prop: (kind: Property(Artist), style: (fg: "#000000"),
+                default: (kind: Text("Unknown"), style: (fg: "#000000"))
             ),
-            label_prop: (kind: Text("Artist")),
+            label_prop: (kind: Text("Artist"), style: (fg: "#674d53", modifiers: "Bold")),
             width: "20%",
         ),
         (
-            prop: (kind: Property(Title),
-                default: (kind: Text("Unknown"))
+            prop: (kind: Property(Title), style: (fg: "#000000"),
+                default: (kind: Text("Unknown"), style: (fg: "#000000"))
             ),
-            label_prop: (kind: Text("Title")),
+            label_prop: (kind: Text("Title"), style: (fg: "#674d53", modifiers: "Bold")),
             width: "35%",
         ),
         (
             prop: (kind: Property(Album), style: (fg: "#000000"),
                 default: (kind: Text("Unknown Album"), style: (fg: "#000000"))
             ),
-            label_prop: (kind: Text("Album")),
+            label_prop: (kind: Text("Album"), style: (fg: "#674d53", modifiers: "Bold")),
             width: "30%",
         ),
         (
-            prop: (kind: Property(Duration),
-                default: (kind: Text("-"))
+            prop: (kind: Property(Duration), style: (fg: "#000000"),
+                default: (kind: Text("-"), style: (fg: "#000000"))
             ),
-            label_prop: (kind: Text("Duration")),
+            label_prop: (kind: Text("Duration"), style: (fg: "#674d53", modifiers: "Bold")),
             width: "15%",
             alignment: Right,
         ),
@@ -166,8 +166,8 @@
         )),
         "title": Pane(Property(
             content: [
-                (kind: Property(Song(Title)), style: (modifiers: "Bold"),
-                    default: (kind: Text("No Song"), style: (modifiers: "Bold"))),
+                (kind: Property(Song(Title)), style: (fg: "#000000", modifiers: "Bold"),
+                    default: (kind: Text("No Song"), style: (fg: "#000000", modifiers: "Bold"))),
             ], align: Center, scroll_speed: 1
         )),
         "volume": Split(
@@ -181,13 +181,13 @@
         ),
         "elapsed_and_bitrate": Pane(Property(
             content: [
-                (kind: Property(Status(Elapsed))), 
-                (kind: Text(" / ")), 
-                (kind: Property(Status(Duration))), 
+                (kind: Property(Status(Elapsed)), style: (fg: "#674d53")), 
+                (kind: Text(" / "), style: (fg: "#674d53")), 
+                (kind: Property(Status(Duration)), style: (fg: "#674d53")), 
                 (kind: Group([
-                    (kind: Text(" (")), 
-                    (kind: Property(Status(Bitrate))), 
-                    (kind: Text(" kbps)")),
+                    (kind: Text(" ("), style: (fg: "#674d53")), 
+                    (kind: Property(Status(Bitrate)), style: (fg: "#674d53")), 
+                    (kind: Text(" kbps)"), style: (fg: "#674d53")),
                 ])),
             ],
             align: Left,
@@ -196,8 +196,9 @@
             content: [
                 (kind: Property(Song(Artist)), style: (fg: "#6d41a9", modifiers: "Bold"),
                     default: (kind: Text("Unknown"), style: (fg: "#6d41a9", modifiers: "Bold"))),
-                (kind: Text(" - ")),
-                (kind: Property(Song(Album)), default: (kind: Text("Unknown Album"))),
+                (kind: Text(" - "), style: (fg: "#674d53")),
+                (kind: Property(Song(Album)), style: (fg: "#000000"),
+                    default: (kind: Text("Unknown Album"), style: (fg: "#000000"))),
             ], align: Center, scroll_speed: 1
         )),
         "states": Split(
@@ -219,28 +220,28 @@
                             on_label: "z",
                             off_label: "z",
                             on_style: (fg: "#6d41a9", modifiers: "Bold"),
-                            off_style: (fg: "#bd3964", modifiers: "Dim"),
+                            off_style: (fg: "#674d53"),
                         )))),
                         (kind: Property(Status(RandomV2(
                             on_label: "x",
                             off_label: "x",
                             on_style: (fg: "#6d41a9", modifiers: "Bold"),
-                            off_style: (fg: "#bd3964", modifiers: "Dim"),
+                            off_style: (fg: "#674d53"),
                         )))),
                         (kind: Property(Status(ConsumeV2(
                             on_label: "c",
                             off_label: "c",
                             oneshot_label: "c",
                             on_style: (fg: "#6d41a9", modifiers: "Bold"),
-                            off_style: (fg: "#bd3964", modifiers: "Dim"),
-                            oneshot_style: (fg: "#d7314b", modifiers: "Dim"),
+                            off_style: (fg: "#674d53"),
+                            oneshot_style: (fg: "#d7314b"),
                         )))),
                         (kind: Property(Status(SingleV2(
                             on_label: "v",
                             off_label: "v",
                             oneshot_label: "v",
                             on_style: (fg: "#6d41a9", modifiers: "Bold"),
-                            off_style: (fg: "#bd3964", modifiers: "Dim"),
+                            off_style: (fg: "#674d53"),
                             oneshot_style: (fg: "#d7314b", modifiers: "Bold"),
                         )))),
                         (kind: Text("]"), style: (fg: "#bd3964", modifiers: "Bold")),

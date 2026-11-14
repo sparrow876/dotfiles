@@ -584,6 +584,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — nuclear-light: much text was near-white on the pink
+  background. Cause: rmpc's `text_color` doesn't reach song-table columns, tab
+  labels, list symbols, header title / elapsed fields; unstyled text uses the
+  terminal default (kitty foreground #f4f8ff), and "Dim" styles get lighter.
+  Fix: explicit fg everywhere (black text, #674d53 labels / inactive tabs /
+  elapsed, Dim replaced by the muted colour) + the launcher sets kitty
+  `foreground=#000000`. Lesson for light rmpc themes: style every Property.
+  Files: nuclear-light.ron, rmpc.desktop.
+
 - **2026-11-14** — rmpc theme `nuclear-light` (user request), now active: the
   Nuclear player's light palette from its packages/tailwind-config/global.css
   (:root, OKLCH → hex): background #fadadf, primary #ff9cb4 (selected row,
