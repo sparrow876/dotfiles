@@ -7,11 +7,8 @@
 (
     address: "127.0.0.1:6600",
     password: None,
-    // Themes in themes/ (same layout; match the launcher background in
-    // applications/.local/share/applications/rmpc.desktop):
-    //   "nuclear-light"    Nuclear player's light pink palette   #fadadf
-    //   "catppuccin-pink"  Catppuccin Macchiato, pink accent     #24273a
-    //   "rice"             the rice palette, follows ALT+T       #202636
+    // themes/rice.ron, generated from the rice palette (theme/render.sh);
+    // its solid background #202636 matches the launcher (rmpc.desktop)
     theme: Some("rice"),
     cache_dir: Some("~/.cache/rmpc/"),
     on_song_change: None,

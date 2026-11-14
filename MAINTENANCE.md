@@ -584,6 +584,9 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — rmpc themes catppuccin-pink and nuclear-light deleted (user
+  request); only `rice` remains. config.ron / rmpc.desktop comments trimmed.
+
 - **2026-11-14** — rmpc back to the `rice` theme (user request); launcher
   background #202636 again. catppuccin-pink and nuclear-light stay in
   rmpc/.config/rmpc/themes/ (config.ron lists how to pick them).
