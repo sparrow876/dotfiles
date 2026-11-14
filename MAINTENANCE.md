@@ -584,6 +584,11 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — Tauon Music Box removed again (user request): out of
+  pacman.txt and the README; user uninstalls (`pacman -Rns` also drops its
+  ~25 Python/lib deps, incl. python-mutagen, which only rmpc's optional
+  YouTube feature would use). It left no data folders behind.
+
 - **2026-11-14** — rmpc restyled after a reference screenshot (user request):
   Queue tab = album art 38% | queue (40%) over a big Cava pane; lyrics pane
   dropped. Theme: tabs in their own box; bottom = one box with ▶/⏸/■

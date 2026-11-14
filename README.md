@@ -47,8 +47,8 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
 - **Nautilus**: Nord, Google Drive via rclone, PDF thumbnails, Move to Trash
   everywhere, and right-click **Copy as Path** and **Lock with Password… /
   Unlock…** for folders.
-- **Music**: rmpc (terminal player, palette-themed) on MPD, and Tauon Music
-  Box; both show in the bar's music widget and follow the media keys.
+- **Music**: rmpc (terminal player with album art and a cava visualiser) on
+  MPD; it shows in the bar's music widget and follows the media keys.
 - **Apps**: Zen, Outlook web app, Teams, Vesktop, Claude desktop, LocalSend,
   Steam + MangoHud + GameMode (GE-Proton where a game needs it).
 - **Bluetooth**: devices pair from the bar menu and stay paired (blueman's
