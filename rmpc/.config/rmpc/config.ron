@@ -7,7 +7,10 @@
 (
     address: "127.0.0.1:6600",
     password: None,
-    theme: Some("rice"),      // themes/rice.ron, generated from the active palette (theme/render.sh)
+    // themes/catppuccin-pink.ron (Catppuccin Macchiato, pink accent). The other
+    // one: Some("rice"), the rice palette (follows ALT+T; launcher background
+    // in applications/rmpc.desktop is #202636 for it)
+    theme: Some("catppuccin-pink"),
     cache_dir: Some("~/.cache/rmpc/"),
     on_song_change: None,
     volume_step: 5,

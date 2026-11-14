@@ -584,6 +584,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — rmpc theme `catppuccin-pink` (user request), now active:
+  same layout, made from rice.ron.tmpl with Catppuccin Macchiato colours
+  (pink #f5bde6 accent/borders/progress, mauve #c6a0f6 for state/artist,
+  base #24273a solid background, cava mauve → pink → rosewater). Static file
+  (not rendered by render.sh); regenerate from the template after layout
+  changes. Launcher background #24273a to match; `theme: Some("rice")` +
+  #202636 switches back. Files: `rmpc/.config/rmpc/themes/catppuccin-pink.ron`,
+  config.ron, rmpc.desktop.
+
 - **2026-11-14** — rmpc opaque like the reference (user request): theme
   background / header / modal colour #202636 (sampled from the screenshot;
   fixed, not palette) — kitty's background_opacity only affects the default
