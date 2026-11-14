@@ -584,6 +584,16 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — rmpc theme `nuclear-light` (user request), now active: the
+  Nuclear player's light palette from its packages/tailwind-config/global.css
+  (:root, OKLCH → hex): background #fadadf, primary #ff9cb4 (selected row,
+  active tab), black text + borders; deeper same-hue shades for coloured text
+  (#bd3964 highlights/progress, #6d41a9 state/artist); white progress track;
+  cava #ff4e6c → #a87eeb → #549de5; text_color set (kitty's light default
+  text would vanish on pink). Launcher background #fadadf; config.ron lists
+  all three themes with their launcher colours. File:
+  `rmpc/.config/rmpc/themes/nuclear-light.ron`.
+
 - **2026-11-14** — rmpc theme `catppuccin-pink` (user request), now active:
   same layout, made from rice.ron.tmpl with Catppuccin Macchiato colours
   (pink #f5bde6 accent/borders/progress, mauve #c6a0f6 for state/artist,

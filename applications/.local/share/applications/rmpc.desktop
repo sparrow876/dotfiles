@@ -5,9 +5,9 @@ Type=Application
 Name=rmpc
 GenericName=Music Player (MPD)
 Comment=Play your music library (~/Music) through MPD
-# opaque window in rmpc's background colour (padding included): #24273a for
-# the catppuccin-pink theme (#202636 for the rice theme)
-Exec=kitty --class rmpc --title rmpc -o background_opacity=1 -o "background=#24273a" -e rmpc
+# opaque window in rmpc's background colour (padding included): #fadadf for
+# the nuclear-light theme (#24273a catppuccin-pink, #202636 rice; see config.ron)
+Exec=kitty --class rmpc --title rmpc -o background_opacity=1 -o "background=#fadadf" -e rmpc
 Icon=mpd
 Terminal=false
 Categories=AudioVideo;Audio;Player;Music;
