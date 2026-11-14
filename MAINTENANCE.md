@@ -584,6 +584,10 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — `tauon-music-box` added to pacman.txt (Media; official
+  extra repo, so no PKGBUILD review). Uses MPRIS (bar widget, media keys) and
+  libappindicator (tray). User installs it.
+
 - **2026-11-13** — zathura `:open` Tab completion seemed to offer only recent
   files: zathura (completion.c list_files_for_cc) adds the "Recent files"
   group (show-recent, default 10) before the "Files" group (folders +

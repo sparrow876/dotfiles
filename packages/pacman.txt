@@ -170,6 +170,7 @@ rustup               # Rust: rustc, cargo, rustfmt, clippy, rust-analyzer (insta
 mpv
 mpv-mpris
 yt-dlp               # mpv plays YouTube links with it; also downloads audio/video from links
+tauon-music-box      # music player for local files (MPRIS: bar music widget + media keys work)
 cava
 cmatrix
 
