@@ -14,8 +14,8 @@
     header_background_color: None,
     modal_background_color: None,
     modal_backdrop: false,
-    preview_label_style: (fg: "{{ice}}"),
-    preview_metadata_group_style: (fg: "{{ice}}", modifiers: "Bold"),
+    preview_label_style: (fg: "{{warn}}"),
+    preview_metadata_group_style: (fg: "{{warn}}", modifiers: "Bold"),
     highlighted_item_style: (fg: "{{lightblue}}", modifiers: "Bold"),
     current_item_style: (fg: "{{base}}", bg: "{{lightblue}}", modifiers: "Bold"),
     borders_style: (fg: "{{lightblue}}"),
@@ -32,16 +32,17 @@
     ),
     level_styles: (
         info: (fg: "{{lightblue}}", bg: "{{base}}"),
-        warn: (fg: "{{ice}}", bg: "{{base}}"),
+        warn: (fg: "{{warn}}", bg: "{{base}}"),
         error: (fg: "{{critical}}", bg: "{{base}}"),
         debug: (fg: "{{ice}}", bg: "{{base}}"),
         trace: (fg: "{{blue}}", bg: "{{base}}"),
     ),
+    // Thick rounded bar: [start, elapsed, thumb, track, end] (Nerd Font round caps)
     progress_bar: (
-        symbols: ["█", "█", "█", " ", "█"],
-        track_style: None,
+        symbols: ["\u{e0b6}", "█", "\u{e0b4}", "█", "\u{e0b4}"],
+        track_style: (fg: "{{overlay}}"),
         elapsed_style: (fg: "{{lightblue}}"),
-        thumb_style: (fg: "{{lightblue}}"),
+        thumb_style: (fg: "{{lightblue}}", bg: "{{overlay}}"),
         use_track_when_empty: true,
     ),
     scrollbar: (
@@ -135,9 +136,9 @@
             ),
             (
                 pane: Pane(Tabs),
-                borders: "RIGHT | LEFT | BOTTOM",
+                borders: "ALL",
                 border_symbols: Rounded,
-                size: "2",
+                size: "3",
             ),
             (
                 pane: Pane(TabContent),
@@ -145,34 +146,18 @@
             ),
             (
                 size: "3",
-                pane: Split(
-                    direction: Horizontal,
-                    panes: [
-                        (
-                            size: "12",
-                            borders: "ALL",
-                            border_symbols: Inherited(parent: Rounded, top_right: "┬", bottom_right: "┴"),
-                            pane: Component("input_mode")
-                        ),
-                        (
-                            size: "100%",
-                            borders: "TOP | BOTTOM | RIGHT",
-                            border_symbols: Rounded,
-                            border_title: [(kind: Text(" ")), (kind: Property(Status(QueueLength()))), (kind: Text(" songs / ")), (kind: Property(Status(QueueTimeTotal()))), (kind: Text(" total time "))],
-                            border_title_alignment: Right,
-                            pane: Component("progress_bar"),
-                        ),
-                    ]
-                ),
+                borders: "ALL",
+                border_symbols: Rounded,
+                pane: Component("progress_bar"),
             ),
         ],
     ),
     components: {
         "state": Pane(Property(
             content: [
-                (kind: Text("["), style: (fg: "{{ice}}", modifiers: "Bold")),
-                (kind: Property(Status(StateV2( ))), style: (fg: "{{ice}}", modifiers: "Bold")),
-                (kind: Text("]"), style: (fg: "{{ice}}", modifiers: "Bold")),
+                (kind: Text("["), style: (fg: "{{warn}}", modifiers: "Bold")),
+                (kind: Property(Status(StateV2( ))), style: (fg: "{{warn}}", modifiers: "Bold")),
+                (kind: Text("]"), style: (fg: "{{warn}}", modifiers: "Bold")),
             ], align: Left,
         )),
         "title": Pane(Property(
@@ -205,8 +190,8 @@
         )),
         "artist_and_album": Pane(Property(
             content: [
-                (kind: Property(Song(Artist)), style: (fg: "{{ice}}", modifiers: "Bold"),
-                    default: (kind: Text("Unknown"), style: (fg: "{{ice}}", modifiers: "Bold"))),
+                (kind: Property(Song(Artist)), style: (fg: "{{warn}}", modifiers: "Bold"),
+                    default: (kind: Text("Unknown"), style: (fg: "{{warn}}", modifiers: "Bold"))),
                 (kind: Text(" - ")),
                 (kind: Property(Song(Album)), default: (kind: Text("Unknown Album"))),
             ], align: Center, scroll_speed: 1
@@ -229,20 +214,20 @@
                         (kind: Property(Status(RepeatV2(
                             on_label: "z",
                             off_label: "z",
-                            on_style: (fg: "{{ice}}", modifiers: "Bold"),
+                            on_style: (fg: "{{warn}}", modifiers: "Bold"),
                             off_style: (fg: "{{lightblue}}", modifiers: "Dim"),
                         )))),
                         (kind: Property(Status(RandomV2(
                             on_label: "x",
                             off_label: "x",
-                            on_style: (fg: "{{ice}}", modifiers: "Bold"),
+                            on_style: (fg: "{{warn}}", modifiers: "Bold"),
                             off_style: (fg: "{{lightblue}}", modifiers: "Dim"),
                         )))),
                         (kind: Property(Status(ConsumeV2(
                             on_label: "c",
                             off_label: "c",
                             oneshot_label: "c",
-                            on_style: (fg: "{{ice}}", modifiers: "Bold"),
+                            on_style: (fg: "{{warn}}", modifiers: "Bold"),
                             off_style: (fg: "{{lightblue}}", modifiers: "Dim"),
                             oneshot_style: (fg: "{{critical}}", modifiers: "Dim"),
                         )))),
@@ -250,7 +235,7 @@
                             on_label: "v",
                             off_label: "v",
                             oneshot_label: "v",
-                            on_style: (fg: "{{ice}}", modifiers: "Bold"),
+                            on_style: (fg: "{{warn}}", modifiers: "Bold"),
                             off_style: (fg: "{{lightblue}}", modifiers: "Dim"),
                             oneshot_style: (fg: "{{critical}}", modifiers: "Bold"),
                         )))),
@@ -293,33 +278,34 @@
         "progress_bar": Split(
             direction: Horizontal,
             panes: [
-                (
-                    size: "1",
-                    pane: Pane(Empty())
-                ),
-                (
-                    size: "100%",
-                    pane: Pane(ProgressBar)
-                ),
-                (
-                    size: "1",
-                    pane: Pane(Empty())
-                ),
+                (size: "1", pane: Pane(Empty())),
+                (size: "2", pane: Pane(Property(content: [(kind: Property(Status(StateV2(
+                    playing_label: "▶", paused_label: "⏸", stopped_label: "■"))),
+                    style: (fg: "{{lightblue}}", modifiers: "Bold"))]))),
+                (size: "100%", pane: Pane(ProgressBar)),
+                (size: "1", pane: Pane(Empty())),
+                (size: "13", pane: Pane(Property(content: [
+                    (kind: Property(Status(Elapsed)), style: (fg: "{{text}}")),
+                    (kind: Text(" / "), style: (fg: "{{muted}}")),
+                    (kind: Property(Status(Duration)), style: (fg: "{{text}}")),
+                ], align: Right))),
+                (size: "1", pane: Pane(Empty())),
             ]
         )
     },
-    // Cava pane: bars rising from the bottom, palette gradient (dark -> light)
+    // Cava pane: wide bars rising from the bottom
     cava: (
         bar_symbols: ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'],
         inverted_bar_symbols: ['▔', '🮂', '🮃', '▀', '🮄', '🮅', '🮆', '█'],
         bg_color: None,
-        bar_width: 1,
+        bar_width: 2,
         bar_spacing: 1,
         orientation: Bottom,
+        // fixed colours (don't follow ALT+T): pink -> purple -> cyan
         bar_color: Gradient({
-              0: "{{blue}}",
-             50: "{{lightblue}}",
-            100: "{{ice}}",
+              0: "#ff3d8b",
+             50: "#b07cff",
+            100: "#3fc5ff",
         }),
     ),
 )

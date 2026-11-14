@@ -162,75 +162,20 @@
                 direction: Horizontal,
                 panes: [
                     (
-                        size: "35%",
-                        pane: Split(
-                            direction: Vertical,
-                            panes: [
-                                (
-                                    size: "100%",
-                                    borders: "LEFT | RIGHT | TOP",
-                                    border_symbols: Rounded,
-                                    pane: Pane(AlbumArt)
-                                ),
-                                (
-                                    size: "9",
-                                    borders: "LEFT | RIGHT | TOP",
-                                    border_symbols: Inherited(parent: Rounded, top_left: "├", top_right: "┤",),
-                                    pane: Pane(Cava)
-                                ),
-                                (
-                                    size: "7",
-                                    borders: "ALL",
-                                    border_symbols: Inherited(parent: Rounded, top_left: "├", top_right: "┤",),
-                                    border_title: [(kind: Text(" Lyrics "))],
-                                    border_title_alignment: Right,
-                                    pane: Pane(Lyrics)
-                                ),
-                            ],
-                        ),
-                    ), 
+                        size: "38%",
+                        borders: "ALL",
+                        border_symbols: Inherited(parent: Rounded, top_right: "┬", bottom_right: "┴"),
+                        pane: Pane(AlbumArt)
+                    ),
                     (
-                        size: "65%",
+                        size: "62%",
                         pane: Split(
                             direction: Vertical,
                             panes: [
-                                (
-                                    size: "3",
-                                    borders: "ALL",
-                                    border_symbols: Inherited(parent: Rounded, bottom_left: "├", bottom_right: "┤",),
-                                    pane: Split(
-                                        direction: Horizontal,
-                                        panes: [
-                                            (
-                                                size: "1",
-                                                pane: Pane(Empty())
-                                            ),
-                                            (
-                                                size: "100%",
-                                                pane: Pane(QueueHeader())
-                                            ),
-                                        ]
-                                    )
-                                ),
-                                (
-                                    size: "100%",
-                                    borders: "LEFT | RIGHT | BOTTOM",
-                                    border_symbols: Rounded,
-                                    pane: Split(
-                                        direction: Horizontal,
-                                        panes: [
-                                            (
-                                                size: "1",
-                                                pane: Pane(Empty())
-                                            ),
-                                            (
-                                                size: "100%",
-                                                pane: Pane(Queue)
-                                            ),
-                                        ]
-                                    )
-                                ),
-                            ],
+                                (size: "2", borders: "TOP | RIGHT", border_symbols: Rounded, pane: Pane(QueueHeader())),
+                                (size: "40%", borders: "RIGHT | BOTTOM", border_symbols: Inherited(parent: Rounded, bottom_right: "┤"), pane: Pane(Queue)),
+                                (size: "100%", borders: "RIGHT | BOTTOM", border_symbols: Rounded, pane: Pane(Cava)),
+                            ]
                         )
                     ),
                 ],

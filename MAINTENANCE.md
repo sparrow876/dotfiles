@@ -584,6 +584,17 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — rmpc restyled after a reference screenshot (user request):
+  Queue tab = album art 38% | queue (40%) over a big Cava pane; lyrics pane
+  dropped. Theme: tabs in their own box; bottom = one box with ▶/⏸/■
+  (StateV2 labels) + thick rounded progress bar (symbols e0b6 █ e0b4 █ e0b4,
+  overlay track) + elapsed / duration; input-mode box removed; rmpc's original
+  "yellow" (state, artist, toggles, preview labels) → palette warn (gold).
+  Cava: bar_width 2 / spacing 1, fixed gradient #ff3d8b → #b07cff → #3fc5ff
+  (doesn't follow ALT+T). Hidden-pty run: no new warnings (dup-key warnings
+  come from rmpc's example keybinds). Files: `rmpc/.config/rmpc/config.ron`,
+  theme template rice.ron.tmpl.
+
 - **2026-11-14** — rmpc gets cava (user request): rmpc 0.11's built-in Cava
   pane (src/ui/panes/cava.rs), 9 rows under the album art in the Queue tab.
   config.ron `cava: (...)`: 60 fps, autosens, input PipeWire "auto" (whatever
