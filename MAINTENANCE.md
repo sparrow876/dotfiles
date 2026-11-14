@@ -584,6 +584,17 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — rmpc text colours + font from a reference screenshot (user
+  request): Catppuccin Mocha accents, fixed hex in rice.ron.tmpl — artist /
+  default text subtext1 #bac2de, titles sapphire #74c7ec, playing song mauve
+  #cba6f7 bold, selection + active tab lavender #b4befe on #1e1e2e, [Playing]
+  / volume / scrollbar lavender, header artist rosewater #f5e0dc, separators
+  overlay2 #9399b2, secondary subtext0 #a6adc8. Font: the reference is
+  JetBrains Mono (Medium): launcher passes kitty
+  `-o "font_family=family=\"JetBrainsMono Nerd Font\" style=Medium"` and
+  `foreground=#cdd6f4` (font spec parsed with kitty's load_config). Borders,
+  background, cava unchanged. Files: rice.ron.tmpl, rmpc.desktop.
+
 - **2026-11-14** — rmpc themes catppuccin-pink and nuclear-light deleted (user
   request); only `rice` remains. config.ron / rmpc.desktop comments trimmed.
 
