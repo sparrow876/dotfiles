@@ -47,6 +47,8 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
 - **Nautilus**: Nord, Google Drive via rclone, PDF thumbnails, Move to Trash
   everywhere, and right-click **Copy as Path** and **Lock with Password… /
   Unlock…** for folders.
+- **Music**: rmpc (terminal player, palette-themed) on MPD, and Tauon Music
+  Box; both show in the bar's music widget and follow the media keys.
 - **Apps**: Zen, Outlook web app, Teams, Vesktop, Claude desktop, LocalSend,
   Steam + MangoHud + GameMode (GE-Proton where a game needs it).
 - **Bluetooth**: devices pair from the bar menu and stay paired (blueman's
@@ -241,7 +243,7 @@ More in [MAINTENANCE.md](MAINTENANCE.md) §8.
 ```
 hypr/ quickshell/ rofi/ kitty/ zsh/ starship/ fastfetch/ lazygit/ bat/
 nvim/ zathura/ gtk/ qt/ xdg/ applications/ systemd/ vesktop/ mangohud/ gamemode/
-thumbnailers/ nautilus/ bin/
+thumbnailers/ nautilus/ bin/ mpd/ rmpc/
                       stow packages: each mirrors $HOME (e.g. kitty/.config/kitty/)
 lockscreen/           qylock notes + GPL patch for its login code
 theme/                palettes, style, templates, render.sh, apply.sh

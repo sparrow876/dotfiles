@@ -42,6 +42,8 @@ STOW_PACKAGES=(
   gamemode    # step 19: gamemoderun settings
   thumbnailers  # PDF thumbnails in Nautilus (pdftoppm)
   bin         # commands on PATH (~/.local/bin): lockdir, unlockdir
+  mpd         # music server config (for rmpc)
+  rmpc        # terminal music player (theme generated from the palette)
   nautilus    # Nautilus right-click "Copy as Path" (nautilus-python extension)
 )
 
@@ -108,7 +110,8 @@ step_dirs() {
   mkdir -p "$HOME"/{Music,Documents,Downloads,Pictures,Videos,Desktop,Templates,Public} \
            "$HOME/Pictures/Screenshots" "$HOME/Pictures/Wallpapers" \
            "$HOME/Videos/Recordings" "$HOME/GoogleDrive" \
-           "$HOME/.local/src" "$HOME/.local/bin" "$HOME/.cache/wallpaper-thumbs"
+           "$HOME/.local/src" "$HOME/.local/bin" "$HOME/.cache/wallpaper-thumbs" \
+           "$HOME/.local/share/mpd/playlists" "$HOME/.local/state/mpd"
   # Drive-style icon for the Google Drive folder (after it exists)
   command -v gio >/dev/null && gio set -t string "$HOME/GoogleDrive" metadata::custom-icon-name folder-google-drive 2>/dev/null || true
 }

@@ -584,6 +584,18 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — rmpc + MPD (user request; all official packages: mpd,
+  rmpc 0.11.0, mpd-mpris). New stow packages `mpd/` (mpd.conf: ~/Music,
+  ~/.local/share/mpd + ~/.local/state/mpd, 127.0.0.1:6600, PipeWire,
+  restore_paused) and `rmpc/` (config.ron = rmpc 0.11.0 example with
+  theme "rice" + cache dir; BSD-3 notice kept). Theme template
+  `theme/templates/rmpc/.config/rmpc/themes/rice.ron.tmpl` = the example theme
+  with named colours mapped to the palette (render.sh → rmpc/.../themes/rice.ron).
+  `applications/rmpc.desktop` runs it in kitty (class rmpc, icon mpd).
+  install.sh: dirs + stow packages. User services: ROOT-STEPS §16 (user runs
+  `systemctl --user enable --now mpd mpd-mpris`). Bar: MPRIS name "Music
+  Player Daemon" → MPD. Not verified yet: configs parse (needs the packages).
+
 - **2026-11-14** — `tauon-music-box` added to pacman.txt (Media; official
   extra repo, so no PKGBUILD review). Uses MPRIS (bar widget, media keys) and
   libappindicator (tray). User installs it.

@@ -1,0 +1,12 @@
+[Desktop Entry]
+# rmpc (terminal MPD client) in its own kitty window, so it gets a proper icon
+# and window class in rofi / Hyprland. Replaces the package's rmpc.desktop.
+Type=Application
+Name=rmpc
+GenericName=Music Player (MPD)
+Comment=Play your music library (~/Music) through MPD
+Exec=kitty --class rmpc --title rmpc -e rmpc
+Icon=mpd
+Terminal=false
+Categories=AudioVideo;Audio;Player;Music;
+Keywords=Music;Audio;Player;MPD;

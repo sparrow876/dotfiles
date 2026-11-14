@@ -175,7 +175,7 @@ MouseArea {
     Tooltip {
         target: root
         // The title is in the bar (and scrolls on hover): just the player + keys
-        readonly property var niceNames: ({ "Mozilla zen": "Zen", "Mozilla Firefox": "Firefox" })
+        readonly property var niceNames: ({ "Mozilla zen": "Zen", "Mozilla Firefox": "Firefox", "Music Player Daemon": "MPD" })
         readonly property string playerName: niceNames[Media.player?.identity ?? ""] ?? (Media.player?.identity || "Player")
         text: Media.hasTrack ? `${playerName} · click: play/pause · scroll: skip`
                              : "Nothing playing"

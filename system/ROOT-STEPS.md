@@ -486,3 +486,23 @@ folder, mounts them right away and tests trashing in Downloads. Each folder
 keeps its trash in `<folder>/.Trash-<uid>`; Nautilus's Trash shows all of them.
 
 Undo: `sudo cp /etc/fstab.before-trash-mounts /etc/fstab && sudo systemctl daemon-reload`, then reboot.
+
+## 16. Music: MPD + rmpc (no sudo except the install)
+
+`rmpc` is a terminal music player; it plays through **MPD**, a small music
+server that runs as your user and reads `~/Music`. `mpd-mpris` makes MPD show
+up in the bar's music widget and react to the media keys.
+
+```sh
+sudo pacman -S --needed mpd rmpc mpd-mpris
+cd ~/dotfiles && ./install.sh --only dirs && ./install.sh --only stow
+systemctl --user enable --now mpd.service mpd-mpris.service
+```
+
+- Config: `mpd/.config/mpd/mpd.conf` (music from `~/Music`, database/state in
+  `~/.local/share/mpd` and `~/.local/state/mpd`, only reachable from this
+  computer on 127.0.0.1:6600, plays through PipeWire) and
+  `rmpc/.config/rmpc/` (theme generated from the palette, follows ALT + T).
+- Start rmpc from rofi ("rmpc") or type `rmpc` in a terminal; `?` shows its keys.
+- Check: `systemctl --user status mpd` · logs: `journalctl --user -u mpd`.
+- **Undo:** `systemctl --user disable --now mpd.service mpd-mpris.service`.
