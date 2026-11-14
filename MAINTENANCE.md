@@ -584,6 +584,10 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — rmpc back to the `rice` theme (user request); launcher
+  background #202636 again. catppuccin-pink and nuclear-light stay in
+  rmpc/.config/rmpc/themes/ (config.ron lists how to pick them).
+
 - **2026-11-14** — nuclear-light: much text was near-white on the pink
   background. Cause: rmpc's `text_color` doesn't reach song-table columns, tab
   labels, list symbols, header title / elapsed fields; unstyled text uses the

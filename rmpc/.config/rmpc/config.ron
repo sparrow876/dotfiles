@@ -12,7 +12,7 @@
     //   "nuclear-light"    Nuclear player's light pink palette   #fadadf
     //   "catppuccin-pink"  Catppuccin Macchiato, pink accent     #24273a
     //   "rice"             the rice palette, follows ALT+T       #202636
-    theme: Some("nuclear-light"),
+    theme: Some("rice"),
     cache_dir: Some("~/.cache/rmpc/"),
     on_song_change: None,
     volume_step: 5,
