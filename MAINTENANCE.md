@@ -584,6 +584,17 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-14** — rmpc didn't launch from rofi (kitty window closed ~1 s after
+  rmpc started; rmpc's log just stops, no crash recorded). The same command run
+  from a shell worked. Cause: the Exec line carried escaped inner quotes
+  (`font_family=family=\"JetBrainsMono Nerd Font\" style=Medium`); .desktop
+  Exec values go through key-file unescaping *and* shell-style quoting, and
+  `\"` isn't a valid key-file escape, so launchers can split it differently.
+  Fix: no inner quotes, kitty's full-name form
+  `-o "font_family=JetBrainsMono Nerd Font Medium"` (verified: kitty
+  load_config parses it; GLib KeyFile + shell_parse_argv give clean argv).
+  Rule: never put `\"` in a .desktop Exec. File: rmpc.desktop.
+
 - **2026-11-14** — rmpc text colours + font from a reference screenshot (user
   request): Catppuccin Mocha accents, fixed hex in rice.ron.tmpl — artist /
   default text subtext1 #bac2de, titles sapphire #74c7ec, playing song mauve
