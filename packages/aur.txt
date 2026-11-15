@@ -29,6 +29,7 @@ claude-code                  # [ec02864] Anthropic's official claude binary from
 
 ## Your own additions, reviewed 2026-11-10
 ani-cli                      # [a26ced7] upstream v5.1 tag tarball from github.com/pystardust/ani-cli (sha256-pinned); installs one script + man page; .install only prints a disclaimer. Deps mpv, ffmpeg, fzf, curl
+plattenalbum                 # [6638db1] 2026-11-15, maintained by its author (SoongNoonien); upstream v2.8.1 tag tarball from github.com/SoongNoonien/plattenalbum (sha256-pinned, checked), meson build; installs 1 Python script + .desktop, icons, gschema; no .install. GTK4/libadwaita MPD client with album-cover grid. Network: MPD + api.lyrics.ovh (only when the lyrics view is opened). Its own MPRIS is turned off (install.sh gsettings; mpd-mpris covers MPD)
 
 ## Pending review in later steps (left commented on purpose)
 # game-devices-udev          # step 19: only if Steam doesn't see the 8BitDo controller

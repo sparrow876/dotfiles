@@ -584,6 +584,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-15** — Plattenalbum (GTK4/libadwaita MPD client with an album-cover
+  grid; rmpc has no thumbnail view): AUR package reviewed [6638db1] and listed.
+  Its built-in MPRIS (gsettings key `mpris`, default true) duplicated MPD next
+  to mpd-mpris → install.sh step gsettings sets it false. Follows the dark
+  libadwaita style / gtk-4.0 css. Files: packages/aur.txt, install.sh,
+  ROOT-STEPS §16.
+
 - **2026-11-14** — rmpc didn't launch from rofi (kitty window closed ~1 s after
   rmpc started; rmpc's log just stops, no crash recorded). The same command run
   from a shell worked. Cause: the Exec line carried escaped inner quotes

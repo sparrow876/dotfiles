@@ -260,6 +260,11 @@ step_gsettings() {
   # no tray icon (the bar has one), no "connected" pop-ups
   gsettings set org.blueman.general plugin-list \
     "['!StatusIcon', '!StatusNotifierItem', '!ShowConnected', '!ConnectionNotifier']"
+  # Plattenalbum (MPD album browser): mpd-mpris already reports MPD to the bar
+  # and media keys; its own MPRIS would show the same music twice
+  if gsettings list-keys de.wagnermartin.Plattenalbum >/dev/null 2>&1; then
+    gsettings set de.wagnermartin.Plattenalbum mpris false
+  fi
   # Nautilus "Open in Terminal" -> kitty (nautilus-open-any-terminal)
   if gsettings list-keys com.github.stunkymonkey.nautilus-open-any-terminal >/dev/null 2>&1; then
     gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
