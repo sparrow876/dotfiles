@@ -532,8 +532,9 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   `cat /proc/driver/nvidia/gpus/0000:01:00.0/power` → "Runtime D3 status:
   Enabled (fine-grained)" and `power/runtime_status` → suspended when idle;
   then remove this item.
-- Bluetooth devices needing PIN/number confirmation: use Blueman (Advanced…).
-  Possible later: a tiny BlueZ agent forwarding to Quickshell.
+- Bluetooth PIN / code confirmation is handled by blueman-applet (the pairing
+  agent, since 2026-11-11): notifications with Confirm/Deny or a PIN dialog, not
+  inside the bar menu itself.
 - notify-send with an unknown icon name shows Papirus' grey ✕ instead of the
   bell fallback.
 - Games: ACC and MGSV installed and run (standard launch options); ACC's LAN
