@@ -1,0 +1,15 @@
+# Lets the RTX 3050 power off when idle on Linux 7.3+ (NVIDIA bug 7039712):
+# runs /usr/local/sbin/nvidia-rtd3-rebind once at boot, before the login
+# screen (nothing uses the GPU yet). Installed by system/root-steps/7-nvidia-rtd3.sh.
+[Unit]
+Description=Re-probe NVIDIA GPU so runtime D3 works on Linux 7.3+ (NVIDIA issue #1507)
+After=systemd-modules-load.service systemd-udev-trigger.service
+Before=display-manager.service nvidia-powerd.service nvidia-persistenced.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/nvidia-rtd3-rebind
+
+[Install]
+WantedBy=multi-user.target

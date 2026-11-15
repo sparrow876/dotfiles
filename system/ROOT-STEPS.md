@@ -512,3 +512,26 @@ systemctl --user enable --now mpd.service mpd-mpris.service
   own MPRIS since mpd-mpris already shows MPD in the bar).
 - Check: `systemctl --user status mpd` · logs: `journalctl --user -u mpd`.
 - **Undo:** `systemctl --user disable --now mpd.service mpd-mpris.service`.
+
+## 17. RTX 3050 stays awake on kernel 7.3+ (temporary workaround)
+
+Since kernel 7.3 (with NVIDIA 615/620) the driver reports "Runtime D3 status:
+Disabled by default" and the RTX 3050 never powers off when idle (~4 W, warmer,
+shorter battery). Known bug: NVIDIA bug 7039712,
+<https://github.com/NVIDIA/open-gpu-kernel-modules/issues/1507>. Workaround:
+re-probe the GPU once at boot, before the login screen.
+
+```sh
+bash ~/dotfiles/system/root-steps/6-nvidia-rtd3.sh
+```
+
+- Installs `system/usr-local-sbin/nvidia-rtd3-rebind` → `/usr/local/sbin/` and
+  `system/units/nvidia-rtd3-rebind.service` → `/etc/systemd/system/` (enabled).
+  It does nothing when runtime D3 already works, so it's harmless after
+  NVIDIA's fix; remove it then.
+- Reboot, then: `cat /proc/driver/nvidia/gpus/0000:01:00.0/power` →
+  `Runtime D3 status: Enabled (fine-grained)`; after ~20 s idle
+  `cat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status` → `suspended`.
+- **Undo:** `sudo systemctl disable nvidia-rtd3-rebind.service`,
+  `sudo rm /etc/systemd/system/nvidia-rtd3-rebind.service /usr/local/sbin/nvidia-rtd3-rebind`,
+  `sudo systemctl daemon-reload`.

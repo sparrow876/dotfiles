@@ -1,0 +1,35 @@
+#!/bin/bash
+# Re-probe the NVIDIA GPU from a normal process at boot, so it can power off
+# when idle (runtime D3) on Linux 7.3+. Workaround for NVIDIA bug 7039712 /
+# github.com/NVIDIA/open-gpu-kernel-modules/issues/1507: on 7.3 the driver's
+# probe thread can't read the GPU's PCI config, so it reports "Runtime D3
+# status: Disabled by default" and the RTX 3050 stays on (~4 W).
+# Adapted from the script posted in that issue (william8000, 2026-11-15).
+# Installed by system/root-steps/7-nvidia-rtd3.sh to /usr/local/sbin; run by
+# nvidia-rtd3-rebind.service before the login screen. Does nothing once the
+# driver reports runtime D3 enabled (i.e. after NVIDIA ships the fix).
+
+modprobe nvidia || exit 0
+
+gpus=()
+for p in /proc/driver/nvidia/gpus/*/power; do
+	grep -qE 'Runtime D3 status: *(Not supported|Disabled by default)' "$p" &&
+		gpus+=("$(basename "$(dirname "$p")")")
+done
+[ ${#gpus[@]} -eq 0 ] && { echo "Runtime D3 already enabled, nothing to do"; exit 0; }
+
+mods=()
+for m in nvidia_drm nvidia_modeset nvidia_uvm; do
+	[ -d "/sys/module/$m" ] && mods+=("$m")
+done
+# Something already uses the GPU: change nothing
+[ ${#mods[@]} -gt 0 ] && { rmmod "${mods[@]}" || exit 1; }
+
+for bdf in "${gpus[@]}"; do
+	echo "$bdf" > /sys/bus/pci/drivers/nvidia/unbind
+	echo "$bdf" > /sys/bus/pci/drivers/nvidia/bind
+	echo "$bdf: $(grep 'Runtime D3' "/proc/driver/nvidia/gpus/$bdf/power")"
+done
+
+[ ${#mods[@]} -gt 0 ] && modprobe -a "${mods[@]}"
+exit 0

@@ -46,7 +46,7 @@ After an update, compare with `pacman -Q <pkg>` and update this table.
 
 Hardware: HP Victus 15 (fa0xxx), i5-12450H, Intel Alder Lake iGPU (`i915`,
 drives eDP-1, `boot_vga=1`) + RTX 3050 Laptop (GA107, drives HDMI, sleeps in
-runtime D3 when unused). eDP-1 1920x1080@144, no VRR. Battery `BAT0`, charger
+runtime D3 when unused; on kernel 7.3+ only with ROOT-STEPS §17). eDP-1 1920x1080@144, no VRR. Battery `BAT0`, charger
 `ADP1`, backlight `intel_backlight`, no keyboard backlight. Sound: SOF
 `skl_hda_dsp_generic` (Speaker, 3×HDMI, 2 mics). Wi-Fi `wlp4s0`, Ethernet `eno1`.
 Root on btrfs (`@`, `@home`, `@pkg`, `@log`, `@snapshots`), systemd-boot + UKI.
@@ -583,6 +583,23 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-15** — RTX 3050 awake all the time since the 2026-11-13 upgrade
+  (kernel 7.2.15 → 7.3.4, nvidia-open 615 → 620.70). `/proc/driver/nvidia/gpus/
+  0000:01:00.0/power`: "Runtime D3 status: Disabled by default";
+  `power/control` = on, runtime_status active. Cause: Linux 7.3 runs kthreads
+  in a nullfs root, so the driver's probe kthread can't open the GPU's PCI
+  config → RTD3 silently off (NVIDIA bug 7039712, GitHub issue #1507, fix PR
+  #1512 not released). Workaround (user runs ROOT-STEPS §17,
+  root-steps/6-nvidia-rtd3.sh): oneshot `nvidia-rtd3-rebind.service` before
+  display-manager: rmmod nvidia_drm/modeset/uvm, unbind/bind the GPU, modprobe
+  again; no-op when RTD3 already reports enabled. Remove it once a driver /
+  kernel with the fix is installed. The i915 `intel_pps_vdd_on_unlocked`
+  WARNING at boot is unrelated (panel power sequencing). Files:
+  system/usr-local-sbin/nvidia-rtd3-rebind, system/units/…service,
+  system/root-steps/6-nvidia-rtd3.sh, ROOT-STEPS §17.
+- **2026-11-15** — Euphonica verified: connected to MPD at 127.0.0.1:6600,
+  own server off, MPRIS off (only `mpd` in playerctl), online providers off.
 
 - **2026-11-15** — Plattenalbum dropped (its cover grid is per artist; the
   library is mostly singles). Replaced by **Euphonica** (AUR [d33c282]
