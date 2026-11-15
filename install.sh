@@ -260,10 +260,14 @@ step_gsettings() {
   # no tray icon (the bar has one), no "connected" pop-ups
   gsettings set org.blueman.general plugin-list \
     "['!StatusIcon', '!StatusNotifierItem', '!ShowConnected', '!ConnectionNotifier']"
-  # Plattenalbum (MPD album browser): mpd-mpris already reports MPD to the bar
-  # and media keys; its own MPRIS would show the same music twice
-  if gsettings list-keys de.wagnermartin.Plattenalbum >/dev/null 2>&1; then
-    gsettings set de.wagnermartin.Plattenalbum mpris false
+  # Euphonica (MPD album browser): mpd-mpris already reports MPD to the bar and
+  # media keys, so its own MPRIS would show the same music twice; and MPD
+  # listens on IPv4 127.0.0.1 ("localhost" resolves to ::1 first)
+  if gsettings list-keys io.github.htkhiem.Euphonica.player >/dev/null 2>&1; then
+    gsettings set io.github.htkhiem.Euphonica.player enable-mpris false
+    gsettings set io.github.htkhiem.Euphonica.client mpd-use-own-server false
+    gsettings set io.github.htkhiem.Euphonica.client mpd-host '127.0.0.1'
+    gsettings set io.github.htkhiem.Euphonica.client mpd-port 6600
   fi
   # Nautilus "Open in Terminal" -> kitty (nautilus-open-any-terminal)
   if gsettings list-keys com.github.stunkymonkey.nautilus-open-any-terminal >/dev/null 2>&1; then

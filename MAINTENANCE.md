@@ -584,6 +584,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-15** — Plattenalbum dropped (its cover grid is per artist; the
+  library is mostly singles). Replaced by **Euphonica** (AUR [d33c282]
+  reviewed: Album View = whole-library cover grid). Defaults checked in its
+  gschema: own MPD server off, online metadata providers off, MPRIS on →
+  install.sh sets enable-mpris false and mpd-host 127.0.0.1 (localhost → ::1
+  first; MPD binds IPv4). Kept from the Plattenalbum attempt: MPD's runtime
+  socket + RuntimeDirectory drop-in (useful for any local client). Files:
+  packages/aur.txt, install.sh, ROOT-STEPS §16, mpd.conf comment.
+
 - **2026-11-15** — Plattenalbum said "set up MPD": without MPD_HOST it only
   tries the sockets `$XDG_RUNTIME_DIR/mpd/socket` and `/run/mpd/socket`, and
   MPD listened on 127.0.0.1:6600 only (an explicit bind_to_address disables

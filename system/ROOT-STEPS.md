@@ -506,8 +506,9 @@ systemctl --user enable --now mpd.service mpd-mpris.service
   plays through PipeWire) and
   `rmpc/.config/rmpc/` (theme generated from the palette, follows ALT + T).
 - Start rmpc from rofi ("rmpc") or type `rmpc` in a terminal; `?` shows its keys.
-- Album covers as a grid (optional): `yay -S plattenalbum` (AUR, reviewed in
-  packages/aur.txt), then `./install.sh --only gsettings` (turns off its own
-  MPRIS; mpd-mpris already shows MPD in the bar).
+- Album covers as a grid (optional): `yay -S euphonica` (AUR, reviewed in
+  packages/aur.txt; compiles from source, several minutes), then
+  `./install.sh --only gsettings` (uses this MPD on 127.0.0.1, turns off its
+  own MPRIS since mpd-mpris already shows MPD in the bar).
 - Check: `systemctl --user status mpd` · logs: `journalctl --user -u mpd`.
 - **Undo:** `systemctl --user disable --now mpd.service mpd-mpris.service`.
