@@ -46,7 +46,7 @@ After an update, compare with `pacman -Q <pkg>` and update this table.
 
 Hardware: HP Victus 15 (fa0xxx), i5-12450H, Intel Alder Lake iGPU (`i915`,
 drives eDP-1, `boot_vga=1`) + RTX 3050 Laptop (GA107, drives HDMI, sleeps in
-runtime D3 when unused; on kernel 7.3+ only with ROOT-STEPS §17). eDP-1 1920x1080@144, no VRR. Battery `BAT0`, charger
+runtime D3 when unused; NOT on kernel 7.3+ until NVIDIA fixes bug 7039712, see §6). eDP-1 1920x1080@144, no VRR. Battery `BAT0`, charger
 `ADP1`, backlight `intel_backlight`, no keyboard backlight. Sound: SOF
 `skl_hda_dsp_generic` (Speaker, 3×HDMI, 2 mics). Wi-Fi `wlp4s0`, Ethernet `eno1`.
 Root on btrfs (`@`, `@home`, `@pkg`, `@log`, `@snapshots`), systemd-boot + UKI.
@@ -525,6 +525,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 ## 6. Known limitations / open items
 
+- **RTX 3050 never powers off on kernel 7.3+** (since 2026-11-13): NVIDIA bug
+  7039712 / https://github.com/NVIDIA/open-gpu-kernel-modules/issues/1507
+  (fix PR #1512). User chose to wait for the official fix (no workaround).
+  After each kernel or nvidia-open update, check
+  `cat /proc/driver/nvidia/gpus/0000:01:00.0/power` → "Runtime D3 status:
+  Enabled (fine-grained)" and `power/runtime_status` → suspended when idle;
+  then remove this item.
 - Bluetooth devices needing PIN/number confirmation: use Blueman (Advanced…).
   Possible later: a tiny BlueZ agent forwarding to Quickshell.
 - notify-send with an unknown icon name shows Papirus' grey ✕ instead of the
@@ -583,6 +590,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-15** — RTD3 re-probe workaround removed again: the user prefers to
+  wait for NVIDIA's official fix (files deleted, ROOT-STEPS §17 dropped). The
+  RTX 3050 stays awake (~4 W) meanwhile; tracked in §6. If ever needed: the
+  workaround script is in issue #1507 (william8000, 2026-11-15) and in git
+  history (commit ad6b862).
 
 - **2026-11-15** — RTX 3050 awake all the time since the 2026-11-13 upgrade
   (kernel 7.2.15 → 7.3.4, nvidia-open 615 → 620.70). `/proc/driver/nvidia/gpus/
