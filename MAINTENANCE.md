@@ -592,6 +592,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-15** — rmpc search found nothing for a song that was in ~/Music:
+  MPD knew 112 of 255 files. The other 143 were copied in at 23:15:11 on
+  11-14, the same second MPD's first scan finished (its inotify watches start
+  after that scan), so they were never added. `rmpc update` added all 143;
+  auto_update verified afterwards (temporary test file picked up and removed
+  within seconds). If a song is "missing" in rmpc/Euphonica: compare
+  `find ~/Music -type f | wc -l` with MPD `stats`, then `rmpc update`. No
+  config change.
+
 - **2026-11-15** — RTD3 re-probe workaround removed again: the user prefers to
   wait for NVIDIA's official fix (files deleted, ROOT-STEPS §17 dropped). The
   RTX 3050 stays awake (~4 W) meanwhile; tracked in §6. If ever needed: the
