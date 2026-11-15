@@ -584,6 +584,19 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-15** — Plattenalbum said "set up MPD": without MPD_HOST it only
+  tries the sockets `$XDG_RUNTIME_DIR/mpd/socket` and `/run/mpd/socket`, and
+  MPD listened on 127.0.0.1:6600 only (an explicit bind_to_address disables
+  MPD's default runtime socket). Fix: second `bind_to_address
+  "$XDG_RUNTIME_DIR/mpd/socket"`. Two traps on the way (MPD was down ~2 min):
+  (1) MPD doesn't create that folder for a configured path → drop-in
+  `mpd.service.d/runtime-dir.conf` with `RuntimeDirectory=mpd`; (2) stow folded
+  `mpd.service.d` into a symlink to the repo and systemd ignored it ("changed
+  on disk" forever) → listed in install.sh NO_FOLD_DIRS so it's a real folder
+  with the file linked inside. Rule: systemd *.d drop-in folders must be real
+  folders. Files: mpd.conf, systemd/.config/systemd/user/mpd.service.d/,
+  install.sh, ROOT-STEPS §16.
+
 - **2026-11-15** — Plattenalbum (GTK4/libadwaita MPD client with an album-cover
   grid; rmpc has no thumbnail view): AUR package reviewed [6638db1] and listed.
   Its built-in MPRIS (gsettings key `mpris`, default true) duplicated MPD next

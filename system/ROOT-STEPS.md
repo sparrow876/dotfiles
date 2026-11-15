@@ -501,7 +501,9 @@ systemctl --user enable --now mpd.service mpd-mpris.service
 
 - Config: `mpd/.config/mpd/mpd.conf` (music from `~/Music`, database/state in
   `~/.local/share/mpd` and `~/.local/state/mpd`, only reachable from this
-  computer on 127.0.0.1:6600, plays through PipeWire) and
+  computer: 127.0.0.1:6600 and the socket `$XDG_RUNTIME_DIR/mpd/socket`,
+  whose folder systemd creates via `systemd/.config/systemd/user/mpd.service.d/`;
+  plays through PipeWire) and
   `rmpc/.config/rmpc/` (theme generated from the palette, follows ALT + T).
 - Start rmpc from rofi ("rmpc") or type `rmpc` in a terminal; `?` shows its keys.
 - Album covers as a grid (optional): `yay -S plattenalbum` (AUR, reviewed in
