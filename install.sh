@@ -32,7 +32,7 @@ STOW_PACKAGES=(
   gtk         # step 5 (Nautilus text size; Nord theme in step 16)
   systemd     # user environment (GSK_RENDERER), rclone-gdrive.service
   rofi        # step 11
-  qt          # step 16: Qt color files (qt*ct.conf written by theme/qt.sh)
+  qt          # step 16: Qt color files (qt*ct.conf written by theme/qt.sh) + qimgv colors (theme/qimgv.sh)
   xdg         # step 16: default apps (hyprland-mimeapps.list)
   applications  # step 16: nvim-kitty.desktop, step 17: Outlook web app
   vesktop     # step 17: palette theme for Discord (Vencord themes folder)
@@ -170,8 +170,9 @@ step_render() {
 }
 
 step_qt() {
-  info "Configuring Qt apps (qt5ct/qt6ct)"
+  info "Configuring Qt apps (qt5ct/qt6ct, qimgv colors)"
   "$REPO/theme/qt.sh" >/dev/null
+  "$REPO/theme/qimgv.sh" >/dev/null || warn "qimgv colors not set (close qimgv, then run theme/qimgv.sh)"
 }
 
 # Shared = never move the whole directory. All no-fold dirs count too: apps or

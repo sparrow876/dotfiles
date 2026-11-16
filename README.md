@@ -45,8 +45,9 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
 - **Neovim**: Nord, LSP, Telescope, Treesitter, LaTeX with live preview in
   zathura (SyncTeX both ways), Rust (rust-analyzer, rustfmt + clippy on save).
 - **Nautilus**: Nord, Google Drive via rclone, PDF thumbnails, Move to Trash
-  everywhere, and right-click **Copy as Path** and **Lock with Password… /
-  Unlock…** for folders.
+  everywhere, and right-click **Copy as Path**, **View All Images** (a folder
+  and all its subfolders in one qimgv grid) and **Lock with Password… /
+  Unlock…** for folders. Images open in qimgv, themed like the rest.
 - **Music**: rmpc (terminal player with album art and a cava visualiser) on
   MPD; it shows in the bar's music widget and follows the media keys.
 - **Apps**: Zen, Outlook web app, Teams, Vesktop, Claude desktop, LocalSend,
@@ -110,6 +111,9 @@ applies this repo's lock-screen patch to the qylock clone
 - **`lockdir <folder>`** turns a folder into one password-protected file;
   **`unlockdir <folder>.locked`** brings it back (also in Nautilus's
   right-click menu).
+- **`view-all-images [folder]`** opens every image in a folder and its
+  subfolders as one thumbnail grid in qimgv (also Nautilus right-click
+  **View All Images**). Browsing only: delete/rename the real files in Nautilus.
 - Games: launch options `prime-run gamemoderun mangohud %command%`
   ([system/GAMING.md](system/GAMING.md)).
 

@@ -162,6 +162,18 @@ exactly the same files. **There's no way back without the password.**
 `lockdir` again when you're done. Older /home snapshots keep the readable folder
 until they expire.
 
+### `view-all-images`: every image in a folder tree
+
+```sh
+view-all-images ~/Pictures     # all images in ~/Pictures and its subfolders
+view-all-images                # same, for the folder you're in
+```
+Opens qimgv's thumbnail grid with every image from the folder and all its
+subfolders (hidden folders skipped), labelled like `Trip › Day 2 › IMG_0042.jpg`.
+Also in Nautilus: right-click a folder (or empty space) → **View All Images**.
+The grid shows links, so deleting or renaming there doesn't touch the real
+file: do that in Nautilus (the label tells you which folder it is in).
+
 Git aliases from Oh My Zsh's git plugin, the most useful ones:
 
 | Alias | Runs |

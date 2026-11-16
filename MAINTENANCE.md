@@ -596,6 +596,20 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-16** — qimgv themed + "View All Images" (user request).
+  Colors: new template `theme/templates/qimgv/theme.conf.tmpl` → `qimgv/theme.conf`
+  (not a stow package). qimgv rewrites `~/.config/qimgv/theme.conf` on every
+  exit, so `theme/qimgv.sh` copies it there instead (strips `#` comments, sets
+  `useSystemColorScheme=false`); run by install.sh step `qt` and theme/apply.sh,
+  skipped while qimgv is open (it would overwrite the file on close). Recursive
+  view: qimgv has no recursive mode in the UI (`setDirectoryRecursive` is only
+  used by `--gen-thumbs`), so `scripts/view-all-images.sh` (+ `view-all-images`
+  in ~/.local/bin, Nautilus extension `view_all_images.py`) builds a flat folder
+  of symlinks named `Sub › Dir › file.jpg` under
+  `$XDG_RUNTIME_DIR/view-all-images/<hash>/` and opens it. Tested on ~/Pictures
+  (grid + colors correct). Files: those plus install.sh, theme/apply.sh,
+  README.md, zsh/SHELL-CHEATSHEET.md.
+
 - **2026-11-16** — Image viewer: default switched from Loupe to **qimgv** (user
   request: wanted a more featureful viewer). qimgv is AUR only (PKGBUILD
   reviewed at 7c5bb4e: upstream tag tarball, cmake, no .install); the AUR build

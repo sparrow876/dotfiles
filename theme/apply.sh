@@ -4,7 +4,7 @@
 #   theme/apply.sh <name>          e.g. catppuccin-mocha, blue-ice
 # What changes: Hyprland borders, the bar/popups/panels (Quickshell), rofi,
 # kitty, starship, fzf, bat, lazygit, fastfetch, slurp selections, Qt colors,
-# the Vesktop (Discord) theme and MangoHud (next game launch). All themes are dark. Neovim, Nautilus and zathura stay Nord, the
+# the Vesktop (Discord) theme, qimgv and MangoHud (next game launch). All themes are dark. Neovim, Nautilus and zathura stay Nord, the
 # lock/login screen keeps its qylock theme.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -54,6 +54,7 @@ if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
 fi
 pkill -USR1 -x kitty 2>/dev/null || true               # kitty re-reads colors.conf
 "$ROOT/theme/qt.sh" >/dev/null || true                  # Qt apps (next launch)
+"$ROOT/theme/qimgv.sh" >/dev/null 2>&1 || true          # image viewer (next launch; skipped while it's open)
 command -v bat >/dev/null && bat cache --build >/dev/null 2>&1 || true
 "$ROOT/scripts/fastfetch-logo.sh" >/dev/null 2>&1 || true   # fastfetch card outline
 touch "$ROOT/quickshell/.config/quickshell/Theme.qml"  # Quickshell hot-reloads
