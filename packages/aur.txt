@@ -30,6 +30,7 @@ claude-code                  # [ec02864] Anthropic's official claude binary from
 ## Your own additions, reviewed 2026-11-10
 ani-cli                      # [a26ced7] upstream v5.1 tag tarball from github.com/pystardust/ani-cli (sha256-pinned); installs one script + man page; .install only prints a disclaimer. Deps mpv, ffmpeg, fzf, curl
 euphonica                    # [d33c282] 2026-11-15, AUR maintainer supermario (not upstream); upstream v0.99.8-beta-1 tag tarball from github.com/htkhiem/euphonica (sha256-pinned, checked); meson + cargo build (Cargo.lock, crates.io downloads at build time); installs binary, .desktop, icons, gschema; no .install, no services. GTK4/libadwaita MPD client: Album View = cover grid of the whole library. Defaults: uses the existing MPD (own server off), online metadata (Last.fm/MusicBrainz/TheAudioDB/LRCLIB) all off. install.sh: MPRIS off, host 127.0.0.1
+qimgv                        # [7c5bb4e] 2026-11-16, AUR maintainer FabioLolix; upstream v1.0.3-alpha tag tarball from github.com/easymodo/qimgv (sha256-pinned); plain cmake build+install (binary, .desktop, icons); no .install. Built without EXIF/video/OpenCV. Default image viewer (xdg)
 
 ## Pending review in later steps (left commented on purpose)
 # game-devices-udev          # step 19: only if Steam doesn't see the 8BitDo controller

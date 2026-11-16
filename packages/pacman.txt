@@ -122,7 +122,9 @@ gvfs
 gvfs-mtp
 file-roller
 poppler              # pdftoppm: PDF thumbnails in Nautilus (thumbnailers/)
-loupe
+loupe                # simple GTK viewer, kept as a fallback (default is qimgv, AUR)
+qt6-imageformats     # TIFF/TGA/MNG for qimgv
+kimageformats        # AVIF/HEIC/JXL/RAW/EXR for qimgv (codec libs libavif/libheif/libjxl/libraw already pulled in)
 ffmpegthumbnailer
 udiskie
 

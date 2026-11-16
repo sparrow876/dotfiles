@@ -26,17 +26,20 @@ audio/aac=mpv.desktop
 audio/opus=mpv.desktop
 audio/webm=mpv.desktop
 audio/x-m4a=mpv.desktop
-# org.gnome.Loupe.desktop
-image/png=org.gnome.Loupe.desktop
-image/jpeg=org.gnome.Loupe.desktop
-image/gif=org.gnome.Loupe.desktop
-image/webp=org.gnome.Loupe.desktop
-image/bmp=org.gnome.Loupe.desktop
-image/tiff=org.gnome.Loupe.desktop
-image/svg+xml=org.gnome.Loupe.desktop
-image/avif=org.gnome.Loupe.desktop
-image/heic=org.gnome.Loupe.desktop
-image/x-icon=org.gnome.Loupe.desktop
+# qimgv.desktop (Loupe stays installed as a fallback: right-click > Open With)
+image/png=qimgv.desktop
+image/jpeg=qimgv.desktop
+image/gif=qimgv.desktop
+image/webp=qimgv.desktop
+image/bmp=qimgv.desktop
+image/tiff=qimgv.desktop
+image/svg+xml=qimgv.desktop
+image/avif=qimgv.desktop
+image/heic=qimgv.desktop
+image/heif=qimgv.desktop
+image/jxl=qimgv.desktop
+image/x-icon=qimgv.desktop
+image/x-tga=qimgv.desktop
 # nvim-kitty.desktop
 text/plain=nvim-kitty.desktop
 text/markdown=nvim-kitty.desktop

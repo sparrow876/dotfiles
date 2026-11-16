@@ -596,6 +596,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-16** — Image viewer: default switched from Loupe to **qimgv** (user
+  request: wanted a more featureful viewer). qimgv is AUR only (PKGBUILD
+  reviewed at 7c5bb4e: upstream tag tarball, cmake, no .install); the AUR build
+  has no EXIF panel or video playback. Added `qt6-imageformats` + `kimageformats`
+  so it opens TIFF/AVIF/HEIC/JXL too. Loupe stays installed as a fallback
+  (Open With). qimgv's own settings (`~/.config/qimgv/`) are not stowed: it
+  rewrites that file itself. Files: `xdg/.config/hyprland-mimeapps.list`,
+  `packages/pacman.txt`, `packages/aur.txt`.
+
 - **2026-11-15** — rmpc search found nothing for a song that was in ~/Music:
   MPD knew 112 of 255 files. The other 143 were copied in at 23:15:11 on
   11-14, the same second MPD's first scan finished (its inotify watches start
