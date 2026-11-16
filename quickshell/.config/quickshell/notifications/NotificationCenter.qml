@@ -84,20 +84,23 @@ PopupFrame {
             width: scroller.width
             spacing: 14
 
-            // Empty state
+            // Empty state. The children fill the width and center their text:
+            // a nested layout only stretches if a child does, otherwise it
+            // stays as narrow as the text and sits at the left edge.
             ColumnLayout {
                 visible: Notifications.history.length === 0
                 Layout.fillWidth: true
                 Layout.topMargin: 60
                 spacing: 8
                 Icon {
-                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
                     text: "󰂜"   // nf-md-bell_outline
                     size: 40
                     color: Theme.overlay
                 }
                 StyledText {
-                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter
                     text: "No notifications"
                     color: Theme.muted
                 }
