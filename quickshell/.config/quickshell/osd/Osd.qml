@@ -62,7 +62,10 @@ PanelWindow {
     }
     Connections {
         target: Brightness
-        function onCurrentChanged() {
+        // React to `value` itself: in onCurrentChanged the computed `value`
+        // (current / max) can still hold the previous step, so the pill
+        // showed one step behind (stuck at 95% at full brightness).
+        function onValueChanged() {
             if (Popups.current === "brightness") return   // the popup already shows it
             const v = Brightness.value
             osd.show(Glyphs.brightnessLevels[v < 0.34 ? 0 : v < 0.67 ? 1 : 2], v, "", false)

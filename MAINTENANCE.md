@@ -596,6 +596,20 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-16** — Brightness keys "stop at 95%, down is glitchy". The keys
+  and brightnessctl were fine: a backlight log showed clean 5% steps up to
+  96000/96000 (100%). The OSD lagged one step behind: its handler ran on
+  `Brightness.currentChanged` and read the derived `Brightness.value`
+  (current / max), which wasn't re-evaluated yet, so it showed the previous
+  level (95% at full, one step too high going down) and stayed there when the
+  next press changed nothing. Fix: handle `onValueChanged` instead. Verified
+  with screenshots: 85→100 shows 100%, four steps down shows 80%.
+  Same day: notification center empty state (bell + "No notifications") sat
+  at the left; a nested ColumnLayout only stretches if a child fills the
+  width, so both children now fill it and center their text.
+  Files: `quickshell/.config/quickshell/osd/Osd.qml`,
+  `quickshell/.config/quickshell/notifications/NotificationCenter.qml`.
+
 - **2026-11-16** — qimgv themed + "View All Images" (user request).
   Colors: new template `theme/templates/qimgv/theme.conf.tmpl` → `qimgv/theme.conf`
   (not a stow package). qimgv rewrites `~/.config/qimgv/theme.conf` on every
