@@ -525,6 +525,10 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 ## 6. Known limitations / open items
 
+- **Built-in webcam absent: hardware** (user confirmed, 2026-11-16). Never on
+  the USB bus in any boot since install; most likely its connector/cable after
+  a hinge repair. Internal digital mic works. Don't debug drivers for it; once
+  repaired it should simply appear in `lsusb` (uvcvideo is built in).
 - **RTX 3050 never powers off on kernel 7.3+** (since 2026-11-13): NVIDIA bug
   7039712 / https://github.com/NVIDIA/open-gpu-kernel-modules/issues/1507
   (fix PR #1512). User chose to wait for the official fix (no workaround).
