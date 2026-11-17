@@ -92,7 +92,7 @@ Errors show as coloured text at the end of the line and signs in the gutter.
 | `Space d` | show the full error message under the cursor |
 | `Space c a` | quick fixes for the error |
 | `Space c r` | rename everywhere |
-| `Space c f` | format the file |
+| `Space c f` | format the file (fix indentation/spacing); in Visual mode only the selected lines. C/C++ clang-format, LaTeX latexindent, Rust rustfmt (also on save), Python ruff |
 
 **Completion** pops up while typing: `Tab` / `Shift + Tab` move, `Enter` accepts,
 `Esc` closes it.

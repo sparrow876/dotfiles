@@ -596,6 +596,19 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-17** — Neovim formatting for C/C++, LaTeX, Rust, Python (user
+  request): conform.nvim (pinned 016802d; source skimmed: runs local formatter
+  binaries only). `Space c f` (Normal = file, Visual = selection) replaces the
+  LSP-only binding, so it also works without a language server (no clangd).
+  clang-format: project `.clang-format` if any, else LLVM + IndentWidth 4;
+  latexindent: `-g /dev/null` (no indent.log) and 4-space defaultIndent (its
+  default is tabs); rustfmt (format on save, replaces the old BufWritePre
+  LSP hook in lsp.lua); ruff format. latexindent was broken (missing Perl
+  YAML::Tiny, File::HomeDir) → packages perl-yaml-tiny, perl-file-homedir,
+  ruff added; clang listed explicitly (was only a dependency of bcc).
+  Files: nvim/.config/nvim/lua/plugins/{format,lsp}.lua, lazy-lock.json,
+  packages/pacman.txt, nvim/CHEATSHEET.md.
+
 - **2026-11-17** — LaTeX OCR background mode (user request): ~9 s per capture
   was almost all PyTorch + model loading. `latex_ocr.py --serve` keeps the
   model loaded and answers on `$XDG_RUNTIME_DIR/latex-ocr.sock` (mode 0600;

@@ -183,7 +183,11 @@ zathura-pdf-mupdf
 texlive-basic
 texlive-latexextra
 texlive-fontsrecommended
-texlive-binextra     # includes latexmk
+texlive-binextra     # includes latexmk + latexindent (Neovim Space c f in .tex)
+perl-yaml-tiny       # latexindent needs these two Perl modules
+perl-file-homedir
+clang                # clang-format: C/C++ formatting in Neovim (Space c f)
+ruff                 # Python formatter (Neovim Space c f)
 rustup               # Rust: rustc, cargo, rustfmt, clippy, rust-analyzer (install.sh --only rust picks the toolchain)
 # biber              # only for biblatex bibliographies (\usepackage{biblatex}); pulls ~30 perl deps
 
