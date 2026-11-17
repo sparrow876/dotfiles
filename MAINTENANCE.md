@@ -596,6 +596,19 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-17** — LaTeX OCR gave gibberish (endless `\qquad`) on a clean
+  equation. The model was fine (the same PNG read perfectly from file); the
+  screen selection included a dark viewer frame around the light picture.
+  pix2tex's own `pad()` picks "text" by brightness and then read the whole
+  light picture as one glyph. Fix: `clean()` in latex_ocr.py splits pixels
+  with Otsu, tries both polarities, drops blobs touching the selection edge or
+  shaped like a frame, keeps the polarity with the most glyph-sized blobs, and
+  crops the ORIGINAL pixels to them (dark on white, background levelled; an
+  earlier version that masked to the blobs lost i/j dots and broke `=`).
+  Tested: plain, dark frame, inverted, inverted + frame, 1.8x zoom + frame all
+  give the exact LaTeX. `LATEX_OCR_DEBUG=/path.png` saves what the model sees.
+  Files: scripts/latex-ocr/latex_ocr.py.
+
 - **2026-11-17** — LaTeX OCR (user request): ALT + SHIFT + O selects a region
   and copies it as LaTeX, using pix2tex 0.1.4 (lukas-blecher/LaTeX-OCR, MIT)
   in a private venv `~/.local/share/latex-ocr/venv` (not in the repo, not
