@@ -82,6 +82,7 @@ bind("SHIFT + Print",         exec(scripts .. "screenshot.sh full"),   "Capture:
 bind(mod .. " + Print",       exec(scripts .. "screenshot.sh window"), "Capture: Screenshot of the active window")
 bind(mod .. " + SHIFT + C",   exec(scripts .. "colorpick.sh"),         "Capture: Pick a color (hex copied)")
 bind(mod .. " + O",           exec(scripts .. "ocr.sh"),               "Capture: Copy text from a screen region (OCR)")
+bind(mod .. " + SHIFT + O",   exec(scripts .. "latex-ocr.sh"),         "Capture: Copy an equation as LaTeX (LaTeX OCR)")
 bind(mod .. " + R",           exec("qs ipc call recorder toggleFull"),   "Capture: Start/stop screen recording")
 bind(mod .. " + SHIFT + R",   exec("qs ipc call recorder toggleRegion"), "Capture: Start/stop recording a region")
 bind(mod .. " + CTRL + R",    exec("qs ipc call recorder replay"),       "Capture: Replay mode on / save last 60 s")

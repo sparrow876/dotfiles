@@ -596,6 +596,26 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-17** — LaTeX OCR (user request): ALT + SHIFT + O selects a region
+  and copies it as LaTeX, using pix2tex 0.1.4 (lukas-blecher/LaTeX-OCR, MIT)
+  in a private venv `~/.local/share/latex-ocr/venv` (not in the repo, not
+  system-wide). `scripts/latex-ocr/setup.sh` (user runs it) installs
+  `requirements.txt`: 46 wheels, each pinned by SHA-256 (`--require-hashes`,
+  `--only-binary`, `--no-deps`), CPU-only torch 2.15.0+cpu from
+  download.pytorch.org, plus pins transformers<5 / opencv<5 (pix2tex predates
+  their 5.x). It downloads the two model files from the pix2tex v0.0.1 release
+  itself and checks their SHA-256 (pix2tex's own downloader doesn't).
+  `latex_ocr.py` wraps `pix2tex.cli.LatexOCR`, keeps stdout for the result and
+  disables pix2tex's own clipboard copy. Source read, not run by Claude (the
+  resolve was a `pip --dry-run`). **To update:** in a scratch venv run
+  `pip install --dry-run --only-binary=:all: --ignore-installed --report r.json
+  --index-url https://download.pytorch.org/whl/cpu --extra-index-url
+  https://pypi.org/simple pix2tex==0.1.4 "transformers<5" "opencv-python-headless<5"`,
+  regenerate requirements.txt from r.json (name==version + sha256), re-run
+  setup.sh. Remove: `rm -rf ~/.local/share/latex-ocr`. Files:
+  scripts/latex-ocr.sh, scripts/latex-ocr/{setup.sh,latex_ocr.py,requirements.txt},
+  hypr/.config/hypr/conf/keybinds.lua, README.md.
+
 - **2026-11-17** — Neovim: auto-closing brackets and `$…$` (user request, "not
   annoying"). Added `windwp/nvim-autopairs` (lua/plugins/autopairs.lua, pinned
   in lazy-lock.json at 3172f40, source read: pure Lua, no build step, no network).

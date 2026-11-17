@@ -34,7 +34,9 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
   the lid locks when plugged in and suspends on battery.
 - **Rofi** launcher, clipboard history with image thumbnails, emoji picker.
 - **Capture**: screenshots (frozen screen, annotate with satty), color picker,
-  OCR, screen recording with a 60 s instant-replay buffer.
+  OCR, LaTeX OCR (equation on screen → LaTeX code, offline with pix2tex; one-time
+  `scripts/latex-ocr/setup.sh`), screen recording with a 60 s instant-replay
+  buffer.
 - **Themes**: one palette drives every app (Hyprland, Quickshell, rofi, kitty,
   starship, fzf, bat, lazygit, fastfetch, Qt, Vesktop, MangoHud). Switch with
   **ALT + T**: Blue Ice (default), Catppuccin Mocha / Macchiato / Frappé.
@@ -174,6 +176,7 @@ Generated from the live Hyprland binds by `scripts/keybinds-to-md.sh README.md`
 | `ALT + Print` | Screenshot of the active window |
 | `ALT + SHIFT + C` | Pick a color (hex copied) |
 | `ALT + O` | Copy text from a screen region (OCR) |
+| `ALT + SHIFT + O` | Copy an equation as LaTeX (LaTeX OCR) |
 | `ALT + R` | Start/stop screen recording |
 | `ALT + SHIFT + R` | Start/stop recording a region |
 | `ALT + CTRL + R` | Replay mode on / save last 60 s |
