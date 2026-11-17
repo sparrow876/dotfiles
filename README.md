@@ -42,7 +42,8 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
 - **Shell**: kitty, zsh + Oh My Zsh, starship, eza, bat, ripgrep, fd, fzf,
   zoxide, lazygit, fastfetch, a dropdown terminal (ALT + `), `lockdir` /
   `unlockdir` to password-protect a folder (GnuPG AES-256).
-- **Neovim**: Nord, LSP, Telescope, Treesitter, LaTeX with live preview in
+- **Neovim**: Nord, LSP, Telescope, Treesitter, auto-closing brackets (and `$…$`
+  in LaTeX), LaTeX with live preview in
   zathura (SyncTeX both ways), Rust (rust-analyzer, rustfmt + clippy on save).
 - **Nautilus**: Nord, Google Drive via rclone, PDF thumbnails, Move to Trash
   everywhere, and right-click **Copy as Path**, **View All Images** (a folder

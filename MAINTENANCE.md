@@ -596,6 +596,19 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-17** — Neovim: auto-closing brackets and `$…$` (user request, "not
+  annoying"). Added `windwp/nvim-autopairs` (lua/plugins/autopairs.lua, pinned
+  in lazy-lock.json at 3172f40, source read: pure Lua, no build step, no network).
+  Defaults keep it quiet (no pair before a word, step over closers, Backspace
+  deletes pairs, Enter between brackets indents); no fast-wrap (ALT + e is
+  Hyprland's). Custom `$` rule for tex/plaintex/markdown pairs only after a
+  space / line start / `( [ {` and not before a word or `$`; `` ` `` and `'`
+  not paired in tex. Enter still accepts blink.cmp completions: blink's
+  buffer-local `<CR>` falls back to autopairs' global one when the menu is
+  closed. Not run by Claude (third-party code): installed by lazy.nvim on the
+  next Neovim start. Files: nvim/.config/nvim/lua/plugins/autopairs.lua,
+  lazy-lock.json, nvim/CHEATSHEET.md, README.md.
+
 - **2026-11-16** — Brightness keys "stop at 95%, down is glitchy". The keys
   and brightnessctl were fine: a backlight log showed clean 5% steps up to
   96000/96000 (100%). The OSD lagged one step behind: its handler ran on

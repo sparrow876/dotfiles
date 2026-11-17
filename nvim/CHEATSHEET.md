@@ -97,6 +97,12 @@ Errors show as coloured text at the end of the line and signs in the gutter.
 **Completion** pops up while typing: `Tab` / `Shift + Tab` move, `Enter` accepts,
 `Esc` closes it.
 
+**Auto-closing brackets:** typing `(` `[` `{` `"` adds the closing one; type the
+closing one anyway and the cursor just steps over it. `Backspace` on an empty
+pair deletes both, `Enter` between `{}` opens an indented block. Nothing is
+added when the cursor sits right before a word. To type a lone bracket without
+its partner, press `Ctrl + v` first (e.g. `Ctrl + v` then `(`).
+
 Add another language: `:Mason`, find the server, press `i`, restart Neovim.
 
 ## 7. Git
@@ -121,6 +127,10 @@ Gutter signs: green bar = added, blue = changed, red = deleted.
 4. **Ctrl + click** in the PDF jumps Neovim to that line (inverse search).
 5. `Space l e` lists errors and warnings, `Space l t` shows the table of
    contents, `Space l c` deletes the build files (`.aux`, `.log`, ...).
+6. **`$` closes itself** (also in Markdown): `$` gives `$|$`, type the math,
+   then `$` steps out. It only pairs where math can start (after a space, at
+   the line start or after `( [ {`), so `\$`, `5$` and your own closing `$`
+   are left alone. `` ` `` and `'` aren't paired in LaTeX (``` ``quotes'' ```).
 
 Zathura keys: `j/k` scroll, `J/K` page, `+/-` zoom, `s` fit width, `a` fit page,
 `d` two pages side by side, `Tab` outline, `/` search, **`Ctrl + r` dark mode
