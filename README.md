@@ -34,8 +34,8 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
   the lid locks when plugged in and suspends on battery.
 - **Rofi** launcher, clipboard history with image thumbnails, emoji picker.
 - **Capture**: screenshots (frozen screen, annotate with satty), color picker,
-  OCR, LaTeX OCR (equation on screen → LaTeX code, offline with pix2tex; one-time
-  `scripts/latex-ocr/setup.sh`), screen recording with a 60 s instant-replay
+  OCR, LaTeX OCR (equation on screen → LaTeX code, offline with pix2tex, ~1 s
+  once loaded; one-time `scripts/latex-ocr/setup.sh`), screen recording with a 60 s instant-replay
   buffer.
 - **Themes**: one palette drives every app (Hyprland, Quickshell, rofi, kitty,
   starship, fzf, bat, lazygit, fastfetch, Qt, Vesktop, MangoHud). Switch with

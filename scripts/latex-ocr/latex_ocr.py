@@ -1,14 +1,33 @@
 """Image of an equation -> LaTeX code, with pix2tex (LaTeX-OCR).
 
-Runs inside the private venv made by setup.sh:
-    ~/.local/share/latex-ocr/venv/bin/python -I latex_ocr.py IMAGE.png
-    ... latex_ocr.py --selftest
-Prints only the LaTeX on stdout; pix2tex's own messages go to stderr.
+Runs inside the private venv made by setup.sh (python = that venv's python):
+    python -I latex_ocr.py --ask IMAGE.png   via the background server (fast)
+    python -I latex_ocr.py --warm            start the server if it isn't running
+    python -I latex_ocr.py --stop            stop the server
+    python -I latex_ocr.py IMAGE.png         one-off, no server (~9 s)
+    python -I latex_ocr.py --selftest        one-off on a drawn x^2+y^2=r^2
+Prints only the LaTeX on stdout; messages go to stderr.
 Used by scripts/latex-ocr.sh (ALT + SHIFT + O).
+
+Background server: loading PyTorch + the model takes ~8 s, reading one
+equation ~1 s. The server loads once, answers on a Unix socket in
+$XDG_RUNTIME_DIR (only you can reach it) and exits after LATEX_OCR_IDLE
+seconds without a request (default 1200 = 20 min) to give the ~1 GB back.
+Its log: $XDG_RUNTIME_DIR/latex-ocr.log.
 """
 import contextlib
+import json
 import os
+import socket
+import subprocess
 import sys
+import time
+
+RUNTIME = os.environ.get("XDG_RUNTIME_DIR") or f"/tmp/latex-ocr-{os.getuid()}"
+SOCK = os.path.join(RUNTIME, "latex-ocr.sock")
+LOCK = os.path.join(RUNTIME, "latex-ocr.lock")
+LOG = os.path.join(RUNTIME, "latex-ocr.log")
+IDLE = int(os.environ.get("LATEX_OCR_IDLE", "1200"))
 
 
 def test_image():
@@ -83,25 +102,153 @@ def clean(img):
     return Image.fromarray(g).convert("RGB")
 
 
-def main():
-    if len(sys.argv) != 2:
-        sys.exit("usage: latex_ocr.py IMAGE | --selftest")
-    from PIL import Image
-
-    img = test_image() if sys.argv[1] == "--selftest" else Image.open(sys.argv[1])
-
+def load_model():
     # pix2tex prints progress to stdout: keep stdout for the result only
     with contextlib.redirect_stdout(sys.stderr):
         import pix2tex.cli as cli
 
         cli.clipboard.copy = lambda *_: None  # it copies every result itself; we do that
-        img = clean(img)
-        if os.environ.get("LATEX_OCR_DEBUG"):
-            img.save(os.environ["LATEX_OCR_DEBUG"])  # what the model sees
-        latex = cli.LatexOCR()(img)
-    print(latex)
-    if sys.argv[1] == "--selftest":
+        return cli.LatexOCR()
+
+
+def recognise(model, img):
+    img = clean(img)
+    if os.environ.get("LATEX_OCR_DEBUG"):
+        img.save(os.environ["LATEX_OCR_DEBUG"])  # what the model sees
+    with contextlib.redirect_stdout(sys.stderr):
+        return model(img)
+
+
+# --- background server --------------------------------------------------------
+def serve():
+    import fcntl
+
+    from PIL import Image
+
+    os.makedirs(RUNTIME, mode=0o700, exist_ok=True)
+    lock = open(LOCK, "w")
+    try:  # only one server; a second one started at the same time just exits
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        return
+    model = load_model()
+    with contextlib.suppress(FileNotFoundError):
+        os.unlink(SOCK)  # left over from a crash
+    srv = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    old = os.umask(0o177)  # socket: owner only
+    srv.bind(SOCK)
+    os.umask(old)
+    srv.listen(4)
+    srv.settimeout(IDLE)
+    print(f"ready, exits after {IDLE} s idle", file=sys.stderr, flush=True)
+    try:
+        while True:
+            try:
+                conn, _ = srv.accept()
+            except socket.timeout:
+                break
+            with conn:
+                conn.settimeout(10)
+                try:
+                    req = conn.makefile().readline().strip()
+                    if req == "STOP":
+                        conn.sendall(b'{"ok": true}\n')
+                        break
+                    t = time.monotonic()
+                    reply = {"latex": recognise(model, Image.open(req).convert("RGB"))}
+                    print(f"read {req} in {time.monotonic() - t:.2f} s", file=sys.stderr, flush=True)
+                except Exception as e:  # a bad image must not kill the server
+                    reply = {"error": f"{type(e).__name__}: {e}"}
+                with contextlib.suppress(OSError):
+                    conn.sendall((json.dumps(reply) + "\n").encode())
+    finally:
+        srv.close()
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(SOCK)
+
+
+def request(line, timeout):
+    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    s.settimeout(timeout)
+    s.connect(SOCK)
+    with s:
+        s.sendall((line + "\n").encode())
+        return json.loads(s.makefile().readline())
+
+
+def start_server():
+    """Start the server in the background (it outlives this process)."""
+    with open(LOG, "a") as log:
+        return subprocess.Popen(
+            [sys.executable, "-I", os.path.abspath(__file__), "--serve"],
+            stdin=subprocess.DEVNULL, stdout=log, stderr=log, start_new_session=True,
+        )
+
+
+def running():
+    """True if a server is listening, or one is still loading the model."""
+    import fcntl
+
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+        try:
+            s.connect(SOCK)
+            return True
+        except OSError:
+            pass
+    try:
+        with open(LOCK, "w") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)  # free = nobody loading
+        return False
+    except BlockingIOError:
+        return True
+
+
+def ask(path):
+    path = os.path.abspath(path)
+    try:
+        reply = request(path, 60)
+    except (FileNotFoundError, ConnectionRefusedError):
+        # not running (or still loading): start one, wait until it listens
+        proc = start_server()
+        deadline = time.monotonic() + 120
+        while True:
+            time.sleep(0.2)
+            try:
+                reply = request(path, 60)
+                break
+            except (FileNotFoundError, ConnectionRefusedError):
+                if time.monotonic() > deadline:
+                    sys.exit("the LaTeX OCR server didn't start in 2 minutes; see " + LOG)
+                # ours exiting with 0 = another server was already loading
+                # (keep waiting for that one); non-zero = it crashed
+                if proc.poll() not in (None, 0):
+                    sys.exit("the LaTeX OCR server failed; see " + LOG)
+    if "error" in reply:
+        sys.exit(reply["error"])
+    print(reply["latex"])
+
+
+def main():
+    args = sys.argv[1:]
+    if args == ["--serve"]:
+        serve()
+    elif args == ["--warm"]:
+        if not running():
+            start_server()
+    elif args == ["--stop"]:
+        with contextlib.suppress(OSError):
+            request("STOP", 5)
+    elif len(args) == 2 and args[0] == "--ask":
+        ask(args[1])
+    elif args == ["--selftest"]:
+        print(recognise(load_model(), test_image()))
         print("self-test OK (expected something like x^{2}+y^{2}=r^{2})", file=sys.stderr)
+    elif len(args) == 1 and not args[0].startswith("-"):
+        from PIL import Image
+
+        print(recognise(load_model(), Image.open(args[0]).convert("RGB")))
+    else:
+        sys.exit(__doc__)
 
 
 if __name__ == "__main__":

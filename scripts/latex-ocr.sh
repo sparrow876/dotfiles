@@ -2,7 +2,9 @@
 # LaTeX OCR (ALT + SHIFT + O): freeze the screen, select an equation, turn it
 # into LaTeX code with pix2tex (offline), copy it, notify with the code.
 # Needs the one-time setup: scripts/latex-ocr/setup.sh (private Python venv).
-# Takes a few seconds per equation (loading PyTorch + the model, on the CPU).
+# Fast mode: a background server keeps the model loaded (~1 s per equation).
+# It's started the moment you press the key, so it loads while you select,
+# and exits after 20 min unused (see latex-ocr/latex_ocr.py).
 set -u
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 py="${XDG_DATA_HOME:-$HOME/.local/share}/latex-ocr/venv/bin/python"
@@ -13,6 +15,9 @@ if [[ ! -x $py ]]; then
   exit 1
 fi
 
+ocr=("$py" -I "$here/latex-ocr/latex_ocr.py")
+"${ocr[@]}" --warm 2>/dev/null   # start loading now (returns at once)
+
 source "$here/theme-colors.sh"   # generated: theme colors for slurp
 hyprpicker -r -z >/dev/null 2>&1 & freeze=$!
 sleep 0.15
@@ -22,12 +27,21 @@ kill $freeze 2>/dev/null
 sleep 0.05
 
 img=$(mktemp --suffix=.png)
+out=$(mktemp)
 err=$(mktemp)
-trap 'rm -f "$img" "$err"' EXIT
+trap 'rm -f "$img" "$out" "$err"' EXIT
 grim -g "$geom" "$img"
 
-id=$(notify-send -p -a "LaTeX OCR" -i accessories-calculator -t 30000 "Reading the equation…" "This takes a few seconds.")
-latex=$("$py" -I "$here/latex-ocr/latex_ocr.py" "$img" 2>"$err" | tail -n1)
+"${ocr[@]}" --ask "$img" >"$out" 2>"$err" & job=$!
+# Only say "reading…" if it takes a moment (the model is still loading)
+for _ in 1 2 3 4 5 6; do kill -0 $job 2>/dev/null || break; sleep 0.1; done
+id=0
+if kill -0 $job 2>/dev/null; then
+  id=$(notify-send -p -a "LaTeX OCR" -i accessories-calculator -t 30000 \
+    "Reading the equation…" "Loading the model first; the next ones are instant.")
+fi
+wait $job
+latex=$(tail -n1 "$out")
 
 if [[ -z ${latex//[[:space:]]/} ]]; then
   reason=$(grep -v '^\s*$' "$err" | tail -n1 | cut -c1-120)

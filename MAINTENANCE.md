@@ -596,6 +596,18 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-17** — LaTeX OCR background mode (user request): ~9 s per capture
+  was almost all PyTorch + model loading. `latex_ocr.py --serve` keeps the
+  model loaded and answers on `$XDG_RUNTIME_DIR/latex-ocr.sock` (mode 0600;
+  one line = image path in, JSON out). `latex-ocr.sh` runs `--warm` when the
+  key is pressed (loads while you select) and `--ask IMG` after; "Reading…"
+  notification only if the answer takes > 0.6 s. Exits after 20 min idle
+  (`LATEX_OCR_IDLE` seconds), `--stop` stops it; a flock on
+  `latex-ocr.lock` keeps it to one server. Measured: cold ~10 s, warm
+  ~0.9 s, ~750 MB RSS while running; bad images return an error without
+  killing it. Log: `$XDG_RUNTIME_DIR/latex-ocr.log`. Files:
+  scripts/latex-ocr/latex_ocr.py, scripts/latex-ocr.sh.
+
 - **2026-11-17** — LaTeX OCR gave gibberish (endless `\qquad`) on a clean
   equation. The model was fine (the same PNG read perfectly from file); the
   screen selection included a dark viewer frame around the light picture.
