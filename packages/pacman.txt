@@ -121,6 +121,7 @@ zenity               # password dialogs for Nautilus "Lock with Password…" (sc
 gvfs
 gvfs-mtp
 file-roller
+7zip                 # .7z: password-protected archives, creating .7z, the zsh `extract` command (7za); File Roller uses it too
 poppler              # pdftoppm: PDF thumbnails in Nautilus (thumbnailers/)
 loupe                # simple GTK viewer, kept as a fallback (default is qimgv, AUR)
 qt6-imageformats     # TIFF/TGA/MNG for qimgv

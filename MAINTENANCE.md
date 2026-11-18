@@ -596,6 +596,11 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-18** — Added `7zip` (official, replaces p7zip) to packages/pacman.txt.
+  Before: .7z opened only through libarchive (bsdtar, File Roller), which
+  can't decrypt password-protected archives or create .7z, and the zsh
+  `extract` plugin failed on .7z (calls `7za`). Files: packages/pacman.txt.
+
 - **2026-11-18** — `ccmonitor` (Claude Code Usage Monitor, PyPI
   claude-monitor 4.0.0, MIT; user request). Not in the repos; the only AUR
   package (claude-monitor-git) is a 2025 snapshot with 0 votes, so it gets a
