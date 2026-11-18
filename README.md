@@ -43,7 +43,8 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
   Neovim, Nautilus and zathura stay Nord.
 - **Shell**: kitty, zsh + Oh My Zsh, starship, eza, bat, ripgrep, fd, fzf,
   zoxide, lazygit, fastfetch, a dropdown terminal (ALT + `), `lockdir` /
-  `unlockdir` to password-protect a folder (GnuPG AES-256).
+  `unlockdir` to password-protect a folder (GnuPG AES-256), `ccmonitor` (live
+  Claude Code usage; one-time `scripts/ccmonitor/setup.sh`).
 - **Neovim**: Nord, LSP, Telescope, Treesitter, auto-closing brackets (and `$…$`
   in LaTeX), LaTeX with live preview in
   zathura (SyncTeX both ways), Rust (rust-analyzer, rustfmt + clippy on save).

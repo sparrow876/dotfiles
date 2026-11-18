@@ -174,6 +174,17 @@ Also in Nautilus: right-click a folder (or empty space) → **View All Images**.
 The grid shows links, so deleting or renaming there doesn't touch the real
 file: do that in Nautilus (the label tells you which folder it is in).
 
+### `ccmonitor`: Claude Code usage, live
+
+```sh
+ccmonitor                       # live view: tokens, cost, time until the limit resets
+ccmonitor --plan max5           # compare against your plan's limits (pro, max5, max20, custom)
+ccmonitor --view daily          # table per day (also: monthly)
+```
+Reads Claude Code's own session logs in `~/.claude/projects` on this machine;
+nothing is sent anywhere. `Ctrl + C` quits. One-time setup:
+`~/dotfiles/scripts/ccmonitor/setup.sh` (installs it in its own folder, no sudo).
+
 Git aliases from Oh My Zsh's git plugin, the most useful ones:
 
 | Alias | Runs |

@@ -1,0 +1,8 @@
+#!/bin/sh
+# Claude Code Usage Monitor, from its private venv (scripts/ccmonitor/setup.sh).
+venv="${XDG_DATA_HOME:-$HOME/.local/share}/ccmonitor/venv"
+if [ ! -x "$venv/bin/ccmonitor" ]; then
+  echo "ccmonitor isn't set up yet: run ~/dotfiles/scripts/ccmonitor/setup.sh" >&2
+  exit 1
+fi
+exec "$venv/bin/ccmonitor" "$@"

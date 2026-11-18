@@ -596,6 +596,19 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-18** — `ccmonitor` (Claude Code Usage Monitor, PyPI
+  claude-monitor 4.0.0, MIT; user request). Not in the repos; the only AUR
+  package (claude-monitor-git) is a 2025 snapshot with 0 votes, so it gets a
+  private venv like LaTeX OCR: `scripts/ccmonitor/setup.sh` (user runs it)
+  installs `requirements.txt` (16 wheels, SHA-256 pinned) into
+  `~/.local/share/ccmonitor/venv`; `bin/.local/bin/ccmonitor` runs it.
+  Source reviewed: reads ~/.claude/projects/*.jsonl, writes ~/.claude-monitor/;
+  no network unless `--api` (then it sends the Claude OAuth token from
+  ~/.claude/.credentials.json to api.anthropic.com/api/oauth/usage);
+  subprocess calls are macOS/Windows-only. Update: see the comment at the top
+  of requirements.txt. Files: scripts/ccmonitor/{setup.sh,requirements.txt},
+  bin/.local/bin/ccmonitor, README.md, zsh/SHELL-CHEATSHEET.md.
+
 - **2026-11-17** — Neovim formatting for C/C++, LaTeX, Rust, Python (user
   request): conform.nvim (pinned 016802d; source skimmed: runs local formatter
   binaries only). `Space c f` (Normal = file, Visual = selection) replaces the
