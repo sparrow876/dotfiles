@@ -600,6 +600,16 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-19** — ccmonitor shows official, account-wide limits (incl.
+  Claude desktop chats, which share the plan limits but leave no local logs):
+  user set `"statusLine": {"type": "command", "command":
+  "~/.local/bin/ccmonitor --statusline"}` in ~/.claude/settings.json (not in
+  the repo; re-add on a new machine). Claude Code pipes `rate_limits` to it;
+  ccmonitor stores them in ~/.claude-monitor/statusline/latest.json, no
+  network. Verified: `confidence=official`, five_hour 7% (local estimate was
+  ~1%). seven_day comes back null (Claude Code didn't send one). Stale after
+  10 min without a Claude Code session. Files: zsh/SHELL-CHEATSHEET.md.
+
 - **2026-11-19** — No more `-debug` AUR packages (user request). New stow
   package `makepkg` → `~/.config/pacman/makepkg.conf` (makepkg reads it after
   /etc/makepkg.conf): `OPTIONS=("${OPTIONS[@]/#debug/!debug}")`. Verified with

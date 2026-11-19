@@ -182,7 +182,9 @@ ccmonitor --plan max5           # compare against your plan's limits (pro, max5,
 ccmonitor --view daily          # table per day (also: monthly)
 ```
 Reads Claude Code's own session logs in `~/.claude/projects` on this machine;
-nothing is sent anywhere. `Ctrl + C` quits. One-time setup:
+nothing is sent anywhere. The limit percentages are the official ones (shared
+with Claude desktop/web chats): Claude Code's status line runs
+`ccmonitor --statusline`, which saves them (set in `~/.claude/settings.json`). `Ctrl + C` quits. One-time setup:
 `~/dotfiles/scripts/ccmonitor/setup.sh` (installs it in its own folder, no sudo).
 
 Git aliases from Oh My Zsh's git plugin, the most useful ones:
