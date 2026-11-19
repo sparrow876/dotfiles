@@ -535,7 +535,11 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   After each kernel or nvidia-open update, check
   `cat /proc/driver/nvidia/gpus/0000:01:00.0/power` → "Runtime D3 status:
   Enabled (fine-grained)" and `power/runtime_status` → suspended when idle;
-  then remove this item.
+  then remove this item. Quick source check for a new driver release:
+  `curl -s https://raw.githubusercontent.com/NVIDIA/open-gpu-kernel-modules/<tag>/kernel-open/nvidia/nv-pci.c | grep -c init_fs`
+  (> 0 = fix included). Last checked 2026-11-19: linux 7.3.4.arch1-2 +
+  nvidia-open 620.70.06-3 (both rebuilds) still "Disabled by default";
+  NVIDIA's new 620.73.04 (2026-11-18) does NOT contain it; PR #1512 still open.
 - Bluetooth PIN / code confirmation is handled by blueman-applet (the pairing
   agent, since 2026-11-11): notifications with Confirm/Deny or a PIN dialog, not
   inside the bar menu itself.
