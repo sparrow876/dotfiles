@@ -600,6 +600,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-19** — No more `-debug` AUR packages (user request). New stow
+  package `makepkg` → `~/.config/pacman/makepkg.conf` (makepkg reads it after
+  /etc/makepkg.conf): `OPTIONS=("${OPTIONS[@]/#debug/!debug}")`. Verified with
+  makepkg's own `source_makepkg_config`: `... purge !debug lto`. Existing
+  euphonica-debug, qimgv-debug, yay-debug: user removes them with pacman -Rns.
+  Files: makepkg/.config/pacman/makepkg.conf, install.sh (STOW_PACKAGES).
+
 - **2026-11-19** — Package lists synced with the system (`pacman -Qqe` vs
   packages/*.txt; xorg-* is covered by base.txt's glob). Added python-mutagen
   (user, 2026-11-14; yt-dlp tags/cover art), gtk4-layer-shell (user,

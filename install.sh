@@ -45,6 +45,7 @@ STOW_PACKAGES=(
   mpd         # music server config (for rmpc)
   rmpc        # terminal music player (theme generated from the palette)
   nautilus    # Nautilus right-click "Copy as Path" (nautilus-python extension)
+  makepkg     # ~/.config/pacman/makepkg.conf: no -debug packages from AUR builds
 )
 
 # Third-party code, cloned at a pinned commit. Nothing here is executed.
