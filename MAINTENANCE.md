@@ -600,6 +600,17 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-19** — Package lists synced with the system (`pacman -Qqe` vs
+  packages/*.txt; xorg-* is covered by base.txt's glob). Added python-mutagen
+  (user, 2026-11-14; yt-dlp tags/cover art), gtk4-layer-shell (user,
+  2026-11-11; unused by the repo) and `yay` itself to aur.txt; ROOT-STEPS §5.0
+  now bootstraps `yay` (source build, what's installed) instead of `yay-bin`,
+  which would conflict with the listed `yay`. Not listed on purpose:
+  *-debug split packages (euphonica/qimgv/yay-debug, built because
+  /etc/makepkg.conf has `debug` in OPTIONS) and protonup-qt's AUR deps
+  (python-steam, python-inputs; installed as dependencies, noted in aur.txt).
+  Files: packages/pacman.txt, packages/aur.txt, system/ROOT-STEPS.md.
+
 - **2026-11-18** — Added `7zip` (official, replaces p7zip) to packages/pacman.txt.
   Before: .7z opened only through libarchive (bsdtar, File Roller), which
   can't decrypt password-protected archives or create .7z, and the zsh

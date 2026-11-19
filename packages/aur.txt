@@ -25,6 +25,7 @@ vesktop-bin                  # [eac51f5] maintained by Vesktop's author; officia
 claude-desktop               # [c913337] Anthropic's OFFICIAL .deb from downloads.claude.ai (sha256-pinned), payload only (no Debian scripts); Wayland launcher; chrome-sandbox setuid like every Chromium app; pulls qemu-system-x86 + edk2-ovmf for the Cowork VM
 
 ## Maintenance (step 20), reviewed 2026-11-09
+yay                          # the AUR helper itself (bootstrapped by hand, system/ROOT-STEPS.md §5.0); listed so the package list is complete
 claude-code                  # [ec02864] Anthropic's official claude binary from downloads.claude.ai (sha256-pinned) -> /opt/claude-code; /usr/bin/claude wrapper turns off its self-updater (pacman updates it); no .install script. Needed for TTY recovery (README)
 
 ## Your own additions, reviewed 2026-11-10

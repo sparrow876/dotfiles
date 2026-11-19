@@ -245,11 +245,11 @@ Undo: `sudo mv /etc/pacman.conf.bak /etc/pacman.conf && sudo pacman -Syu`
 if `command -v yay` prints a path):
 ```sh
 sudo pacman -S --needed git base-devel
-git clone https://aur.archlinux.org/yay-bin.git ~/.local/src/yay-bin
-less ~/.local/src/yay-bin/PKGBUILD        # read it: it downloads yay's release from GitHub
-cd ~/.local/src/yay-bin && makepkg -si && cd ~/dotfiles
+git clone https://aur.archlinux.org/yay.git ~/.local/src/yay
+less ~/.local/src/yay/PKGBUILD            # read it: builds yay's GitHub release from source (pulls in go to build)
+cd ~/.local/src/yay && makepkg -si && cd ~/dotfiles
 ```
-Undo: `sudo pacman -Rns yay-bin`.
+(`yay`, not `yay-bin`: it's the one in packages/aur.txt.) Undo: `sudo pacman -Rns yay`.
 
 **5.1 Everything else:**
 ```sh
