@@ -7,9 +7,19 @@ hl.config({
         gaps_out    = c.gaps_out,
         border_size = c.border_size,
         col = {
-            -- light blue -> ice gradient on the focused window
-            active_border   = { colors = { c.rgba("lightblue"), c.rgba("ice") }, angle = 45 },
-            inactive_border = c.rgba("overlay", "cc"),
+            -- Focused window: a soft Blue Ice "aurora" (light blue -> ice ->
+            -- cyan -> a hint of lavender -> back), slightly see-through so it
+            -- never glares. It sweeps once when focus changes (borderangle in
+            -- animations.lua) and is still otherwise: no constant redraws.
+            active_border   = {
+                colors = {
+                    c.rgba("lightblue", "ee"), c.rgba("ice", "d9"), c.rgba("cyan", "d9"),
+                    c.rgba("lavender", "b3"), c.rgba("lightblue", "ee"),
+                },
+                angle = 45,
+            },
+            -- Other windows: a quiet dark-blue gradient
+            inactive_border = { colors = { c.rgba("overlay", "cc"), c.rgba("blue", "80") }, angle = 45 },
         },
         resize_on_border = true,
         layout           = "dwindle",

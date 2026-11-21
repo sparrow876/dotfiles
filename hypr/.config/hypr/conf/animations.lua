@@ -25,10 +25,11 @@ anim("fadeSwitch",  1.8, "quick")
 anim("fadeShadow",  1.8, "quick")
 anim("fadeDim",     1.8, "quick")
 
--- Borders: smooth color change. The gradient angle eases once on focus change
--- (a constant "loop" would redraw the screen non-stop and keep the GPU awake).
-anim("border",      2.0, "easeOutQuint")
-anim("borderangle", 8.0, "easeInOutCubic", "once")
+-- Borders: smooth color change. On focus change the gradient makes one slow,
+-- eased sweep (~1.4 s) and then stays still: noticed now and then, never busy.
+-- (A constant "loop" would redraw the screen non-stop and keep the GPU awake.)
+anim("border",      2.5, "easeOutQuint")
+anim("borderangle", 14.0, "easeInOutCubic", "once")
 
 -- Layers (rofi etc.): fade + small pop-in. Quickshell layers opt out (rules.lua).
 anim("layersIn",      2.2, "easeOutQuint",   "popin 92%")

@@ -11,6 +11,8 @@ local M = {
     muted     = "9fb3c8",
     warn      = "f2c66d",
     critical  = "ef6f7a",
+    cyan      = "7fd6e8",   -- same as kitty's cyan; border accent
+    lavender  = "b9a7ff",   -- same as kitty's magenta; faint border hint
 
     glass_alpha = "bf",  -- hex alpha byte for frosted surfaces
     rounding    = 14,

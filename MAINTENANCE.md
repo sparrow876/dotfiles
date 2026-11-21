@@ -602,6 +602,16 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Subtle Blue Ice "aurora" window border (user: noticeable
+  sometimes, not distracting). Active: 5-stop gradient lightblue(ee) → ice(d9)
+  → cyan(d9) → lavender(b3) → lightblue(ee) at 45° (cyan/lavender = kitty's
+  ANSI cyan/magenta, added to colors.lua); inactive: overlay(cc) → blue(80).
+  borderangle stays `once` but slower (8 → 14 = 1.4 s sweep on focus change),
+  border colour fade 2.0 → 2.5; no loop, so no constant redraws. Verified by
+  sampling a test window's border: light blue → ice (top) → cyan (right) →
+  lavender (bottom) → light blue. Files: hypr/.config/hypr/conf/{colors,look,
+  animations}.lua.
+
 - **2026-11-22** — Theme generator removed (user: "I never really use
   anything other than blue ice"). Deleted theme/ (render.sh, apply.sh,
   4 palettes, style.toml, 17 templates, README), scripts/theme-picker.sh +
