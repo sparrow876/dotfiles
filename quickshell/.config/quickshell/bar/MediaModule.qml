@@ -32,14 +32,14 @@ MouseArea {
         else if (barWindow) Popups.toggle("media", barWindow.screen?.name ?? "")
     }
 
-    WheelHandler {
-        property real acc: 0
-        onWheel: event => {
-            acc += event.angleDelta.y
-            if (Math.abs(acc) < 120) return
-            if (acc < 0) Media.next(); else Media.previous()
-            acc = 0
-        }
+    // Same as the volume/brightness icons: the MouseArea's own wheel signal +
+    // WheelSteps (a separate WheelHandler here never received the scrolls).
+    // Scroll down = next track, up = previous.
+    WheelSteps { id: wheel }
+    onWheel: event => {
+        const n = wheel.steps(event)
+        if (n < 0) Media.next()
+        else if (n > 0) Media.previous()
     }
 
     Row {

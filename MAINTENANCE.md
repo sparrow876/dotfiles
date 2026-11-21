@@ -602,6 +602,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Scrolling on the bar's music did nothing although the
+  tooltip promised "scroll: skip" (MPD reports CanGoNext/CanGoPrevious =
+  true). MediaModule used a separate WheelHandler, which never got the wheel
+  events; every icon that does scroll (audio, brightness, tray) uses the
+  MouseArea's own onWheel + components/WheelSteps. Switched to that (down =
+  next, up = previous). Can't inject a scroll here (no ydotool/wlrctl) →
+  user-tested. Files: quickshell/.config/quickshell/bar/MediaModule.qml.
+
 - **2026-11-22** — Fastfetch layout (item 11 of the visual tweaks): boxed
   "System" / "Hardware" sections (custom modules with box-drawing lines in
   blue, titles in bold ice), fastfetch's built-in Nerd Font icon per line via
