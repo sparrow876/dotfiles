@@ -304,6 +304,7 @@ PanelWindow {
                         Layout.fillWidth: true
                         values: SystemStats.cpuHistory
                         capacity: SystemStats.historyLength
+                        glide: SystemStats.interval
                     }
                 }
 
@@ -334,6 +335,7 @@ PanelWindow {
                         implicitHeight: 46
                         values: SystemStats.memHistory
                         capacity: SystemStats.historyLength
+                        glide: SystemStats.interval
                         color: Theme.ice
                     }
                 }
@@ -424,6 +426,7 @@ PanelWindow {
                         values2: SystemStats.txHistory
                         max: Math.max(64 * 1024, ...SystemStats.rxHistory, ...SystemStats.txHistory)
                         capacity: SystemStats.historyLength
+                        glide: SystemStats.interval
                     }
                     KeyValue {
                         key: (panel.s?.net?.iface ?? "") + " · since boot"

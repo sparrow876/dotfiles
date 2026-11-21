@@ -3,6 +3,9 @@
 // by `max` (0..max -> bottom..top). Up to two series: `values` (color) and
 // optional `values2` (color2), e.g. download/upload. New points enter on the
 // right; until the history is full the left part shows a dotted baseline.
+// Motion is continuous: each new point glides in from the right over `glide`
+// ms (the poll interval), the oldest one slides out on the left, the dot
+// follows the curve at the right edge and a changing `max` eases in.
 import QtQuick
 import QtQuick.Shapes
 import qs
@@ -15,16 +18,26 @@ Item {
     property int capacity: 40                 // points across the full width
     property color color: Theme.lightBlue
     property color color2: Theme.ice
+    property int glide: 1500                  // = SystemStats.interval
     implicitHeight: 60
+
+    // one point's width; capacity - 2 steps across, so at rest the oldest
+    // point sits just off the left edge (it slides out instead of popping)
+    readonly property real step: width / Math.max(1, capacity - 2)
+    property real shift: 0                    // step -> 0 while a new point glides in
+    NumberAnimation { id: glideAnim; target: g; property: "shift"; from: g.step; to: 0; duration: g.glide }
+    onValuesChanged: if (values.length > 1) glideAnim.restart()
+    // vertical scale eases instead of jumping when max changes
+    property real vmax: max
+    Behavior on vmax { NumberAnimation { duration: 700; easing.type: Easing.OutCubic } }
 
     function points(vals) {
         const pts = []
         const n = vals.length
         if (n === 0 || width <= 0) return pts
-        const step = width / Math.max(1, capacity - 1)
-        const x0 = width - (n - 1) * step
+        const x0 = width - (n - 1) * step + shift
         for (let i = 0; i < n; i++) {
-            const v = Math.max(0, Math.min(1, vals[i] / Math.max(1e-9, max)))
+            const v = Math.max(0, Math.min(1, vals[i] / Math.max(1e-9, vmax)))
             pts.push({ x: x0 + i * step, y: height - 2 - v * (height - 6) })
         }
         return pts
@@ -69,6 +82,7 @@ Item {
 
     Shape {
         anchors.fill: parent
+        clip: true
         preferredRendererType: Shape.CurveRenderer
         ShapePath {
             strokeColor: "transparent"; strokeWidth: 0
@@ -102,6 +116,16 @@ Item {
         }
     }
 
+    // where the curve crosses the right edge (the newest point is still
+    // gliding in from beyond it): linear between the last two points
+    function head(pts) {
+        const n = pts.length
+        if (n === 0) return null
+        if (n === 1 || pts[n - 1].x <= width) return { x: Math.min(width, pts[n - 1].x), y: pts[n - 1].y }
+        const a = pts[n - 2], b = pts[n - 1]
+        const t = Math.max(0, Math.min(1, (width - a.x) / Math.max(1e-6, b.x - a.x)))
+        return { x: width, y: a.y + (b.y - a.y) * t }
+    }
     // dot on the newest value (+ halo)
     component Dot: Item {
         property var pt: null
@@ -111,8 +135,7 @@ Item {
         width: 12; height: 12
         Rectangle { anchors.fill: parent; radius: 6; color: Qt.rgba(parent.tint.r, parent.tint.g, parent.tint.b, 0.22) }
         Rectangle { anchors.centerIn: parent; width: 6; height: 6; radius: 3; color: parent.tint }
-        Behavior on y { NumberAnimation { duration: 300; easing.type: Easing.OutQuint } }
     }
-    Dot { pt: g.pts1.length ? g.pts1[g.pts1.length - 1] : null; tint: g.color }
-    Dot { pt: g.pts2.length ? g.pts2[g.pts2.length - 1] : null; tint: g.color2 }
+    Dot { pt: g.head(g.pts1); tint: g.color }
+    Dot { pt: g.head(g.pts2); tint: g.color2 }
 }

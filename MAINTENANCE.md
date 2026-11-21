@@ -603,6 +603,16 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-21** — Stats panel graphs glide instead of jumping every poll:
+  Graph.qml animates a horizontal `shift` (one step -> 0 over `glide` =
+  SystemStats.interval, linear) so each new point slides in from the right
+  and the oldest slides out on the left (step = width / (capacity - 2), so
+  it rests just off-screen; curves clipped). The dot follows the curve at
+  the right edge (interpolated), `max` changes ease (vmax, 700 ms).
+  Verified: three frames 0.4 s apart within one poll all differ, the line
+  moving left a few px each frame. Files: components/Graph.qml,
+  panel/StatsPanel.qml (glide bound to the poll interval).
+
 - **2026-11-21** — Stats panel: per-core bars → per-thread heat map (2 rows,
   tile brightness = load, warn/critical tones, exact % + T<n> label; footer
   names the busiest thread). Panel opened scrolled down: the PanelWindow
