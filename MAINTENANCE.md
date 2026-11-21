@@ -604,6 +604,16 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Clicking a window in the overview didn't switch to it.
+  activate() called Toplevel.activate() while the overview still held
+  exclusive keyboard focus (close() only starts the fade), so Hyprland
+  dropped the focus request. Now the action is stored (`pending`, a
+  `hl.dsp.focus({ window = "address:…" })` dispatch, which also switches
+  workspace; tile clicks the same with `{ workspace = N }`) and runs in the
+  hide animation's ScriptAction once the overlay is gone. Tested via the same
+  path (search + Enter): focus moved to the picked test window. Files:
+  quickshell/.config/quickshell/overview/Overview.qml.
+
 - **2026-11-22** — Overview shows ALL windows (user: a tiling WM has one or
   two windows per workspace, a per-workspace view loses the point). One grid
   of every window on workspaces 1-9, sorted by workspace then x/y

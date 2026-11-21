@@ -80,6 +80,7 @@ PanelWindow {
         Hyprland.refreshToplevels()       // window positions for the mini-maps
         search.text = ""
         hoverWs = 0
+        pending = ""
         // keyboard selection starts on the window you're in
         sel = Math.max(0, shown.findIndex(t => t.activated))
         open = true
@@ -95,15 +96,23 @@ PanelWindow {
         showAnim.stop()
         hideAnim.restart()
     }
-    function activate(t) { close(); t?.wayland?.activate() }
+    // Focus a window / go to a workspace only AFTER the overview has closed:
+    // while it holds exclusive keyboard focus Hyprland drops focus requests,
+    // so clicking a window used to do nothing. The action waits in `pending`
+    // and runs once the hide animation is done (ScriptAction below).
+    property string pending: ""
+    function addressOf(t) { const a = String(t.address); return a.startsWith("0x") ? a : "0x" + a }
+    function activate(t) {
+        if (!t) return
+        pending = `hl.dsp.focus({ window = "address:${addressOf(t)}" })`   // also switches workspace
+        close()
+    }
     function dispatch(lua) { Quickshell.execDetached(["hyprctl", "dispatch", lua]) }
     function moveTo(t, ws) {
-        const a = String(t.address)
-        const addr = a.startsWith("0x") ? a : "0x" + a
-        dispatch(`hl.dsp.window.move({ workspace = ${ws}, window = "address:${addr}", follow = false })`)
+        dispatch(`hl.dsp.window.move({ workspace = ${ws}, window = "address:${addressOf(t)}", follow = false })`)
         refreshTimer.restart()
     }
-    function goTo(ws) { close(); dispatch(`hl.dsp.focus({ workspace = ${ws} })`) }
+    function goTo(ws) { pending = `hl.dsp.focus({ workspace = ${ws} })`; close() }
     Timer { id: refreshTimer; interval: 150; onTriggered: Hyprland.refreshToplevels() }
 
     Connections {
@@ -488,6 +497,11 @@ PanelWindow {
             NumberAnimation { target: content; property: "opacity"; to: 0; duration: 160; easing.type: Easing.InOutCubic }
             NumberAnimation { target: content; property: "scale"; to: 0.96; duration: 170; easing.type: Easing.InOutCubic }
         }
-        ScriptAction { script: ov.visible = false }
+        ScriptAction {
+            script: {
+                ov.visible = false
+                if (ov.pending) { ov.dispatch(ov.pending); ov.pending = "" }
+            }
+        }
     }
 }
