@@ -154,9 +154,9 @@ PanelWindow {
         width: parent.width
         height: parent.height
         radius: Theme.rounding
-        gradient: Theme.surfaceGradient
+        color: Theme.glass
         border.width: 1
-        border.color: Theme.edge
+        border.color: Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.12)
         opacity: 0
         transform: Translate { id: slide; x: 40 }
         focus: true

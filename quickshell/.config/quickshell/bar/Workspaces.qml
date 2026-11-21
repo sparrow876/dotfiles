@@ -41,11 +41,7 @@ Item {
         width: root.cellWidth
         height: 30
         radius: height / 2
-        gradient: Gradient {
-            orientation: Gradient.Horizontal
-            GradientStop { position: 0; color: Theme.cyan }
-            GradientStop { position: 1; color: Theme.lightBlue }
-        }
+        color: Theme.lightBlue
         opacity: root.activeId >= 1 && root.activeId <= root.names.length ? 1 : 0
         Behavior on x { NumberAnimation { duration: 320; easing.type: Easing.OutQuint } }
         Behavior on opacity { NumberAnimation { duration: 150 } }

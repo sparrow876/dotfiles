@@ -602,6 +602,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Step 4 of the beautification batch UNDONE (user): popups,
+  notification popups, OSD, cheat sheet, stats panel and the workspace pill
+  are back to plain Blue Ice (files restored from 82e5d63^; Theme.qml lost
+  `cyan`, `edge`, `surfaceGradient`, `barGradient`). Steps 1, 2, 5 stay.
+  Files: quickshell/.config/quickshell/{Theme.qml, popups/PopupFrame.qml,
+  notifications/NotificationPopups.qml, osd/Osd.qml, cheatsheet/CheatSheet.qml,
+  panel/StatsPanel.qml, bar/Workspaces.qml}.
+
 - **2026-11-22** — Beautification batch (user picked 1, 2, 4, 5, 6, 11 of my
   suggestions). 1: GTK accent-color 'teal' (install.sh gsettings; Nautilus
   keeps its scoped Nord accent). 2: Hyprland dim_inactive 0.07, `no_dim` on

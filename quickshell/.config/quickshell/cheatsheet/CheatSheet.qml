@@ -91,9 +91,9 @@ PanelWindow {
         height: parent.height * 0.7
         anchors.centerIn: parent
         radius: Theme.rounding + 4
-        gradient: Theme.surfaceGradient
+        color: Theme.glass
         border.width: 1
-        border.color: Theme.edge
+        border.color: Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.12)
         opacity: 0
         scale: 0.97
         MouseArea { anchors.fill: parent }   // clicks inside don't close

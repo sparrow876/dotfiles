@@ -85,9 +85,9 @@ PanelWindow {
         id: pill
         anchors.fill: parent
         radius: height / 2
-        gradient: Theme.barGradient   // a miniature of the bar
+        color: Theme.glass
         border.width: 1
-        border.color: Theme.edge
+        border.color: Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.12)
         opacity: 0
         transform: Translate { id: slide; y: 12 }
 
