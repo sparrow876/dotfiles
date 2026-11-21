@@ -604,6 +604,17 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — README rewritten from scratch (user: the system changed a
+  lot). New sections: The look, What's in it (by area), Install, Everyday use,
+  generated Keybinds, Recovery (+ layout reset), Documentation (theme/README.md
+  removed), Repository layout (makepkg/, qimgv/, overview/, docs/), Credits
+  (Catppuccin dropped; conform.nvim, nvim-autopairs, rofi-calc, pix2tex, MPD,
+  rmpc, qimgv, Claude Code Usage Monitor added). Screenshots retaken on
+  workspace 2 with three demo windows (closed afterwards, user returned to
+  workspace 1): desktop, compact, overview, stats, launcher, calc, wallpaper,
+  powermenu (docs/screenshots/*.jpg, 1.9 MB). Files: README.md,
+  docs/screenshots/.
+
 - **2026-11-22** — Window overview (user: "gnome style swipe up to see all
   windows, tailored to this system"). quickshell overview/Overview.qml, one per
   monitor via Overlays (`overview` property + IPC toggle/open/close):

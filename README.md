@@ -1,79 +1,124 @@
 # dotfiles · Hyprland on Arch
 
-A calm blue-and-white Hyprland desktop for an **HP Victus 15 laptop**
-(Intel i5-12450H + **RTX 3050**, hybrid graphics) on Arch Linux. Bar, popups,
-notifications, panels and overlays are all **Quickshell**. Everything is in this
-repo and linked into place with GNU Stow; nothing is edited outside it by hand.
+A calm, blue Hyprland desktop for an **HP Victus 15 laptop** (Intel i5-12450H +
+**RTX 3050**, hybrid graphics) on Arch Linux. The bar, popups, notifications,
+panels, overview and every overlay are hand-written in **Quickshell**. All
+config lives in this repo and is linked into place with GNU Stow.
 
-![Desktop: bar, fastfetch and Neovim](docs/screenshots/desktop.jpg)
+![Desktop: the bar, fastfetch, Neovim and lazygit](docs/screenshots/desktop.jpg)
 
-| App launcher (ALT + D) | Power menu (ALT + Escape) |
+| Compact layout (bar button or ALT + G) | Window overview (3-finger swipe up or ALT + A) |
 |---|---|
-| ![App launcher](docs/screenshots/launcher.jpg) | ![Power menu](docs/screenshots/powermenu.jpg) |
+| ![Compact, i3-style layout](docs/screenshots/compact.jpg) | ![Window overview](docs/screenshots/overview.jpg) |
+| **System stats (ALT + S)** | **App launcher (ALT + D)** |
+| ![System stats panel](docs/screenshots/stats.jpg) | ![App launcher](docs/screenshots/launcher.jpg) |
+| **Calculator (ALT + =)** | **Wallpaper reel (ALT + W)** |
+| ![Calculator](docs/screenshots/calc.jpg) | ![Wallpaper reel](docs/screenshots/wallpaper.jpg) |
+| **Power menu (ALT + Escape)** | |
+| ![Power menu](docs/screenshots/powermenu.jpg) | |
+
+## The look
+
+- **Blue Ice** everywhere: deep navy, steel blue, light blue and ice-white, in
+  Hyprland, Quickshell, rofi, kitty, the prompt, fzf, bat, lazygit, fastfetch,
+  Qt apps, qimgv, Vesktop and MangoHud. GTK apps use a teal accent. Neovim,
+  Nautilus and zathura use Nord, a close cousin.
+- **The bar** is a "deep glacier" gradient: teal at both ends, steel blue, and
+  indigo in the middle, all at the same perceived brightness, so text stays
+  easy to read everywhere.
+- **Windows** get a soft aurora border (light blue → ice → cyan → a hint of
+  lavender) that sweeps once when focus changes, and is still otherwise.
+  Unfocused windows are dimmed slightly.
+- **Two layouts**, switched with an animation: *spaced* (floating rounded
+  bar, gaps, rounded windows, shadows) or *compact* (i3-style: no gaps, square
+  windows, the bar a flat strip on the top edge).
+- **Motion** is smooth and calm: things glide and settle, nothing bounces.
+  Nothing animates while you're not doing anything, so idle CPU stays near
+  zero.
 
 ## What's in it
 
+**Desktop**
 - **Hyprland 0.57** (Lua config) on the Intel iGPU; games and heavy apps on the
-  RTX 3050 through `prime-run`. Smooth, no-bounce animations, sensible floating
-  rules, tearing for games.
-- **Quickshell bar**: workspaces 一 二 三 四 五 六 七 八 九; music with play/pause (a
-  cut-off title scrolls smoothly on hover); tray with a drag-to-reorder order
-  that's remembered; stay-awake and recording indicators; Wi-Fi / Bluetooth /
-  audio menus that really connect, pair and switch devices; a brightness
-  control (scroll, or click for a slider with presets); battery,
-  notifications, clock + calendar.
-- **Overlays**: on-screen volume/brightness, notification popups + center with
-  Do Not Disturb (automatic during fullscreen games), system stats panel,
-  power menu, wallpaper reel (slanted cards, angled transition), keybind
-  cheat sheet, idle screen.
-- **Lock + login**: [qylock](https://github.com/Darkkal44/qylock) "winter" for
-  SDDM and the lock screen, with a small patch to its login code (no more hang
-  after pressing Enter on an empty password; shows why a login failed, e.g.
-  the 10-minute lockout after 3 wrong passwords). hypridle dims → idle screen
-  → locks → screen off, and suspends after 20 min **on battery only**. Closing
-  the lid locks when plugged in and suspends on battery.
-- **Rofi** launcher, clipboard history with image thumbnails, emoji picker,
-  calculator (**ALT + =**, also units and currencies) and a file finder for
-  your home folder (**ALT + SHIFT + F**, newest first).
+  RTX 3050 through `prime-run`. 9 workspaces (一 … 九), 3-finger swipe
+  left/right between them, sensible floating rules, tearing for games.
 - **Window overview** (3-finger swipe up or **ALT + A**): live thumbnails of
-  the workspace's windows, the 9 workspaces as mini-maps, type to search all
-  windows, drag a window onto a workspace to move it. Swipe down / Esc closes.
-- **Layout toggle** (bar button next to the coffee cup, or **ALT + G**):
-  spaced and rounded ⇄ i3-style compact (no gaps, square windows, the bar a
-  flat strip on the top edge), animated.
-- **Capture**: screenshots (frozen screen, annotate with satty), color picker,
-  OCR, LaTeX OCR (equation on screen → LaTeX code, offline with pix2tex, ~1 s
-  once loaded; one-time `scripts/latex-ocr/setup.sh`), screen recording with a 60 s instant-replay
+  the workspace's windows, all 9 workspaces as mini-maps, type to search every
+  window, drag a window onto a workspace to move it there. Swipe down or Esc
+  closes.
+
+**Bar** (Quickshell)
+- Workspaces with a sliding pill; the music in the middle (**click**:
+  play/pause, **middle-click**: a now-playing card with the cover, seek bar and
+  controls; a long title scrolls on hover).
+- On the right: the tray (drag icons to reorder; the order is remembered),
+  the layout button, stay-awake (coffee cup), recording indicator, Wi-Fi,
+  Bluetooth and audio menus that really connect, pair and switch devices,
+  brightness (scroll, or click for a slider with presets), battery,
+  notifications and the clock with a calendar.
+
+**Overlays and panels**
+- On-screen volume / brightness indicator, notification popups and a
+  notification center with Do Not Disturb (automatic during fullscreen games).
+- **System stats (ALT + S)**: CPU/RAM/GPU/disk gauges, a per-thread heat map
+  (hover a thread for its own graph), smooth graphs, GPUs, storage, network,
+  battery health, and top processes with app icons (end one with a confirm).
+- Power menu, wallpaper reel (slanted cards, angled transition), keybind cheat
+  sheet (**ALT + /**, searchable), idle screen.
+
+**Lock, login and idle**
+- [qylock](https://github.com/Darkkal44/qylock) "winter" for the SDDM login
+  and the lock screen (**SUPER + L**), with a small patch to its login code
+  (no hang on an empty password; it says why a login failed).
+- Idle: dim + idle screen → lock → screen off; suspend after 20 min **on
+  battery only**. Closing the lid locks when plugged in and suspends on
+  battery.
+
+**Launcher and tools**
+- **rofi**: app launcher (**ALT + D**), clipboard history with image
+  thumbnails (**ALT + C**), emoji picker (**ALT + SHIFT + E**), calculator
+  (**ALT + =**, also units and currencies; Enter copies), and a file finder for
+  your home folder (**ALT + SHIFT + F**, newest first; Enter opens, Shift +
+  Enter shows it in Nautilus).
+- **Capture**: screenshots on a frozen screen (annotate with satty), color
+  picker, OCR, **LaTeX OCR** (an equation on screen → LaTeX code, offline with
+  pix2tex, ~1 s once loaded), screen recording with a 60-second instant-replay
   buffer.
-- **Theme**: Blue Ice (dark/light blue + white) across Hyprland, Quickshell,
-  rofi, kitty, starship, fzf, bat, lazygit, fastfetch, Qt, qimgv, Vesktop and
-  MangoHud. Neovim, Nautilus and zathura use Nord.
-- **Shell**: kitty, zsh + Oh My Zsh, starship, eza, bat, ripgrep, fd, fzf,
-  zoxide, lazygit, fastfetch, a dropdown terminal (ALT + `), `lockdir` /
-  `unlockdir` to password-protect a folder (GnuPG AES-256), `ccmonitor` (live
-  Claude Code usage; one-time `scripts/ccmonitor/setup.sh`).
-- **Neovim**: Nord, LSP, Telescope, Treesitter, auto-closing brackets (and `$…$`
-  in LaTeX), LaTeX with live preview in
-  zathura (SyncTeX both ways), Rust (rust-analyzer, rustfmt + clippy on save).
-- **Nautilus**: Nord, Google Drive via rclone, PDF thumbnails, Move to Trash
-  everywhere, and right-click **Copy as Path**, **View All Images** (a folder
-  and all its subfolders in one qimgv grid) and **Lock with Password… /
-  Unlock…** for folders. Images open in qimgv, themed like the rest.
-- **Music**: rmpc (terminal player with album art and a cava visualiser) on
-  MPD; it shows in the bar's music widget and follows the media keys.
-- **Apps**: Zen, Outlook web app, Teams, Vesktop, Claude desktop, LocalSend,
-  Steam + MangoHud + GameMode (GE-Proton where a game needs it).
-- **Bluetooth**: devices pair from the bar menu and stay paired (blueman's
-  agent runs in the background; PIN / code confirmations arrive as
-  notifications).
-- **Safety net**: btrfs snapshots before/after every package change (snapper +
-  snap-pac), a careful `update` command, firewall, and a maintenance log.
+
+**Terminal and shell**
+- kitty, zsh + Oh My Zsh, starship, eza, bat, ripgrep, fd, fzf, zoxide,
+  lazygit, fastfetch (boxed, with icons), a dropdown terminal (**ALT + `**).
+- `lockdir` / `unlockdir` to password-protect a folder (GnuPG AES-256),
+  `view-all-images` (a folder and its subfolders in one image grid),
+  `ccmonitor` (live Claude Code usage and limits), `update` (safe system
+  updates, below).
+
+**Neovim**
+- Nord, LSP, Telescope, Treesitter, completion, file tree, git signs, lazygit.
+- **Space c f** formats the file (C/C++, LaTeX, Rust, Python; Rust also on
+  save); brackets and `$…$` (in LaTeX) close themselves without getting in the
+  way.
+- LaTeX with live preview in zathura (SyncTeX both ways), Rust with
+  rust-analyzer and clippy.
+
+**Files and apps**
+- **Nautilus**: Nord, Google Drive via rclone, PDF thumbnails, right-click
+  **Copy as Path**, **View All Images** and **Lock with Password… / Unlock…**.
+  Images open in **qimgv**.
+- **Music**: rmpc (terminal player with album art and a visualiser) on MPD,
+  shown in the bar and on the media keys.
+- Zen, Outlook web app, Teams, Vesktop, Claude desktop, LocalSend; Steam +
+  MangoHud + GameMode (GE-Proton where a game needs it).
+
+**Safety net**
+- btrfs snapshots before and after every package change (snapper + snap-pac),
+  a careful `update` command, a firewall, and a dated maintenance log.
 
 ## Install (fresh Arch Linux)
 
-Assumes Arch on **btrfs** with systemd-boot, NetworkManager and the AUR helper
-`yay`, on this laptop's hardware. Other machines: read the GPU (§2) and
-hardware notes in `system/ROOT-STEPS.md` first.
+Assumes Arch on **btrfs** with systemd-boot and NetworkManager, on this
+laptop's hardware. On other machines, read the GPU and hardware notes in
+`system/ROOT-STEPS.md` first.
 
 ```sh
 git clone https://github.com/sparrow876/dotfiles ~/dotfiles
@@ -88,43 +133,44 @@ Short version:
 2. `bash system/root-steps/1.5-home-subvolumes.sh` from a TTY (keeps caches,
    downloads, recordings and Steam out of snapshots).
 3. `bash system/root-steps/2-nvidia.sh`, then **reboot**.
-4. Install `yay` (ROOT-STEPS §5.0), then `bash system/root-steps/3-system.sh`:
-   checks, performance profile, multilib, **all packages** (`packages/*.txt`),
-   the user-level `./install.sh`, timers, firewall.
-5. `./install.sh` again only if you skipped step 4 or changed something: the
-   user-level part (no sudo): folders, default wallpaper, pinned clones (Oh My
-   Zsh, plugins, qylock), theme files, stow links, Qt and GTK settings.
+4. Install the AUR helper `yay` (ROOT-STEPS §5.0), then
+   `bash system/root-steps/3-system.sh`: checks, performance profile,
+   multilib, **all packages** (`packages/*.txt`), the user-level
+   `./install.sh`, timers, firewall.
+5. `./install.sh` again only if you skipped step 4 or changed something. It's
+   the user-level part (no sudo): folders, default wallpaper, pinned clones
+   (Oh My Zsh, plugins, qylock), stow links, Qt and GTK settings.
 6. `chsh -s /usr/bin/zsh` (ROOT-STEPS §8).
 7. Lock + login screen: qylock's two scripts, then
    `bash system/root-steps/4-login.sh` (ROOT-STEPS §10), and reboot into SDDM.
 8. Laptop lid (lock when plugged in, suspend on battery): ROOT-STEPS §14.
-9. Move to Trash in Downloads / Recordings / .cache / Steam (their own btrfs
-   subvolumes): `bash system/root-steps/5-trash-mounts.sh` (ROOT-STEPS §15).
-10. Optional: Google Drive and folder colors (§11), work/chat apps (§12),
+9. Move to Trash in Downloads / Recordings / .cache / Steam:
+   `bash system/root-steps/5-trash-mounts.sh` (ROOT-STEPS §15).
+10. Optional: Google Drive and folder colours (§11), work/chat apps (§12),
     gaming (§13 + [system/GAMING.md](system/GAMING.md)), Rust
-    (`./install.sh --only rust` after `rustup` is installed).
+    (`./install.sh --only rust` after `rustup`), LaTeX OCR
+    (`scripts/latex-ocr/setup.sh`), ccmonitor (`scripts/ccmonitor/setup.sh`).
 
 `./install.sh` (without `--packages`) never uses `sudo`, never edits `/etc` and
-never runs third-party scripts. `./install.sh --help` lists its steps. It also
-applies this repo's lock-screen patch to the qylock clone
-(`lockscreen/apply-patches.sh`), so run qylock's `quickshell.sh` after it.
+never runs third-party scripts; `./install.sh --help` lists its steps. Every
+AUR package was reviewed first (`packages/aur.txt` notes the reviewed AUR
+commit), and the two Python tools install only checksum-pinned packages (their
+`requirements.txt`).
 
 ## Everyday use
 
-- **ALT + /** shows every shortcut (searchable). The full table is below.
-- **ALT + W** picks a wallpaper (drop images in
-  `~/Pictures/Wallpapers`; they're listed in natural order: w1, w2, …, w10).
-- **Bar**: drag tray icons to reorder them; scroll on the sun for brightness
-  (click for the slider); hover a long song title to read it all.
-- **`update`** in a terminal updates the system safely: Arch news first (stops
-  if something needs a manual step), then `yay -Syu`, then checks. `update
-  --check` changes nothing. See [zsh/SHELL-CHEATSHEET.md](zsh/SHELL-CHEATSHEET.md).
-- **`lockdir <folder>`** turns a folder into one password-protected file;
-  **`unlockdir <folder>.locked`** brings it back (also in Nautilus's
-  right-click menu).
-- **`view-all-images [folder]`** opens every image in a folder and its
-  subfolders as one thumbnail grid in qimgv (also Nautilus right-click
-  **View All Images**). Browsing only: delete/rename the real files in Nautilus.
+- **ALT + /** shows every shortcut, searchable; the full table is below.
+- **3-finger swipe up** (or **ALT + A**) shows all windows; swipe down closes.
+- **ALT + G** (or the bar button left of the coffee cup) switches between the
+  spaced and compact layouts. The choice is remembered.
+- **ALT + W** picks a wallpaper (put images in `~/Pictures/Wallpapers`; they're
+  listed in natural order: w1, w2, …, w10).
+- **Bar**: drag tray icons to reorder them; scroll on the sun for brightness;
+  middle-click the music for the now-playing card.
+- **`update`** in a terminal updates the system safely: Arch news first (it
+  stops if something needs a manual step), then `yay -Syu`, then checks.
+  `update --check` changes nothing. See
+  [zsh/SHELL-CHEATSHEET.md](zsh/SHELL-CHEATSHEET.md).
 - Games: launch options `prime-run gamemoderun mangohud %command%`
   ([system/GAMING.md](system/GAMING.md)).
 
@@ -239,8 +285,9 @@ Generated from the live Hyprland binds by `scripts/keybinds-to-md.sh README.md`
   number); how to roll back, in plain English: ROOT-STEPS §1.6.
 - **Login screen broken**: from a TTY, `sudo systemctl disable sddm.service`,
   reboot, log in on the TTY and type `start-hyprland`.
+- **Stuck in the compact layout or odd gaps**: `scripts/layout-mode.sh spaced`.
 - **No sound**: MAINTENANCE.md §4.4 (card profile).
-- **Qt apps or qimgv lose their colours**: `./install.sh --only qt`.
+- **Qt apps or qimgv lost their colours**: `./install.sh --only qt`.
 
 More in [MAINTENANCE.md](MAINTENANCE.md) §8.
 
@@ -249,10 +296,9 @@ More in [MAINTENANCE.md](MAINTENANCE.md) §8.
 | File | What's in it |
 |------|--------------|
 | [system/ROOT-STEPS.md](system/ROOT-STEPS.md) | every root action, in order, with undo |
-| [MAINTENANCE.md](MAINTENANCE.md) | how the system is built, gotchas, recipes, dated log of breakages and fixes |
+| [MAINTENANCE.md](MAINTENANCE.md) | how the system is built, gotchas, recipes, decisions, and a dated log of every change and fix |
 | [zsh/SHELL-CHEATSHEET.md](zsh/SHELL-CHEATSHEET.md) | the shell and CLI tools, in plain English |
 | [nvim/CHEATSHEET.md](nvim/CHEATSHEET.md) | Neovim + LaTeX, in plain English |
-| [theme/README.md](theme/README.md) | palettes and how to add a theme |
 | [system/GAMING.md](system/GAMING.md) | Steam, launch options, controller, per-game notes |
 | [system/APPS.md](system/APPS.md) | Outlook, Teams, Vesktop, Claude, Google Drive, LocalSend |
 | [lockscreen/README.md](lockscreen/README.md) | how the qylock lock/login screen is set up, and its patch |
@@ -260,15 +306,21 @@ More in [MAINTENANCE.md](MAINTENANCE.md) §8.
 ## Repository layout
 
 ```
-hypr/ quickshell/ rofi/ kitty/ zsh/ starship/ fastfetch/ lazygit/ bat/
-nvim/ zathura/ gtk/ qt/ xdg/ applications/ systemd/ vesktop/ mangohud/ gamemode/
-thumbnailers/ nautilus/ bin/ mpd/ rmpc/
+hypr/ quickshell/ rofi/ kitty/ zsh/ starship/ fastfetch/ lazygit/ bat/ nvim/
+zathura/ gtk/ qt/ xdg/ applications/ systemd/ vesktop/ mangohud/ gamemode/
+thumbnailers/ nautilus/ bin/ mpd/ rmpc/ makepkg/
                       stow packages: each mirrors $HOME (e.g. kitty/.config/kitty/)
+quickshell/.config/quickshell/
+    bar/ popups/ notifications/ osd/ overview/ panel/ powermenu/ wallpaper/
+    idle/ cheatsheet/ services/ components/      the whole shell, one folder per part
+qimgv/                qimgv's colours (copied into place: qimgv rewrites its file)
 lockscreen/           qylock notes + GPL patch for its login code
-scripts/              screenshot, OCR, recording, clipboard, lock, update, ...
+scripts/              screenshot, OCR, LaTeX OCR, recording, clipboard, calculator,
+                      file finder, layout mode, lock, update, ...
 packages/             pacman.txt, aur.txt (PKGBUILDs reviewed), base.txt
 system/               ROOT-STEPS.md, root-step scripts, /etc snippets, units, docs
-install.sh            user-level setup (stow, clones, theme, settings)
+docs/screenshots/     the pictures above
+install.sh            user-level setup (stow, clones, settings)
 ```
 
 ## Credits
@@ -279,18 +331,20 @@ Built on the work of many projects, each under its own license:
 [qylock](https://github.com/Darkkal44/qylock) by Darkkal44 (lock and login
 screen, GPL-3.0; cloned by `install.sh`, not included here) ·
 [awww](https://codeberg.org/LGFae/awww) ·
-[rofi](https://github.com/davatorium/rofi) + rofimoji ·
+[rofi](https://github.com/davatorium/rofi), rofimoji, rofi-calc + libqalculate ·
 [kitty](https://sw.kovidgoyal.net/kitty/) ·
 [Oh My Zsh](https://ohmyz.sh), zsh-autosuggestions, zsh-syntax-highlighting ·
 starship, fastfetch, eza, bat, ripgrep, fd, fzf, zoxide, lazygit ·
-[Neovim](https://neovim.io) with lazy.nvim, nord.nvim, Telescope, nvim-treesitter,
-mason, blink.cmp, neo-tree, lualine, bufferline, which-key, gitsigns,
-toggleterm, vimtex · zathura ·
-grim, slurp, satty, hyprpicker, tesseract, gpu-screen-recorder, cliphist ·
+[Neovim](https://neovim.io) with lazy.nvim, nord.nvim, Telescope,
+nvim-treesitter, mason, blink.cmp, conform.nvim, nvim-autopairs, neo-tree,
+lualine, bufferline, which-key, gitsigns, toggleterm, vimtex · zathura ·
+grim, slurp, satty, hyprpicker, tesseract,
+[pix2tex](https://github.com/lukas-blecher/LaTeX-OCR), gpu-screen-recorder,
+cliphist · MPD, rmpc · qimgv ·
+[Claude Code Usage Monitor](https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor) ·
 MangoHud, GameMode, GE-Proton · rclone · blueman · nautilus-python · GnuPG ·
-[Catppuccin](https://catppuccin.com) palettes (MIT) ·
-[Nord](https://www.nordtheme.com) ·
-Papirus icons · Bibata cursor · JetBrains Mono Nerd Font.
+[Nord](https://www.nordtheme.com) · Papirus icons · Bibata cursor ·
+JetBrains Mono Nerd Font.
 
 ## License
 
