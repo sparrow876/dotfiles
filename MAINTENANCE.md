@@ -606,8 +606,10 @@ root cause, fix, files.
 - **2026-11-21** — Battery health baseline (user asked; no change made):
   BAT0 (HP "Primary", Li-ion) energy_full 52.65 Wh / energy_full_design
   70.07 Wh = 75.1%, cycle_count 49 (`/sys/class/power_supply/BAT0`, same as
-  `upower -i`). High wear for 49 cycles → calendar/heat ageing at 100% on AC
-  (or a mis-learned full value). No charge_control_end_threshold in sysfs on
+  `upower -i`). These come from the battery's gauge chip (lifetime values,
+  not reset by reinstalling the OS). Laptop is 3-4 years old and mostly on
+  AC → few cycles; 75% is normal calendar ageing for that (sitting at 100%,
+  warm), not abnormal wear. No charge_control_end_threshold in sysfs on
   this model; advised: one full calibration cycle, HP BIOS "Adaptive Battery
   Optimizer", HP F2 Battery Test if under warranty. Recheck these numbers
   later to see the trend.
