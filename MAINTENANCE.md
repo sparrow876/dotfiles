@@ -540,6 +540,9 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   (> 0 = fix included). Last checked 2026-11-19: linux 7.3.4.arch1-2 +
   nvidia-open 620.70.06-3 (both rebuilds) still "Disabled by default";
   NVIDIA's new 620.73.04 (2026-11-18) does NOT contain it; PR #1512 still open.
+  Rechecked 2026-11-21 on linux 7.3.5.arch1-1 + nvidia-open 620.73.04-1:
+  still "Disabled by default", 0 ms suspended. PR #1512 unmerged; two Arch
+  users report 620.73.04 + #1512 rebuilt locally (nvidia-open-dkms) fixes it.
 - Bluetooth PIN / code confirmation is handled by blueman-applet (the pairing
   agent, since 2026-11-11): notifications with Confirm/Deny or a PIN dialog, not
   inside the bar menu itself.
