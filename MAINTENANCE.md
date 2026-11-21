@@ -603,6 +603,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-21** — Stats panel: per-core bars → per-thread heat map (2 rows,
+  tile brightness = load, warn/critical tones, exact % + T<n> label; footer
+  names the busiest thread). Panel opened scrolled down: the PanelWindow
+  persists between opens, so the Flickable kept its old contentY; show() now
+  resets it to 0. (A property named `top` on a StyledText failed to load:
+  "Cannot override FINAL property", it's the anchor line; renamed.) Files:
+  quickshell/.config/quickshell/panel/StatsPanel.qml.
+
 - **2026-11-21** — Stats panel (ALT + S) redesign (user: "looks kinda basic").
   Same data, polling and behaviour (Esc/outside click, kill confirm, frozen
   process rows); new look: gradient hero (clock, date, host/uptime/kernel

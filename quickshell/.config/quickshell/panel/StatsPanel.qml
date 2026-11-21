@@ -60,6 +60,7 @@ PanelWindow {
         SystemStats.active = true
         hideAnim.stop()
         visible = true
+        scroller.contentY = 0   // always open at the top (the window persists between opens)
         showAnim.restart()
         frame.forceActiveFocus()
     }
@@ -83,8 +84,6 @@ PanelWindow {
     function tone(levelName) {
         return levelName === "critical" ? Theme.critical : levelName === "warn" ? Theme.warn : Theme.lightBlue
     }
-    // gradient start for a tone: the blue ramp normally, solid for warnings
-    function tone2(levelName) { return levelName === "normal" ? Theme.blue : tone(levelName) }
     function pct(v) { return Math.round(Math.max(0, v) * 100) + "%" }
 
     // derived numbers shared by the overview and the sections
@@ -107,6 +106,7 @@ PanelWindow {
         Keys.onEscapePressed: panel.close()
 
         Flickable {
+            id: scroller
             anchors.fill: parent
             anchors.margins: 14
             contentHeight: content.implicitHeight
@@ -239,40 +239,64 @@ PanelWindow {
                             sub: panel.s ? `${panel.s.load[1].toFixed(2)} · ${panel.s.load[2].toFixed(2)}` : ""
                         }
                     }
-                    // Per-core bars
-                    Row {
+                    // Per-thread heat map: one tile per thread, brighter = busier
+                    // (warning tones when hot), with the exact percentage
+                    Grid {
+                        id: coreGrid
+                        readonly property int n: SystemStats.cores.length
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 48
                         Layout.topMargin: 2
-                        spacing: 4
+                        columns: n > 8 ? Math.ceil(n / 2) : Math.max(1, Math.min(n, 4))
+                        spacing: 6
                         Repeater {
-                            // a count, not the array: bars stay and animate between polls
-                            model: SystemStats.cores.length
+                            // a count, not the array: tiles stay and animate between polls
+                            model: coreGrid.n
                             delegate: Rectangle {
-                                id: coreBar
+                                id: cell
                                 required property int index
-                                readonly property real load: SystemStats.cores[index] ?? 0
+                                readonly property real load: Math.min(1, SystemStats.cores[index] ?? 0)
                                 readonly property string lvl: SystemStats.level(load, 0.85, 0.95)
-                                width: (parent.width - (SystemStats.cores.length - 1) * 4) / Math.max(1, SystemStats.cores.length)
-                                height: 48
-                                radius: 4
-                                color: Qt.rgba(Theme.base.r, Theme.base.g, Theme.base.b, 0.22)
+                                readonly property color heat: lvl === "normal" ? Theme.lightBlue : panel.tone(lvl)
+                                readonly property bool bright: load > 0.55   // dark text on a bright tile
+                                width: (coreGrid.width - (coreGrid.columns - 1) * coreGrid.spacing) / coreGrid.columns
+                                height: 44
+                                radius: 9
+                                color: Qt.rgba(Theme.base.r, Theme.base.g, Theme.base.b, 0.35)
+                                border.width: 1
+                                border.color: Qt.rgba(cell.heat.r, cell.heat.g, cell.heat.b, 0.10 + 0.45 * cell.load)
                                 Rectangle {
-                                    anchors.bottom: parent.bottom
-                                    width: parent.width
-                                    height: Math.max(3, parent.height * coreBar.load)
-                                    radius: 4
-                                    gradient: Gradient {
-                                        GradientStop { position: 0; color: coreBar.lvl === "normal" ? Theme.ice : panel.tone(coreBar.lvl) }
-                                        GradientStop { position: 1; color: panel.tone2(coreBar.lvl) }
+                                    anchors.fill: parent
+                                    radius: parent.radius
+                                    color: cell.heat
+                                    opacity: 0.06 + 0.78 * cell.load
+                                    Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.OutQuint } }
+                                    Behavior on color { ColorAnimation { duration: 300 } }
+                                }
+                                Column {
+                                    anchors.centerIn: parent
+                                    StyledText {
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        text: Math.round(cell.load * 100) + "%"
+                                        font.pixelSize: Theme.fontSizeSmall
+                                        font.weight: Font.Bold
+                                        color: cell.bright ? Theme.base : Theme.text
                                     }
-                                    Behavior on height { NumberAnimation { duration: 350; easing.type: Easing.OutQuint } }
+                                    StyledText {
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        text: "T" + cell.index
+                                        font.pixelSize: Theme.fontSizeSmall - 3
+                                        color: cell.bright ? Qt.rgba(Theme.base.r, Theme.base.g, Theme.base.b, 0.75) : Theme.muted
+                                    }
                                 }
                             }
                         }
                     }
                     StyledText {
-                        text: `${SystemStats.cores.length} threads · last 60 s`
+                        // busiest thread + what the graph below covers
+                        readonly property int busiest: SystemStats.cores.reduce((b, v, i, a) => v > a[b] ? i : b, 0)
+                        text: SystemStats.cores.length
+                              ? `${SystemStats.cores.length} threads · busiest T${busiest} ${Math.round((SystemStats.cores[busiest] ?? 0) * 100)}% · graph: last 60 s`
+                              : ""
                         color: Theme.muted
                         font.pixelSize: Theme.fontSizeSmall - 1
                     }
