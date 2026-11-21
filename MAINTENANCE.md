@@ -602,6 +602,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Bar gradient more vivid (user: "too washed out"): barRose
+  #802e70@0.95, barLavender #4d409e@0.93, centre navy @0.85 (measured ends
+  #772C6B, quarters #463A91, symmetric). White text 8.4:1; Theme.muted fell
+  to 4.1-4.3:1 there, so the bar uses new Theme.barMuted (muted + 40% ice,
+  5.2-5.4:1) for the date and empty workspace numerals. Files:
+  quickshell/.config/quickshell/{Theme.qml,bar/Clock.qml,bar/Workspaces.qml}.
+
 - **2026-11-22** — Bar gradient redone (user: the pastel version "just looks
   like a white blur", wanted tasteful + symmetric). Pastel tints at 50% over
   the translucent glass washed out under the blur. Now deep, mostly opaque
