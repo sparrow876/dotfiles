@@ -4,7 +4,8 @@ pragma Singleton
 // (An IpcHandler inside a per-monitor Variants delegate only works for the
 // first monitor: Quickshell ignores a second handler for the same target.)
 // Each overlay watches its property and opens when it names its monitor.
-//   qs ipc call panel|powermenu|wallpaper|cheatsheet toggle
+//   qs ipc call panel|powermenu|wallpaper|cheatsheet|overview toggle
+//   qs ipc call overview open|close   (3-finger swipe up / down)
 //   qs ipc call idlescreen enter|leave
 import QtQuick
 import Quickshell
@@ -19,6 +20,7 @@ Singleton {
     property string powermenu: ""
     property string wallpaper: ""
     property string cheatsheet: ""
+    property string overview: ""
     // The idle screen covers every monitor
     property bool idle: false
 
@@ -46,6 +48,12 @@ Singleton {
     IpcHandler {
         target: "cheatsheet"
         function toggle(): void { root.toggle("cheatsheet") }
+    }
+    IpcHandler {
+        target: "overview"
+        function toggle(): void { root.toggle("overview") }
+        function open(): void { root.overview = root.focusedScreen() }
+        function close(): void { root.overview = "" }
     }
     IpcHandler {
         target: "idlescreen"

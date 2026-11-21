@@ -32,7 +32,15 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
   the 10-minute lockout after 3 wrong passwords). hypridle dims → idle screen
   → locks → screen off, and suspends after 20 min **on battery only**. Closing
   the lid locks when plugged in and suspends on battery.
-- **Rofi** launcher, clipboard history with image thumbnails, emoji picker.
+- **Rofi** launcher, clipboard history with image thumbnails, emoji picker,
+  calculator (**ALT + =**, also units and currencies) and a file finder for
+  your home folder (**ALT + SHIFT + F**, newest first).
+- **Window overview** (3-finger swipe up or **ALT + A**): live thumbnails of
+  the workspace's windows, the 9 workspaces as mini-maps, type to search all
+  windows, drag a window onto a workspace to move it. Swipe down / Esc closes.
+- **Layout toggle** (bar button next to the coffee cup, or **ALT + G**):
+  spaced and rounded ⇄ i3-style compact (no gaps, square windows, the bar a
+  flat strip on the top edge), animated.
 - **Capture**: screenshots (frozen screen, annotate with satty), color picker,
   OCR, LaTeX OCR (equation on screen → LaTeX code, offline with pix2tex, ~1 s
   once loaded; one-time `scripts/latex-ocr/setup.sh`), screen recording with a 60 s instant-replay
@@ -137,12 +145,15 @@ Generated from the live Hyprland binds by `scripts/keybinds-to-md.sh README.md`
 | `ALT + C` | Clipboard history |
 | `ALT + SHIFT + E` | Emoji picker |
 | `ALT + E` | Files (Nautilus) |
+| `ALT + equal` | Calculator |
+| `ALT + SHIFT + F` | Find a file in your home folder |
 | `` ALT + ` `` | Dropdown terminal |
 
 ### Windows
 
 | Keys | Action |
 |------|--------|
+| `ALT + A` | Overview of all windows (also 3-finger swipe up) |
 | `ALT + Q` | Close window |
 | `ALT + F` | Toggle fullscreen |
 | `ALT + V` | Toggle floating |
@@ -158,6 +169,19 @@ Generated from the live Hyprland binds by `scripts/keybinds-to-md.sh README.md`
 | `ALT + SHIFT + L` / `ALT + SHIFT + →` | Move window right |
 | `ALT + Left-drag` | Move with mouse (drag) |
 | `ALT + Right-drag` | Resize with mouse (drag) |
+
+### System
+
+| Keys | Action |
+|------|--------|
+| `ALT + G` | Toggle layout (spaced / compact, no gaps) |
+| `ALT + I` | Toggle idle inhibitor (stay awake) |
+| `ALT + N` | Notification center |
+| `ALT + S` | System stats panel |
+| `ALT + W` | Wallpaper selector |
+| `ALT + /` | Keybind cheat sheet |
+| `ALT + Esc` | Power menu |
+| `SUPER + L` | Lock screen |
 
 ### Workspaces
 
@@ -181,18 +205,6 @@ Generated from the live Hyprland binds by `scripts/keybinds-to-md.sh README.md`
 | `ALT + SHIFT + R` | Start/stop recording a region |
 | `ALT + CTRL + R` | Replay mode on / save last 60 s |
 | `ALT + CTRL + SHIFT + R` | Replay mode on / off |
-
-### System
-
-| Keys | Action |
-|------|--------|
-| `ALT + I` | Toggle idle inhibitor (stay awake) |
-| `ALT + N` | Notification center |
-| `ALT + S` | System stats panel |
-| `ALT + W` | Wallpaper selector |
-| `ALT + /` | Keybind cheat sheet |
-| `ALT + Esc` | Power menu |
-| `SUPER + L` | Lock screen |
 
 ### Media
 

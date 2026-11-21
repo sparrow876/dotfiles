@@ -21,7 +21,8 @@ PopupFrame {
     contentWidth: 380
 
     readonly property var p: Media.player
-    readonly property string art: p?.trackArtUrl ?? ""
+    // only while open: players delete old cover files when the track changes
+    readonly property string art: card.visible ? (p?.trackArtUrl ?? "") : ""
     readonly property bool canSeek: (p?.canSeek ?? false) && (p?.positionSupported ?? false)
     readonly property real length: (p?.lengthSupported ?? false) ? (p?.length ?? 0) : 0
     readonly property var niceNames: ({ "Mozilla zen": "Zen", "Mozilla Firefox": "Firefox" })

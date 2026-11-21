@@ -10,6 +10,7 @@ import qs.cheatsheet
 import qs.idle
 import qs.notifications
 import qs.osd
+import qs.overview
 import qs.panel
 import qs.powermenu
 import qs.wallpaper
@@ -58,6 +59,11 @@ ShellRoot {
         delegate: CheatSheet {}
     }
 
+    // Window overview (3-finger swipe up, ALT + A): qs ipc call overview toggle
+    Variants {
+        model: Quickshell.screens
+        delegate: Overview {}
+    }
     // Notification popups (top-right)
     Variants {
         model: Quickshell.screens

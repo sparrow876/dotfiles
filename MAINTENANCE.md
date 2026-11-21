@@ -122,6 +122,7 @@ AUR helper: **yay** (not paru).
 | `idle` | `toggle`, `status` | ALT+I (coffee cup) |
 | `idlescreen` | `enter`, `leave` | hypridle via `scripts/idle-dim.sh` |
 | `cheatsheet` | `toggle` | ALT+/ |
+| `overview` | `toggle`, `open`, `close` | ALT+A, 3-finger swipe up (open) / down (close) |
 | `notifications` | `dnd`, `clear`, `status`, `clickLatest` | — |
 | `recorder` | `toggleFull`, `toggleRegion`, `replay`, `toggleReplay`, `toggleMic`, `status` | ALT+R, ALT+Shift+R, ALT+Ctrl+R, ALT+Ctrl+Shift+R |
 | `audio` | `devices` | debugging |
@@ -602,6 +603,29 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-22** — Window overview (user: "gnome style swipe up to see all
+  windows, tailored to this system"). quickshell overview/Overview.qml, one per
+  monitor via Overlays (`overview` property + IPC toggle/open/close):
+  search field (filters all windows), 9 workspace mini-maps (window rects from
+  HyprlandToplevel.lastIpcObject at/size after Hyprland.refreshToplevels(),
+  app icons, dot on the active one), the selected workspace's windows as live
+  ScreencopyView thumbnails (captureSource = toplevel.wayland, only while
+  open) in a grid sized for the biggest thumbnails; click = wayland.activate(),
+  middle-click / ✕ = close(), drag onto a tile = `hl.dsp.window.move({
+  workspace, window = "address:…", follow = false })` (follow=false = silent,
+  from LuaBindingsDispatchers.cpp; without it the view follows), click tile =
+  show it, double-click = go there, arrows/Enter, Esc. Triggers: ALT + A and
+  hl.gesture 3 fingers up/down with a Lua function action (fires once at the
+  end; directions per GestureTypes.hpp / LuaFunctionGesture.cpp). Tested with a
+  test window + search (live thumbnail, strip mini-map); idle cost with it
+  closed 0.1% of a core. During testing a non-silent move switched the user to
+  workspace 9 (asked them to press ALT + 6). Also: icon fallback for unknown
+  app ids; MediaCard loads cover art only while open (players delete old art
+  files → "Cannot open" warnings). Files: quickshell/.config/quickshell/
+  {overview/Overview.qml, services/Overlays.qml, shell.qml,
+  popups/MediaCard.qml}, hypr/.config/hypr/conf/{input,keybinds}.lua,
+  README.md.
 
 - **2026-11-22** — Layout toggle made smooth (user). Bar: the layer surface no
   longer changes size (full width × 52, exclusionMode Normal, exclusiveZone
