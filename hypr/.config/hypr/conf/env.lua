@@ -21,7 +21,7 @@ hl.env("QT_QPA_PLATFORM", "wayland;xcb", true)
 hl.env("CLUTTER_BACKEND", "wayland")
 -- SDL_VIDEODRIVER=wayland is deliberately NOT set: it breaks some games/Proton.
 
--- Qt look: qt6ct (palette from theme/qt.sh). Qt5 apps would stay unthemed
+-- Qt look: qt6ct (palette from scripts/qt-config.sh). Qt5 apps would stay unthemed
 -- (they only load "qt5ct"); none are installed, only the qt5ct tool itself.
 hl.env("QT_QPA_PLATFORMTHEME", "qt6ct", true)
 hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1", true)

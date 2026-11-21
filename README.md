@@ -37,10 +37,9 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
   OCR, LaTeX OCR (equation on screen → LaTeX code, offline with pix2tex, ~1 s
   once loaded; one-time `scripts/latex-ocr/setup.sh`), screen recording with a 60 s instant-replay
   buffer.
-- **Themes**: one palette drives every app (Hyprland, Quickshell, rofi, kitty,
-  starship, fzf, bat, lazygit, fastfetch, Qt, Vesktop, MangoHud). Switch with
-  **ALT + T**: Blue Ice (default), Catppuccin Mocha / Macchiato / Frappé.
-  Neovim, Nautilus and zathura stay Nord.
+- **Theme**: Blue Ice (dark/light blue + white) across Hyprland, Quickshell,
+  rofi, kitty, starship, fzf, bat, lazygit, fastfetch, Qt, qimgv, Vesktop and
+  MangoHud. Neovim, Nautilus and zathura use Nord.
 - **Shell**: kitty, zsh + Oh My Zsh, starship, eza, bat, ripgrep, fd, fzf,
   zoxide, lazygit, fastfetch, a dropdown terminal (ALT + `), `lockdir` /
   `unlockdir` to password-protect a folder (GnuPG AES-256), `ccmonitor` (live
@@ -105,7 +104,7 @@ applies this repo's lock-screen patch to the qylock clone
 ## Everyday use
 
 - **ALT + /** shows every shortcut (searchable). The full table is below.
-- **ALT + T** switches the theme. **ALT + W** picks a wallpaper (drop images in
+- **ALT + W** picks a wallpaper (drop images in
   `~/Pictures/Wallpapers`; they're listed in natural order: w1, w2, …, w10).
 - **Bar**: drag tray icons to reorder them; scroll on the sun for brightness
   (click for the slider); hover a long song title to read it all.
@@ -191,7 +190,6 @@ Generated from the live Hyprland binds by `scripts/keybinds-to-md.sh README.md`
 | `ALT + N` | Notification center |
 | `ALT + S` | System stats panel |
 | `ALT + W` | Wallpaper selector |
-| `ALT + T` | Theme selector |
 | `ALT + /` | Keybind cheat sheet |
 | `ALT + Esc` | Power menu |
 | `SUPER + L` | Lock screen |
@@ -230,7 +228,7 @@ Generated from the live Hyprland binds by `scripts/keybinds-to-md.sh README.md`
 - **Login screen broken**: from a TTY, `sudo systemctl disable sddm.service`,
   reboot, log in on the TTY and type `start-hyprland`.
 - **No sound**: MAINTENANCE.md §4.4 (card profile).
-- **Colors look wrong**: `theme/apply.sh blue-ice`.
+- **Qt apps or qimgv lose their colours**: `./install.sh --only qt`.
 
 More in [MAINTENANCE.md](MAINTENANCE.md) §8.
 
@@ -255,7 +253,6 @@ nvim/ zathura/ gtk/ qt/ xdg/ applications/ systemd/ vesktop/ mangohud/ gamemode/
 thumbnailers/ nautilus/ bin/ mpd/ rmpc/
                       stow packages: each mirrors $HOME (e.g. kitty/.config/kitty/)
 lockscreen/           qylock notes + GPL patch for its login code
-theme/                palettes, style, templates, render.sh, apply.sh
 scripts/              screenshot, OCR, recording, clipboard, lock, update, ...
 packages/             pacman.txt, aur.txt (PKGBUILDs reviewed), base.txt
 system/               ROOT-STEPS.md, root-step scripts, /etc snippets, units, docs

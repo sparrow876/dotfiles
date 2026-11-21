@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# Give qimgv (image viewer) the active theme's colors.
+# Give qimgv (image viewer) the Blue Ice colors.
 # qimgv saves its colors to ~/.config/qimgv/theme.conf every time it exits, so
-# that file can't be a stow symlink: this script copies the rendered
+# that file can't be a stow symlink: this script copies
 # qimgv/theme.conf there and switches qimgv to "custom colors" mode.
-# Run by install.sh (step qt) and theme/apply.sh. Takes effect the next time
+# Run by install.sh (step qt). Takes effect the next time
 # qimgv opens; if it's open right now, close it and run this again.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 src="$ROOT/qimgv/theme.conf"
 dir="$HOME/.config/qimgv"
-[[ -f $src ]] || { echo "qimgv: $src missing (run theme/render.sh)" >&2; exit 1; }
+[[ -f $src ]] || { echo "qimgv: $src missing" >&2; exit 1; }
 
 if [[ -n $(ps -C qimgv -o pid=) ]]; then
-  echo "qimgv is open: it will overwrite its colors when it closes. Close it, then run theme/qimgv.sh." >&2
+  echo "qimgv is open: it will overwrite its colors when it closes. Close it, then run scripts/qimgv-theme.sh." >&2
   exit 1
 fi
 
@@ -28,4 +28,4 @@ elif [[ -f $conf ]] && grep -q '^\[General\]' "$conf"; then
 else
   printf '[General]\nuseSystemColorScheme=false\n' >> "$conf"
 fi
-echo "qimgv: colors from $(sed -n 's/^# qimgv colors for the \([^.]*\) theme\..*/\1/p' "$src")"
+echo "qimgv: Blue Ice colors installed"

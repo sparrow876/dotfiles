@@ -65,15 +65,18 @@ AUR helper: **yay** (not paru).
    reboots; they log to `~/.local/state/dotfiles/logs/`, so read the newest log
    instead of asking for pasted output). Claude never runs these.
 3. **`install.sh`** (user level): dirs, default wallpaper, pinned clones
-   (Oh My Zsh + 2 plugins, qylock), `theme/render.sh`, GNU Stow, gsettings.
+   (Oh My Zsh + 2 plugins, qylock), GNU Stow, Qt config, gsettings.
    `./install.sh --packages` installs packages (user runs it).
 4. **Stow packages**: top-level dirs mirroring `$HOME`. Only the ones listed in
    `STOW_PACKAGES` in `install.sh` are linked (a half-built package never
    replaces a working config). `NO_FOLD_DIRS` keeps dirs like `~/.config/gtk-3.0`
    real so app-written files (bookmarks) never land in the repo.
-5. **Generated theme files**: `theme/render.sh` fills `theme/templates/**.tmpl`
-   from `theme/style.toml` + `theme/palettes/$(cat theme/current).toml`.
-   Generated files ARE committed (fresh clone works without rendering).
+5. **Colours**: Blue Ice only, as plain per-app files (Theme.qml, colors.lua,
+   kitty colors.conf, rofi colors.rasi, starship.toml, fzf-colors.zsh, bat
+   rice.tmTheme, lazygit, fastfetch, MangoHud, qt*ct rice.conf, Vesktop css,
+   rmpc rice.ron, qimgv/theme.conf, scripts/theme-colors.sh). The palette
+   generator + theme switcher were removed 2026-11-22 (user request, §5);
+   change a colour in each file that uses it.
 6. **Runtime**: Hyprland (Lua) autostarts polkit agent, hypridle, awww +
    restore, Quickshell (`qs`), cliphist watchers, wl-clip-persist.
 
@@ -92,18 +95,17 @@ AUR helper: **yay** (not paru).
 | `quickshell/…/notifications/` | popups + center |
 | `quickshell/…/components/` | StyledText, Icon, Glyphs (all glyphs), Tooltip, Toggle, Slider, IconButton, TextButton, Card, Spinner, Separator, LevelBar, Graph, RingGauge, WheelSteps (scroll → whole steps) |
 | `quickshell/…/{osd,panel,powermenu,wallpaper,idle,cheatsheet}/` | one overlay each |
-| `scripts/` | shell helpers (update, wifi-enterprise, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, lid, wallpaper, record, notify-file, theme-picker, keybinds-to-md.sh + keybinds.jq, theme-colors.sh (generated)) |
-| `theme/` | palettes, style, templates, `render.sh`, `apply.sh`, README |
+| `scripts/` | shell helpers (update, wifi-enterprise, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, lid, wallpaper, record, notify-file, qt-config, qimgv-theme, view-all-images, latex-ocr/, ccmonitor/, keybinds-to-md.sh + keybinds.jq, theme-colors.sh) |
 | `system/` | ROOT-STEPS.md, root-steps scripts, units (platform profile, paccache), etc (reflector.conf, logind.conf.d/10-lid.conf) |
 | `systemd/` | `environment.d/10-rice.conf` (env before Hyprland starts), `systemd/user/rclone-gdrive.service` |
 | `applications/` | `.desktop` files: Outlook web app, nvim in kitty |
 | `xdg/` | `hyprland-mimeapps.list` (default apps) |
-| `qt/` | qt5ct/qt6ct colour files (generated) |
-| `vesktop/` | Vesktop theme `rice.theme.css` (generated) |
+| `qt/` | qt5ct/qt6ct colour files (Blue Ice) |
+| `vesktop/` | Vesktop theme `rice.theme.css` (Blue Ice) |
 | `zsh/`, `kitty/`, `starship/`, `fastfetch/`, `lazygit/`, `bat/`, `rofi/`, `gtk/` | app configs (stowed) |
 | `nvim/` | Neovim (Nord): `init.lua`, `lua/{options,keymaps,autocmds}.lua`, `lua/plugins/*.lua` (one file per topic), `lazy-lock.json`; `CHEATSHEET.md` (not stowed) |
 | `zathura/` | zathurarc (Nord, SyncTeX, recolor on Ctrl+R) |
-| `mangohud/` | MangoHud.conf (generated from `theme/templates/mangohud/…`) |
+| `mangohud/` | MangoHud.conf (Blue Ice colours) |
 | `gamemode/` | `gamemode.ini` (renice, screensaver inhibit) |
 | `thumbnailers/` | `pdf.thumbnailer` (PDF thumbnails in Nautilus via pdftoppm) |
 | `system/GAMING.md` | Steam setup, launch options, controller, per-game notes |
@@ -222,17 +224,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - **New stow package**: create `<pkg>/<path under $HOME>`, add `<pkg>` to
   `STOW_PACKAGES`, `./install.sh --only stow`. If apps write into that dir,
   add it to `NO_FOLD_DIRS`.
-- **New app color file**: add `theme/templates/<repo path>.tmpl` using
-  `{{role}}`, `{{role.hex}}`, `{{role.rgb}}`, `{{glass_alpha.alpha}}`… then
-  `theme/render.sh`. Never hardcode palette colors anywhere else.
-- **New theme**: `theme/palettes/<name>.toml` with the same roles (see
-  `theme/README.md`), `theme/apply.sh <name>`, screenshot-check bar, kitty, rofi.
+- **New app colours**: use the Blue Ice hexes from CLAUDE.md §5 (QML: the
+  `Theme.*` properties, scripts: `scripts/theme-colors.sh`).
 - **New package**: verify name (`pacman -Si` / `yay -Si`), add to the right
   group in `packages/*.txt`; AUR: read the PKGBUILD first and note it inline.
 - **New root action**: document in ROOT-STEPS (command, what it does, undo);
   for long blocks, a script in `system/root-steps/` with the logging wrapper.
-- **Text sizes**: `theme/style.toml` (`font_px`, `font_px_small`, `font_pt`), GTK
-  via `install.sh` gsettings, kitty in `kitty.conf`, Nautilus in `gtk-4.0/gtk.css`.
+- **Text sizes**: Quickshell `Theme.qml` (fontSize 15 / fontSizeSmall 13), rofi
+  `config.rasi`, GTK via `install.sh` gsettings, kitty in `kitty.conf`, Nautilus in `gtk-4.0/gtk.css`.
 - **Idle timings**: `hypr/.config/hypr/hypridle.conf` (then restart hypridle).
 
 ---
@@ -280,7 +279,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   `PersistentProperties { reloadableId }` (coffee cup, DND); long-running
   children are stopped in `Component.onDestruction` and started via
   `setpriv --pdeathsig <SIG>` so they also die if qs is killed/crashes
-  (udevadm, gpu-screen-recorder). theme/apply.sh refuses to switch while recording.
+  (udevadm, gpu-screen-recorder).
 - **IpcHandler inside a per-screen `Variants` delegate only works on the first
   monitor** ("another handler is registered for target"). Overlay IPC lives in
   `services/Overlays.qml`; overlays react via `Connections` (a `wanted`
@@ -452,9 +451,9 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   `mimeapps.list` because XDG_CURRENT_DESKTOP=Hyprland). Apps rewrite
   `~/.config/mimeapps.list` and would break a stowed symlink, so that file stays
   user-owned. Check with `gio mime <type>`.
-- Qt: qt5ct/qt6ct, Fusion + generated `qt/.config/qt*ct/colors/rice.conf`;
-  `theme/qt.sh` writes `qt*ct.conf` (absolute path → not committed) on install
-  and every theme switch. Kvantum Manager always draws in Kvantum's own style,
+- Qt: qt5ct/qt6ct, Fusion + `qt/.config/qt*ct/colors/rice.conf` (Blue Ice);
+  `scripts/qt-config.sh` writes `qt*ct.conf` (absolute path → not committed) on
+  install (`./install.sh --only qt`). Kvantum Manager always draws in Kvantum's own style,
   so it's useless for checking the palette; use `qt6ct`.
 - Hyprland reuses window addresses right away: when testing windows, wait for
   the old one to disappear before diffing addresses for the next one.
@@ -472,7 +471,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - `install.sh` stow backups: dirs in `NO_FOLD_DIRS` are treated as shared
   (per-file backup), otherwise generated real files (qt*ct.conf) made it move
   the whole dir, after which stow *folded* it into a repo link and
-  `theme/qt.sh` wrote absolute-path configs into the repo (removed, now
+  the Qt helper wrote absolute-path configs into the repo (removed, now
   gitignored). After any stow change: `ls -la ~/.config | grep -- '->'` and
   check no-fold dirs are real directories.
 
@@ -504,7 +503,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Workspaces scroll to cycle | removed | user request |
 | Cava wave in the bar (+ IdleScreen) | removed | 15–30 % CPU while playing; user scrapped it |
 | Text sizes | Windows-125 % (15 px UI, GTK 11.25 pt, kitty 13 pt, Nautilus 12 pt); bar 44 px | user request |
-| Theme | palette system + 4 dark themes (ALT+T) | user request |
+| Theme | Blue Ice only, plain per-app colour files; the palette generator + ALT+T switcher (4 themes) were removed 2026-11-22 (brief §4 `theme/render.sh` no longer applies) | user request: only ever used Blue Ice |
 | Replay toggled only from bar menu | ALT+Ctrl+R turns it on / saves; ALT+Ctrl+Shift+R toggles | indicator is hidden when idle |
 | Bluetooth PIN confirm dialog | blueman-applet is the pairing agent (no tray icon): code confirmations arrive as notifications with Confirm/Deny, PIN entry as a small dialog | Quickshell has no agent API |
 | Bar right side order | tray (drag to reorder, Pomoclock pinned last) · idle · recording · Wi-Fi · Bluetooth · audio · **brightness** · battery · bell · clock | user request 2026-11-13; brief had tray · recording · idle · … (no brightness) |
@@ -513,8 +512,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Wallpapers never created | default palette gradient only if folder empty | no blank screen on fresh install |
 | Logout | `hyprshutdown` if installed | graceful app shutdown |
 | Music title truncation | soft fade, 420 px | user request |
-| Nord GTK3 theme (e.g. Nordic) | not installed; Nautilus (GTK4) is Nord via scoped CSS, GTK3 dialogs use Adwaita-dark | Nordic AUR last updated 2022; a global GTK3 theme would fight the theme switcher |
-| Qt via Kvantum | qt5ct/qt6ct Fusion + generated palette (Kvantum installed, unused) | follows theme switches; Kvantum needs SVG themes per palette |
+| Nord GTK3 theme (e.g. Nordic) | not installed; Nautilus (GTK4) is Nord via scoped CSS, GTK3 dialogs use Adwaita-dark | Nordic AUR last updated 2022; a global GTK3 theme would clash with the Nord Nautilus CSS |
+| Qt via Kvantum | qt5ct/qt6ct Fusion + Blue Ice palette (Kvantum installed, unused) | Kvantum needs an SVG theme |
 | Default apps in `mimeapps.list` | `hyprland-mimeapps.list` | apps rewrite mimeapps.list (breaks stow) |
 | Touchpad natural scroll | normal (traditional) scrolling | user's choice, 2026-11-09 |
 | Lid close → lock + suspend | plugged in: lock only; battery: suspend | user's choice, 2026-11-09 (downloads keep running) |
@@ -594,7 +593,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - Bad update: roll back to the snap-pac "pre" snapshot (ROOT-STEPS §1.6; if
   the kernel changed, `sudo pacman -S linux` after rollback).
 - No sound: check the card profile (§4.4).
-- Theme looks wrong: `theme/apply.sh blue-ice`.
+- Qt apps / qimgv lost their colours: `./install.sh --only qt`.
 
 ---
 
@@ -602,6 +601,19 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-22** — Theme generator removed (user: "I never really use
+  anything other than blue ice"). Deleted theme/ (render.sh, apply.sh,
+  4 palettes, style.toml, 17 templates, README), scripts/theme-picker.sh +
+  ALT + T bind, scripts/fastfetch-logo.sh (unused, read the palettes). The 17
+  former outputs stay as plain Blue Ice files; only their "GENERATED / edit
+  the template" headers changed (verified with git diff). Kept + moved:
+  theme/qt.sh → scripts/qt-config.sh (qt*ct.conf needs an absolute path),
+  theme/qimgv.sh → scripts/qimgv-theme.sh (qimgv rewrites its file).
+  install.sh: no `render` step; `qt` step calls the moved helpers. Docs:
+  README, MAINTENANCE §2/§3/§4/§5/§8, APPS.md, GAMING.md, comments. Restore
+  the switcher: `git checkout 4b4f8c6 -- theme scripts/theme-picker.sh` (+ the
+  ALT+T bind). Files: as above.
 
 - **2026-11-22** — Full compatibility check of recent changes (user request).
   OK: Hyprland verify/configerrors, no duplicate binds, workspaces 1-9; no

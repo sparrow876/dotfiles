@@ -2,11 +2,11 @@
 # Dotfiles installer. Run from anywhere; it locates the repo itself.
 #
 #   ./install.sh               user-level setup only (no sudo):
-#                                dirs, pinned clones, theme render, stow, gsettings
+#                                dirs, pinned clones, stow, Qt config, gsettings
 #   ./install.sh --packages    install packages/pacman.txt + packages/aur.txt
 #                                (asks for your sudo password via pacman/yay)
 #   ./install.sh --all         --packages, then the user-level setup
-#   ./install.sh --only <step> run one step: dirs | wallpaper | clones | render | stow | qt | gsettings | rust
+#   ./install.sh --only <step> run one step: dirs | wallpaper | clones | stow | qt | gsettings | rust
 #
 # It never enables services, edits /etc or runs third-party scripts.
 # Root-level steps live in system/ROOT-STEPS.md and are run by hand.
@@ -32,7 +32,7 @@ STOW_PACKAGES=(
   gtk         # step 5 (Nautilus text size; Nord theme in step 16)
   systemd     # user environment (GSK_RENDERER), rclone-gdrive.service
   rofi        # step 11
-  qt          # step 16: Qt color files (qt*ct.conf written by theme/qt.sh) + qimgv colors (theme/qimgv.sh)
+  qt          # step 16: Qt color files (qt*ct.conf written by scripts/qt-config.sh) + qimgv colors (scripts/qimgv-theme.sh)
   xdg         # step 16: default apps (hyprland-mimeapps.list)
   applications  # step 16: nvim-kitty.desktop, step 17: Outlook web app
   vesktop     # step 17: palette theme for Discord (Vencord themes folder)
@@ -165,15 +165,10 @@ step_clones() {
   "$REPO/lockscreen/apply-patches.sh" || warn "qylock patches didn't apply (lockscreen/apply-patches.sh)"
 }
 
-step_render() {
-  info "Rendering theme files from the active theme"
-  "$REPO/theme/render.sh" >/dev/null
-}
-
 step_qt() {
   info "Configuring Qt apps (qt5ct/qt6ct, qimgv colors)"
-  "$REPO/theme/qt.sh" >/dev/null
-  "$REPO/theme/qimgv.sh" >/dev/null || warn "qimgv colors not set (close qimgv, then run theme/qimgv.sh)"
+  "$REPO/scripts/qt-config.sh" >/dev/null
+  "$REPO/scripts/qimgv-theme.sh" >/dev/null || warn "qimgv colors not set (close qimgv, then run scripts/qimgv-theme.sh)"
 }
 
 # Shared = never move the whole directory. All no-fold dirs count too: apps or
@@ -254,7 +249,7 @@ step_gsettings() {
   gsettings set $s icon-theme 'Papirus-Dark'
   gsettings set $s cursor-theme 'Bibata-Modern-Ice'
   gsettings set $s cursor-size 24
-  # Text sizes match Windows at 125% (see theme/palette.toml font_pt)
+  # Text sizes match Windows at 125% (11.25 pt = 15 px at 96 dpi, like the shell)
   gsettings set $s font-name 'Noto Sans 11.25'
   gsettings set $s document-font-name 'Noto Sans 12'
   gsettings set $s monospace-font-name 'JetBrainsMono Nerd Font 11.25'
@@ -295,7 +290,6 @@ user_setup() {
   step_dirs
   step_wallpaper
   step_clones
-  step_render
   step_stow
   step_qt
   step_gsettings

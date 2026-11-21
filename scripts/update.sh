@@ -20,7 +20,7 @@ STATE="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
 PACLOG=/var/log/pacman.log
 mkdir -p "$STATE"
 
-# Standard terminal colors, so the active theme's kitty palette applies
+# Standard terminal colors, so kitty's Blue Ice palette applies
 b=$'\e[1m'; dim=$'\e[2m'; off=$'\e[0m'
 blue=$'\e[34m'; yellow=$'\e[33m'; red=$'\e[31m'; green=$'\e[32m'
 section() { printf '\n%s%s==> %s%s\n' "$b" "$blue" "$*" "$off"; }

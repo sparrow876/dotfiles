@@ -77,14 +77,14 @@ the boost).
 
 ## 4. MangoHud (the overlay)
 
-Top-left, compact, in the current theme's colors (it follows ALT + T).
+Top-left, compact, in the Blue Ice colours.
 Shows: GPU name, GPU load + temperature, CPU load + temperature, VRAM in use,
 FPS (red < 30, yellow < 60), frame time + frame-time graph (a flat line = smooth;
 spikes = stutters).
 
 - **Left Shift + F12** shows / hides it.
 - Config: `mangohud/.config/MangoHud/MangoHud.conf`, generated from
-  `theme/templates/mangohud/...tmpl` (edit the template, then `theme/render.sh`).
+  `mangohud/.config/MangoHud/MangoHud.conf` (edit it directly).
 - Only the RTX 3050's stats are shown (`pci_dev`), the name line still tells
   you which GPU the game uses.
 

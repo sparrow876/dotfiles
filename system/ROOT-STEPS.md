@@ -504,7 +504,7 @@ systemctl --user enable --now mpd.service mpd-mpris.service
   computer: 127.0.0.1:6600 and the socket `$XDG_RUNTIME_DIR/mpd/socket`,
   whose folder systemd creates via `systemd/.config/systemd/user/mpd.service.d/`;
   plays through PipeWire) and
-  `rmpc/.config/rmpc/` (theme generated from the palette, follows ALT + T).
+  `rmpc/.config/rmpc/` (Blue Ice theme).
 - Start rmpc from rofi ("rmpc") or type `rmpc` in a terminal; `?` shows its keys.
 - Album covers as a grid (optional): `yay -S euphonica` (AUR, reviewed in
   packages/aur.txt; compiles from source, several minutes), then

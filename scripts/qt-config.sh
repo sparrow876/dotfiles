@@ -1,20 +1,18 @@
 #!/usr/bin/env bash
 # Write ~/.config/qt5ct/qt5ct.conf and ~/.config/qt6ct/qt6ct.conf (Qt apps:
-# Fusion style + the palette's colors, Papirus icons, the shell's fonts).
+# Fusion style + the Blue Ice colors, Papirus icons, the shell's fonts).
 # Not committed: qt*ct needs an absolute path to the color file. The color
-# files themselves (qt/.config/qt*ct/colors/rice.conf) are generated + stowed.
-# Run by install.sh and theme/apply.sh. QT_QPA_PLATFORMTHEME=qt6ct (env.lua).
+# files themselves (qt/.config/qt*ct/colors/rice.conf) are stowed.
+# Run by install.sh (step qt). QT_QPA_PLATFORMTHEME=qt6ct (env.lua).
 set -euo pipefail
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-current=$(tr -d '[:space:]' < "$ROOT/theme/current")
-icons=Papirus-Dark   # every theme is dark
+icons=Papirus-Dark
 
 for v in qt5ct qt6ct; do
   dir="$HOME/.config/$v"
   mkdir -p "$dir"
   cat > "$dir/$v.conf" <<CONF
-# Written by ~/dotfiles/theme/qt.sh ($current). Changes here are
-# overwritten on the next theme switch; edit theme/qt.sh instead.
+# Written by ~/dotfiles/scripts/qt-config.sh (install.sh step qt). Changes
+# here are overwritten on the next run; edit that script instead.
 [Appearance]
 color_scheme_path=$dir/colors/rice.conf
 custom_palette=true

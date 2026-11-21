@@ -146,10 +146,9 @@ Singleton {
 
     function toggleMic() { mic = !mic }
 
-    // A Quickshell reload (theme switch, config edit) doesn't stop child
-    // processes: finish a recording cleanly and end replay mode instead of
-    // leaving an invisible recorder running. (theme/apply.sh also refuses to
-    // switch themes while recording.)
+    // A Quickshell reload (config edit) doesn't stop child processes: finish
+    // a recording cleanly and end replay mode instead of leaving an invisible
+    // recorder running.
     Component.onDestruction: {
         if (rec.running) rec.signal(2)
         if (replayProc.running) { root.stoppingReplay = true; replayProc.signal(2) }

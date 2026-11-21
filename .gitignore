@@ -16,7 +16,7 @@ id_ed25519*
 # --- App runtime state that may land in stowed dirs ---
 **/gtk-3.0/bookmarks
 **/gtk-*/settings.ini
-# written by theme/qt.sh with absolute paths (never commit)
+# written by scripts/qt-config.sh with absolute paths (never commit)
 qt/.config/qt5ct/qt5ct.conf
 qt/.config/qt6ct/qt6ct.conf
 .cache/
@@ -27,8 +27,6 @@ node_modules/
 *~
 .qmlls.ini
 fastfetch/**/cache/
-# fastfetch picture choice (scripts/fastfetch-logo.sh); its PNGs are ignored below
-fastfetch/.config/fastfetch/logo.crop
 kitty/.config/kitty/*.socket
 nvim/.config/nvim/.netrwhist
 lazygit/.config/lazygit/state.yml

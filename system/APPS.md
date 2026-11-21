@@ -45,7 +45,7 @@ wrapper around Teams on the web.
 Wayland screen sharing **including audio**. Discord's terms technically don't
 allow third-party clients (you chose it knowing that).
 - Palette theme: Settings → Vencord → **Themes** → enable **rice** (once). It
-  follows ALT + T theme switches (the file is regenerated).
+  has the Blue Ice colours.
 - Closing the window minimizes to the tray (Settings → Vesktop → "Minimize to
   tray" if you want to change it).
 - Screen share with audio: in the share dialog pick the window/screen and the

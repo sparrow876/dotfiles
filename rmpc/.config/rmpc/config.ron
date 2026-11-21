@@ -7,7 +7,7 @@
 (
     address: "127.0.0.1:6600",
     password: None,
-    // themes/rice.ron, generated from the rice palette (theme/render.sh);
+    // themes/rice.ron, with the Blue Ice colours;
     // its solid background #202636 matches the launcher (rmpc.desktop)
     theme: Some("rice"),
     cache_dir: Some("~/.cache/rmpc/"),

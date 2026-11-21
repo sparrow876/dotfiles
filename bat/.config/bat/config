@@ -1,4 +1,4 @@
-# bat config. The "rice" theme is generated from the palette by theme/render.sh;
+# bat config. The "rice" theme (themes/rice.tmTheme) has the Blue Ice colours;
 # after changing it, run: bat cache --build
 --theme=rice
 --style=numbers,changes,header
