@@ -12,10 +12,8 @@ config lives in this repo and is linked into place with GNU Stow.
 | ![Compact, i3-style layout](docs/screenshots/compact.jpg) | ![Window overview](docs/screenshots/overview.jpg) |
 | **System stats (ALT + S)** | **App launcher (ALT + D)** |
 | ![System stats panel](docs/screenshots/stats.jpg) | ![App launcher](docs/screenshots/launcher.jpg) |
-| **Calculator (ALT + =)** | **Wallpaper reel (ALT + W)** |
-| ![Calculator](docs/screenshots/calc.jpg) | ![Wallpaper reel](docs/screenshots/wallpaper.jpg) |
-| **Power menu (ALT + Escape)** | |
-| ![Power menu](docs/screenshots/powermenu.jpg) | |
+| **Wallpaper reel (ALT + W)** | **Power menu (ALT + Escape)** |
+| ![Wallpaper reel](docs/screenshots/wallpaper.jpg) | ![Power menu](docs/screenshots/powermenu.jpg) |
 
 ## The look
 
