@@ -2,7 +2,7 @@
 //   playing: ⏸  Artist — Title
 //   paused:  ▶  Artist — Title            (muted)
 //   nothing: ♪                            (small muted icon)
-// Click = now-playing card (popups/MediaCard.qml), middle-click = play/pause.
+// Click = play/pause, middle-click = now-playing card (popups/MediaCard.qml).
 // (No scroll-to-skip: players start playback on Next, so skipping while
 // paused couldn't stay paused reliably; removed 2026-11-22.)
 // Long titles are cut at 420px (less if the bar is crowded: Bar.qml sets maxWidth)
@@ -29,7 +29,7 @@ MouseArea {
     cursorShape: Qt.PointingHandCursor
     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
     onClicked: event => {
-        if (event.button === Qt.MiddleButton) Media.toggle()
+        if (event.button === Qt.LeftButton) Media.toggle()
         else if (barWindow) Popups.toggle("media", barWindow.screen?.name ?? "")
     }
 
@@ -176,7 +176,7 @@ MouseArea {
         // The title is in the bar (and scrolls on hover): just the player + keys
         readonly property var niceNames: ({ "Mozilla zen": "Zen", "Mozilla Firefox": "Firefox" })
         readonly property string playerName: niceNames[Media.player?.identity ?? ""] ?? (Media.player?.identity || "Player")
-        text: Media.hasTrack ? `${playerName} · click: details · middle-click: play/pause`
+        text: Media.hasTrack ? `${playerName} · click: play/pause · middle-click: details`
                              : "Nothing playing"
     }
 

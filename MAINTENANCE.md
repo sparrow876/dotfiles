@@ -501,7 +501,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | NVIDIA suspend services | not enabled | unnecessary with open modules 595+ |
 | Recording with NVENC | Intel Quick Sync | gsr encodes on the display GPU (iGPU chosen) |
 | Workspaces scroll to cycle | removed | user request |
-| Music: click = play/pause, scroll = next/previous | click = now-playing card, middle-click = play/pause, no scroll-to-skip | user request 2026-11-22: players start playback on Next, so skipping while paused kept leaking playback with fast scrolling |
+| Music: click = play/pause, scroll = next/previous | click = play/pause, middle-click = now-playing card, no scroll-to-skip | user request 2026-11-22: players start playback on Next, so skipping while paused kept leaking playback with fast scrolling |
 | Cava wave in the bar (+ IdleScreen) | removed | 15–30 % CPU while playing; user scrapped it |
 | Text sizes | Windows-125 % (15 px UI, GTK 11.25 pt, kitty 13 pt, Nautilus 12 pt); bar 44 px | user request |
 | Theme | Blue Ice only, plain per-app colour files; the palette generator + ALT+T switcher (4 themes) were removed 2026-11-22 (brief §4 `theme/render.sh` no longer applies) | user request: only ever used Blue Ice |
@@ -602,6 +602,10 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-22** — Bar music clicks swapped (user): left-click = play/pause
+  again, middle-click = now-playing card; tooltip updated. Files:
+  quickshell/.config/quickshell/bar/MediaModule.qml, MAINTENANCE §5.
 
 - **2026-11-22** — Scroll-to-skip on the bar's music REMOVED (user): even with
   burst handling, fast irregular scrolling still let playback start (MPRIS
