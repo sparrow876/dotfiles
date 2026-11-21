@@ -603,6 +603,25 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Calculator, file finder, layout toggle (user request).
+  ALT + = scripts/calc.sh: rofi-calc (libqalculate; package added, user
+  installs), Enter copies the result. ALT + SHIFT + F scripts/find-file.sh:
+  fd over $HOME (skips hidden, ~/GoogleDrive network mount, build dirs),
+  newest first (~1.7k files, 0.02 s), Papirus icons by extension, Enter =
+  xdg-open, Shift+Enter = Nautilus --select. Layout mode: one word in
+  ~/.local/state/rice/layout (install.sh creates it), toggled by
+  scripts/layout-mode.sh (bar button left of the coffee cup, ALT + G) which
+  writes it and runs `hyprctl reload`; hypr/conf/look.lua reads it with io.open
+  (compact = gaps 0, rounding 0, no shadows); services/LayoutMode.qml watches it
+  (FileView watchChanges) and the bar becomes a square 36 px strip on the top
+  edge (margins 0, no border), notifications move up to match. Verified:
+  compact → bar 0,0 1920x36, tiled window at 2,38 (border only), rounding 0;
+  spaced → bar 12,8 1896x44, rounding 14. Files: scripts/{calc,find-file,
+  layout-mode}.sh, hypr/.config/hypr/conf/{keybinds,look}.lua,
+  quickshell/.config/quickshell/{services/LayoutMode.qml, bar/LayoutIcon.qml,
+  bar/Bar.qml, notifications/NotificationPopups.qml}, install.sh,
+  packages/pacman.txt.
+
 - **2026-11-22** — Bar music clicks swapped (user): left-click = play/pause
   again, middle-click = now-playing card; tooltip updated. Files:
   quickshell/.config/quickshell/bar/MediaModule.qml, MAINTENANCE §5.

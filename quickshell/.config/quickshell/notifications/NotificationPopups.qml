@@ -24,7 +24,8 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay
     exclusionMode: ExclusionMode.Ignore
     anchors { top: true; right: true }
-    margins { top: 8 + 44 + 10; right: 12 }
+    // just under the bar (floating 8 + 44 tall, or 36 tall on the edge in compact mode)
+    margins { top: LayoutMode.compact ? 36 + 8 : 8 + 44 + 10; right: LayoutMode.compact ? 8 : 12 }
     implicitWidth: 380
     implicitHeight: Math.max(1, column.implicitHeight)
     color: "transparent"

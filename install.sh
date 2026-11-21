@@ -112,7 +112,10 @@ step_dirs() {
            "$HOME/Pictures/Screenshots" "$HOME/Pictures/Wallpapers" \
            "$HOME/Videos/Recordings" "$HOME/GoogleDrive" \
            "$HOME/.local/src" "$HOME/.local/bin" "$HOME/.cache/wallpaper-thumbs" \
-           "$HOME/.local/share/mpd/playlists" "$HOME/.local/state/mpd"
+           "$HOME/.local/share/mpd/playlists" "$HOME/.local/state/mpd" \
+           "$HOME/.local/state/rice"
+  # window layout mode (scripts/layout-mode.sh): Hyprland + the bar read it
+  [[ -f $HOME/.local/state/rice/layout ]] || echo spaced > "$HOME/.local/state/rice/layout"
   # Drive-style icon for the Google Drive folder (after it exists)
   command -v gio >/dev/null && gio set -t string "$HOME/GoogleDrive" metadata::custom-icon-name folder-google-drive 2>/dev/null || true
 }

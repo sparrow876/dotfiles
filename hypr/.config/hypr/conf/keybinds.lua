@@ -19,6 +19,7 @@ bind(mod .. " + D",      exec("rofi -show drun"),     "Apps: App launcher")
 bind(mod .. " + C",         exec(os.getenv("HOME") .. "/dotfiles/scripts/clipboard.sh"), "Apps: Clipboard history")
 bind(mod .. " + SHIFT + E", exec(os.getenv("HOME") .. "/dotfiles/scripts/emoji.sh"),     "Apps: Emoji picker")
 bind(mod .. " + E",      exec("nautilus --new-window"), "Apps: Files (Nautilus)")
+bind(mod .. " + G",         exec(os.getenv("HOME") .. "/dotfiles/scripts/layout-mode.sh"), "System: Toggle layout (spaced / compact, no gaps)")
 bind(mod .. " + equal",     exec(os.getenv("HOME") .. "/dotfiles/scripts/calc.sh"),      "Apps: Calculator")
 bind(mod .. " + SHIFT + F", exec(os.getenv("HOME") .. "/dotfiles/scripts/find-file.sh"), "Apps: Find a file in your home folder")
 
