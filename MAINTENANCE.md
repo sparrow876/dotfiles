@@ -603,6 +603,17 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-21** — OPEN (user: "later"): battery lasts ~1 h browsing →
+  ~50 W draw from 52.7 Wh, not a dead battery. Suspects: platform_profile
+  pinned to performance also on battery (system/units/platform-profile-
+  performance.service + 99-platform-profile.rules), RTX 3050 awake (RTD3 bug,
+  ~3 W + memory/link), 144 Hz. Plan: user unplugs ~3 min, read
+  /sys/class/power_supply/BAT0/power_now (µW); then temporary
+  `echo balanced | sudo tee /sys/firmware/acpi/platform_profile` (re-pinned on
+  replug) and measure again. If big: ASK user to switch "full tilt always" to
+  performance on AC / balanced on battery (their explicit choice; don't change
+  without a yes).
+
 - **2026-11-21** — Battery health baseline (user asked; no change made):
   BAT0 (HP "Primary", Li-ion) energy_full 52.65 Wh / energy_full_design
   70.07 Wh = 75.1%, cycle_count 49 (`/sys/class/power_supply/BAT0`, same as
