@@ -16,6 +16,8 @@ Singleton {
     readonly property color muted: "#9fb3c8"
     readonly property color warn: "#f2c66d"
     readonly property color critical: "#ef6f7a"
+    readonly property color lavender: "#b9a7ff"   // bar gradient (left end), border hint
+    readonly property color pink: "#f5bde6"       // pastel pink: bar gradient (right end)
 
     // Frosted glass surface (surface color at glassAlpha)
     readonly property real glassAlpha: 0.75

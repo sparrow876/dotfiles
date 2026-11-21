@@ -602,6 +602,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Bar background gradient (user: lavender · current colour ·
+  pastel pink): horizontal gradient, lavender tint (left) → Theme.glass
+  (middle) → pastel pink #f5bde6 tint (right), ends = Qt.tint(glass, colour
+  @ 0.5) so it stays dark glass. Measured: left #5C5989, right #75617D; white
+  text ≥ 5.2:1 everywhere. The clock's date was Theme.muted = 2.6:1 on the
+  pink end → now an ice/text mix (4.7:1). Theme.qml gained `lavender` and
+  `pink`. Files: quickshell/.config/quickshell/{Theme.qml,bar/Bar.qml,
+  bar/Clock.qml}.
+
 - **2026-11-22** — Subtle Blue Ice "aurora" window border (user: noticeable
   sometimes, not distracting). Active: 5-stop gradient lightblue(ee) → ice(d9)
   → cyan(d9) → lavender(b3) → lightblue(ee) at 45° (cyan/lavender = kitty's

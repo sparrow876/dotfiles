@@ -39,7 +39,15 @@ PanelWindow {
         id: background
         anchors.fill: parent
         radius: Theme.rounding
-        color: Theme.glass
+        // Lavender (left) -> the usual blue glass (middle) -> pastel pink (right).
+        // The ends are tinted into the dark glass, not pure pastel, so the white
+        // text and icons stay readable.
+        gradient: Gradient {
+            orientation: Gradient.Horizontal
+            GradientStop { position: 0.0; color: Qt.tint(Theme.glass, Qt.rgba(Theme.lavender.r, Theme.lavender.g, Theme.lavender.b, 0.5)) }
+            GradientStop { position: 0.5; color: Theme.glass }
+            GradientStop { position: 1.0; color: Qt.tint(Theme.glass, Qt.rgba(Theme.pink.r, Theme.pink.g, Theme.pink.b, 0.5)) }
+        }
         border.width: 1
         border.color: Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.12)
 
