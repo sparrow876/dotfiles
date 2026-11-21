@@ -16,13 +16,15 @@ Singleton {
     readonly property color muted: "#9fb3c8"
     readonly property color warn: "#f2c66d"
     readonly property color critical: "#ef6f7a"
-    // Bar gradient, "deep glacier" (symmetric): deep teal ends -> steel blue
-    // -> navy centre. Neighbouring hues (~190 -> 213 -> 222 deg) of the Blue
-    // Ice family, moderate saturation, low lightness, nearly opaque (the blur
-    // washed out lighter/translucent tones).
-    readonly property color barEdge: Qt.rgba(0.07, 0.26, 0.31, 0.93)      // #12424f deep teal
-    readonly property color barMid: Qt.rgba(0.12, 0.23, 0.38, 0.92)       // #1f3a61 steel blue
-    readonly property color barCentre: Qt.rgba(0.08, 0.11, 0.19, 0.90)    // #141d30 navy
+    // Bar gradient, "deep glacier" (symmetric): teal ends -> steel blue ->
+    // indigo centre. Picked in OKLCH at the same perceived lightness
+    // (L 0.335, chroma ~0.06, hue 215 -> 248 -> 270), so only the hue glides
+    // and the centre doesn't look like a dark dip (equal HSL lightness still
+    // made the blue centre look darker). Nearly opaque: the blur washed out
+    // lighter/translucent tones.
+    readonly property color barEdge: Qt.rgba(0.000, 0.244, 0.290, 0.93)   // #003e4a teal
+    readonly property color barMid: Qt.rgba(0.101, 0.223, 0.333, 0.93)    // #1a3955 steel blue
+    readonly property color barCentre: Qt.rgba(0.164, 0.206, 0.344, 0.93) // #2a3458 indigo
 
     // Frosted glass surface (surface color at glassAlpha)
     readonly property real glassAlpha: 0.75

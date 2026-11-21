@@ -602,6 +602,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Bar gradient: centre looked "goofy", too dark (navy at 13%
+  lightness vs 18-23% elsewhere). Equal HSL lightness wasn't enough (blue
+  looks darker than teal: rel. luminance still 0.043 → 0.023), so the colours
+  are now picked in OKLCH at equal perceived lightness: L 0.335, C ~0.06,
+  hue 215 → 248 → 270 → barEdge #003e4a, barMid #1a3955, barCentre #2a3458,
+  all @0.93. Measured luminance 0.033-0.034 across the whole bar, symmetric;
+  white 11.7:1+, muted 5.8:1+. Tip for future colour work: balance in OKLCH,
+  not HSL. Files: quickshell/.config/quickshell/Theme.qml.
+
 - **2026-11-22** — Bar gradient redesigned, pink/lavender dropped (user:
   "choose the colors yourself … make something good"). "Deep glacier",
   mirrored: barEdge #12424f@0.93 (deep teal) → barMid #1f3a61@0.92 (steel
