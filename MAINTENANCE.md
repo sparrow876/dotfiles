@@ -602,6 +602,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Skipping a paused track started playback (user wants it to
+  stay paused). MPD (and most MPRIS players) start the new track on
+  Next/Previous; MPRIS has no "skip, stay paused". services/Media.qml:
+  next()/previous() go through skip(), which, if the player was paused, arms
+  `keepPaused` for 2 s; when the player reports isPlaying it's paused again
+  (a split-second blip of audio is possible). Covers bar scroll + the
+  now-playing card buttons; media keys (playerctl in keybinds.lua) bypass it.
+  Files: quickshell/.config/quickshell/services/Media.qml.
+
 - **2026-11-22** — Scrolling on the bar's music did nothing although the
   tooltip promised "scroll: skip" (MPD reports CanGoNext/CanGoPrevious =
   true). MediaModule used a separate WheelHandler, which never got the wheel
