@@ -40,10 +40,10 @@ config lives in this repo and is linked into place with GNU Stow.
 - **Hyprland 0.57** (Lua config) on the Intel iGPU; games and heavy apps on the
   RTX 3050 through `prime-run`. 9 workspaces (一 … 九), 3-finger swipe
   left/right between them, sensible floating rules, tearing for games.
-- **Window overview** (3-finger swipe up or **ALT + A**): live thumbnails of
-  the workspace's windows, all 9 workspaces as mini-maps, type to search every
-  window, drag a window onto a workspace to move it there. Swipe down or Esc
-  closes.
+- **Window overview** (3-finger swipe up or **ALT + A**): every open window,
+  on every workspace, as live thumbnails in one grid with its workspace badge;
+  the 9 workspaces as mini-maps above (click one to go there, drop a window on
+  one to move it). Type to filter. Swipe down or Esc closes.
 
 **Bar** (Quickshell)
 - Workspaces with a sliding pill; the music in the middle (**click**:

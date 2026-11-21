@@ -1,13 +1,17 @@
 // Window overview, GNOME-style: 3-finger swipe up (down closes), ALT + A, or
 // `qs ipc call overview toggle|open|close`.
 //   top     "Type to search windows" + the 9 workspaces as mini-maps (where
-//           each window sits, with its app icon; the one you're on has a dot)
-//   middle  the selected workspace's windows as live thumbnails in a centred
-//           grid; typing searches every workspace instead
+//           each window sits, with its app icon; the one you're on has a dot;
+//           the hovered / selected window's workspace lights up)
+//   middle  EVERY window on every workspace as live thumbnails in one centred
+//           grid, sorted by workspace, each with its workspace badge (a tiling
+//           WM has only a window or two per workspace, so no per-workspace
+//           view); typing filters them
 //   click a window: focus it (switches workspace) · middle-click / ✕: close it
 //   drag a window onto a workspace tile: move it there (you stay put)
-//   click a tile: show its windows · double-click: go there
-//   arrows + Enter: pick a window · Esc: clear the search, then close
+//   click a tile: go to that workspace
+//   arrows + Enter: pick a window (starts on the one you're in) · Esc: clear
+//   the search, then close
 // Live captures (ScreencopyView) run only while it's open.
 import QtQuick
 import QtQuick.Layouts
@@ -26,7 +30,7 @@ PanelWindow {
 
     property bool open: false
     property string query: ""
-    property int selectedWs: 1
+    property int hoverWs: 0               // workspace of the window under the mouse
     property int sel: 0                   // keyboard-selected card
     property int dropWs: 0                // tile under a dragged window
 
@@ -46,11 +50,16 @@ PanelWindow {
     readonly property var wins: Hyprland.toplevels.values.filter(t => t.wayland && (t.workspace?.id ?? 0) >= 1 && (t.workspace?.id ?? 0) <= 9)
     function wsWins(id) { return wins.filter(t => t.workspace?.id === id) }
     function appId(t) { return t?.wayland?.appId || t?.lastIpcObject?.class || "" }
+    // all windows (or the search hits), by workspace, then left to right, top to bottom
     readonly property var shown: {
         const q = query.trim().toLowerCase()
-        if (!q) return wsWins(selectedWs)
-        return wins.filter(t => (t.title || "").toLowerCase().includes(q) || appId(t).toLowerCase().includes(q))
+        const list = q ? wins.filter(t => (t.title || "").toLowerCase().includes(q) || appId(t).toLowerCase().includes(q))
+                       : wins.slice()
+        const pos = (t, i) => t.lastIpcObject?.at?.[i] ?? 0
+        return list.sort((a, b) => (a.workspace.id - b.workspace.id) || (pos(a, 0) - pos(b, 0)) || (pos(a, 1) - pos(b, 1)))
     }
+    // workspace tile to light up: the hovered window's, else the keyboard-selected one's
+    readonly property int litWs: hoverWs || (shown[sel]?.workspace?.id ?? 0)
 
     // app icon, looked up once per app id (the fuzzy lookup isn't free)
     property var iconCache: ({})
@@ -70,8 +79,9 @@ PanelWindow {
         Popups.close()
         Hyprland.refreshToplevels()       // window positions for the mini-maps
         search.text = ""
-        selectedWs = activeWs
-        sel = 0
+        hoverWs = 0
+        // keyboard selection starts on the window you're in
+        sel = Math.max(0, shown.findIndex(t => t.activated))
         open = true
         hideAnim.stop()
         visible = true
@@ -176,7 +186,7 @@ PanelWindow {
                         font.pixelSize: Theme.fontSize
                         selectionColor: Theme.blue
                         clip: true
-                        onTextChanged: { ov.query = text; ov.sel = 0 }
+                        onTextChanged: { ov.query = text; ov.sel = 0; ov.hoverWs = 0 }
                         Keys.onPressed: event => {
                             const n = ov.shown.length, cols = ov.grid.cols
                             if (event.key === Qt.Key_Escape) {
@@ -208,7 +218,6 @@ PanelWindow {
             anchors.topMargin: 22
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: 12
-            visible: ov.query.trim() === ""
 
             Repeater {
                 model: 9
@@ -217,7 +226,7 @@ PanelWindow {
                     required property int index
                     readonly property int wsId: index + 1
                     readonly property var tileWins: ov.wsWins(wsId)
-                    readonly property bool selected: ov.selectedWs === wsId
+                    readonly property bool selected: ov.litWs === wsId
                     readonly property bool dropping: ov.dropWs === wsId
                     spacing: 5
 
@@ -261,8 +270,7 @@ PanelWindow {
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: { search.text = ""; ov.selectedWs = tile.wsId; ov.sel = 0; search.forceActiveFocus() }
-                            onDoubleClicked: ov.goTo(tile.wsId)
+                            onClicked: ov.goTo(tile.wsId)
                         }
                     }
                     Row {
@@ -301,7 +309,7 @@ PanelWindow {
             StyledText {
                 visible: ov.shown.length === 0
                 anchors.centerIn: parent
-                text: ov.query.trim() ? "No windows match" : "No windows on this workspace"
+                text: ov.query.trim() ? "No windows match" : "No windows open"
                 color: Theme.muted
                 font.pixelSize: Theme.fontSize + 2
             }
@@ -408,17 +416,34 @@ PanelWindow {
                             font.pixelSize: Theme.fontSizeSmall
                             color: card.picked || hover.hovered ? Theme.text : Theme.ice
                         }
-                        StyledText {   // which workspace, while searching
-                            visible: ov.query.trim() !== ""
+                        // workspace badge
+                        Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "· " + ov.names[(card.modelData.workspace?.id ?? 1) - 1]
-                            font.family: Theme.fontCjk
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.muted
+                            width: 24; height: 20; radius: 10
+                            color: (card.modelData.workspace?.id ?? 0) === ov.activeWs
+                                   ? Qt.rgba(Theme.lightBlue.r, Theme.lightBlue.g, Theme.lightBlue.b, 0.30)
+                                   : Qt.rgba(Theme.overlay.r, Theme.overlay.g, Theme.overlay.b, 0.9)
+                            StyledText {
+                                anchors.centerIn: parent
+                                text: ov.names[(card.modelData.workspace?.id ?? 1) - 1]
+                                font.family: Theme.fontCjk
+                                font.pixelSize: Theme.fontSizeSmall - 1
+                                color: Theme.text
+                            }
                         }
                     }
 
-                    HoverHandler { id: hover; cursorShape: Qt.PointingHandCursor }
+                    HoverHandler {
+                        id: hover
+                        cursorShape: Qt.PointingHandCursor
+                        onHoveredChanged: {
+                            const ws = card.modelData.workspace?.id ?? 0
+                            if (hovered) ov.hoverWs = ws
+                            else if (ov.hoverWs === ws) ov.hoverWs = 0
+                        }
+                    }
+                    // filtered away or closed while under the mouse: no stale highlight
+                    Component.onDestruction: if (hover.hovered) ov.hoverWs = 0
                     TapHandler {
                         acceptedButtons: Qt.LeftButton
                         onTapped: ov.activate(card.modelData)
