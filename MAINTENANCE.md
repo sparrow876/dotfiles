@@ -602,6 +602,16 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Skip-while-paused still started playback when scrolling
+  several notches (user). The first version re-read isPlaying on every skip;
+  mid-burst it saw the auto-started track as "playing" and stopped re-pausing,
+  and it re-paused only once. Now a burst of skips counts as one (state taken
+  at the first skip, kept until 2.5 s after the last), pause() is sent right
+  after each Next/Previous, and every isPlaying=true during the burst is
+  paused again. Verified the D-Bus sequence on MPD: 3x (Next, Pause) →
+  Paused on the 3rd track; 3x (Previous, Pause) → back, still Paused.
+  Files: quickshell/.config/quickshell/services/Media.qml.
+
 - **2026-11-22** — Skipping a paused track started playback (user wants it to
   stay paused). MPD (and most MPRIS players) start the new track on
   Next/Previous; MPRIS has no "skip, stay paused". services/Media.qml:

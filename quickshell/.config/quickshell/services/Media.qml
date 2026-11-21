@@ -22,10 +22,10 @@ Singleton {
         target: root.player
         function onIsPlayingChanged() {
             if (!root.player.isPlaying) return
-            // skipped while paused: the player started the new track by
-            // itself (MPRIS has no "skip but stay paused"), so pause it again
-            if (root.keepPaused) {
-                root.keepPaused = false
+            // During a skip burst that began paused, any "playing" report is
+            // the player auto-starting a skipped-to track: pause it again
+            // (every time, not just once: each skip can restart it)
+            if (root.burstActive && root.burstWasPaused) {
                 if (root.player.canPause) root.player.pause()
                 return
             }
@@ -33,14 +33,25 @@ Singleton {
         }
     }
 
-    // Skipping keeps the play/pause state: armed for 2 s after a skip made
-    // while paused (long enough for the player to report the new state)
-    property bool keepPaused: false
-    Timer { id: keepPausedTimer; interval: 2000; onTriggered: root.keepPaused = false }
+    // Skipping keeps the play/pause state. MPRIS has no "skip but stay
+    // paused" and players start the new track on Next/Previous, so:
+    // - a burst of skips (scrolling several notches) counts as one: the state
+    //   is taken at the FIRST skip and kept until 2.5 s after the last one
+    //   (re-reading it mid-burst saw the auto-started track as "playing")
+    // - pause is sent right after each skip (MPD runs commands in order, so
+    //   usually no sound at all) and again whenever the player reports playing
+    property bool burstActive: false
+    property bool burstWasPaused: false
+    Timer { id: burstTimer; interval: 2500; onTriggered: root.burstActive = false }
     function skip(action) {
-        const wasPaused = !root.isPlaying
+        if (!root.burstActive) {
+            root.burstWasPaused = !root.isPlaying
+            root.burstActive = true
+        }
+        burstTimer.restart()
+        const p = root.player
         action()
-        if (wasPaused) { root.keepPaused = true; keepPausedTimer.restart() }
+        if (root.burstWasPaused && p?.canPause) p.pause()
     }
 
     readonly property bool isPlaying: player?.isPlaying ?? false
