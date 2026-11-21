@@ -10,7 +10,7 @@ def modnames:
 
 def prettykey:
   {
-    "grave": "`", "slash": "/", "Return": "Enter", "Escape": "Esc",
+    "grave": "`", "slash": "/", "equal": "=", "minus": "-", "Return": "Enter", "Escape": "Esc",
     "left": "←", "right": "→", "up": "↑", "down": "↓", "Tab": "Tab", "space": "Space",
     "mouse:272": "Left-drag", "mouse:273": "Right-drag",
     "mouse_down": "Scroll down", "mouse_up": "Scroll up",

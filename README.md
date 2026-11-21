@@ -145,7 +145,7 @@ Generated from the live Hyprland binds by `scripts/keybinds-to-md.sh README.md`
 | `ALT + C` | Clipboard history |
 | `ALT + SHIFT + E` | Emoji picker |
 | `ALT + E` | Files (Nautilus) |
-| `ALT + equal` | Calculator |
+| `ALT + =` | Calculator |
 | `ALT + SHIFT + F` | Find a file in your home folder |
 | `` ALT + ` `` | Dropdown terminal |
 
