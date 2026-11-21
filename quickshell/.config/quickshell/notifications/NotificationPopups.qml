@@ -200,7 +200,9 @@ PanelWindow {
                             required property var modelData
                             label: modelData.text
                             Layout.fillWidth: true
-                            onClicked: { modelData.invoke(); Notifications.hidePopup(card.n) }
+                            // take the notification first: invoke() often makes the app
+                            // close it, which destroys this card mid-handler
+                            onClicked: { const n = card.n; modelData.invoke(); Notifications.hidePopup(n) }
                         }
                     }
                 }

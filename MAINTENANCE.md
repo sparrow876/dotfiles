@@ -603,6 +603,22 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Full compatibility check of recent changes (user request).
+  OK: Hyprland verify/configerrors, no duplicate binds, workspaces 1-9; no
+  failed system/user units; no broken stow links; all listed packages
+  installed; every tracked .sh (bash -n), .py and .lua parses; theme render
+  idempotent; README keybind table current; no secrets/home paths; nvim
+  plugins at the locked commits; clang-format / latexindent (4 spaces, no
+  indent.log) / rustfmt / ruff work; ccmonitor statusline live; LaTeX OCR
+  venv imports; default apps right; no .pacnew; fwupd clean. Fixed: Quickshell
+  ReferenceError "card is not defined" (NotificationPopups.qml:203): an
+  action button's invoke() makes many apps close the notification, which
+  destroys the card mid-handler; now takes `card.n` first. Listed
+  python-pandas (user, 2026-11-20). Orphans left for the user: cmake, meson
+  (qimgv/euphonica build deps), gspell, libgedit-tepl, libpeas (from gedit).
+  Files: quickshell/.config/quickshell/notifications/NotificationPopups.qml,
+  packages/pacman.txt.
+
 - **2026-11-22** — Workspaces 6 → 9 (user request): ALT + 1…9 / ALT + SHIFT +
   1…9 (keybinds.lua), persistent 1-9 (rules.lua), bar shows 一…九 with the
   pill limit following the list (bar/Workspaces.qml). README table
