@@ -2,7 +2,8 @@
 //   playing: ⏸  Artist — Title
 //   paused:  ▶  Artist — Title            (muted)
 //   nothing: ♪                            (small muted icon)
-// Click = play/pause, scroll = next / previous track.
+// Click = now-playing card (popups/MediaCard.qml), middle-click = play/pause,
+// scroll = next / previous track.
 // Long titles are cut at 420px (less if the bar is crowded: Bar.qml sets maxWidth)
 // with a soft fade instead of "…". Hovering scrolls a cut title to the left in
 // an endless loop (marquee); moving the mouse away lets it run on to the start
@@ -11,10 +12,12 @@ import QtQuick
 import Qt5Compat.GraphicalEffects
 import qs
 import qs.components
+import qs.popups
 import qs.services
 
 MouseArea {
     id: root
+    property var barWindow: null
     // Room the bar can give the module (centered between workspaces and icons)
     property real maxWidth: 100000
     readonly property int maxTitleWidth: Math.max(0, Math.min(420, Math.floor(maxWidth - playIcon.width - row.spacing)))
@@ -22,8 +25,12 @@ MouseArea {
     implicitWidth: row.implicitWidth
     implicitHeight: 32
     hoverEnabled: true
-    cursorShape: Media.hasTrack ? Qt.PointingHandCursor : Qt.ArrowCursor
-    onClicked: Media.toggle()
+    cursorShape: Qt.PointingHandCursor
+    acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+    onClicked: event => {
+        if (event.button === Qt.MiddleButton) Media.toggle()
+        else if (barWindow) Popups.toggle("media", barWindow.screen?.name ?? "")
+    }
 
     WheelHandler {
         property real acc: 0
@@ -177,7 +184,13 @@ MouseArea {
         // The title is in the bar (and scrolls on hover): just the player + keys
         readonly property var niceNames: ({ "Mozilla zen": "Zen", "Mozilla Firefox": "Firefox" })
         readonly property string playerName: niceNames[Media.player?.identity ?? ""] ?? (Media.player?.identity || "Player")
-        text: Media.hasTrack ? `${playerName} · click: play/pause · scroll: skip`
+        text: Media.hasTrack ? `${playerName} · click: details · middle-click: play/pause · scroll: skip`
                              : "Nothing playing"
+    }
+
+    // created once the bar hands over its window (Bar.qml sets barWindow)
+    Loader {
+        active: root.barWindow !== null
+        sourceComponent: MediaCard { barWindow: root.barWindow; anchorItem: root }
     }
 }

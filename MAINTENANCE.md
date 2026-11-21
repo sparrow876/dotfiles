@@ -602,7 +602,22 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
-- **2026-11-22** — Step 4 of the beautification batch UNDONE (user): popups,
+- **2026-11-22** — Now-playing card (item 6 of the visual tweaks): new
+  popups/MediaCard.qml (PopupFrame "media"): blurred cover backdrop (FastBlur),
+  cover, title / artist / album, player name, seek bar (Slider; only when
+  canSeek + positionSupported; `position` written to seek) with times, shuffle
+  / previous / play-pause / next / repeat (shuffle/repeat only if supported;
+  repeat cycles off → all → track). MPRIS doesn't push position: a 1 s timer
+  calls positionChanged() only while the card is open and playing. Bar: click
+  the music = card, middle-click = play/pause, scroll = skip (tooltip says so).
+  MediaModule gets `barWindow` from Bar.qml; the card is in a Loader until it's
+  set (a PopupWindow needs a real window as anchor). Tested with MPD (rmpc):
+  title/album/MPD/seek 0:58 of 2:08/controls correct; that track's extracted
+  cover (/tmp/mpd_mpris/artwork_*) is a solid black 520×520 JPEG, so the cover
+  shows black for it. Files: quickshell/.config/quickshell/{popups/MediaCard.qml,
+  bar/MediaModule.qml, bar/Bar.qml}.
+
+- **2026-11-22** — Step 4 of the visual-tweaks batch UNDONE (user): popups,
   notification popups, OSD, cheat sheet, stats panel and the workspace pill
   are back to plain Blue Ice (files restored from 82e5d63^; Theme.qml lost
   `cyan`, `edge`, `surfaceGradient`, `barGradient`). Steps 1, 2, 5 stay.
@@ -610,7 +625,7 @@ root cause, fix, files.
   notifications/NotificationPopups.qml, osd/Osd.qml, cheatsheet/CheatSheet.qml,
   panel/StatsPanel.qml, bar/Workspaces.qml}.
 
-- **2026-11-22** — Beautification batch (user picked 1, 2, 4, 5, 6, 11 of my
+- **2026-11-22** — Visual tweaks (user picked 1, 2, 4, 5, 6, 11 of my
   suggestions). 1: GTK accent-color 'teal' (install.sh gsettings; Nautilus
   keeps its scoped Nord accent). 2: Hyprland dim_inactive 0.07, `no_dim` on
   PiP + call pop-outs. 5: Papirus folders nordic → darkcyan (hue 186°, 45%

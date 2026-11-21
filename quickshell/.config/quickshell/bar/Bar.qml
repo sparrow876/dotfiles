@@ -62,6 +62,7 @@ PanelWindow {
 
         MediaModule {
             id: media
+            barWindow: bar
             readonly property real gapLeft: workspaces.x + workspaces.width + 24
             readonly property real gapRight: rightGroup.x - 24
             anchors.verticalCenter: parent.verticalCenter
