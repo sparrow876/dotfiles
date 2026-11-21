@@ -108,6 +108,7 @@ imagemagick
 
 ## Launcher, clipboard, emoji
 rofi                 # 2.x has native Wayland (replaces rofi-wayland)
+rofi-calc            # ALT + = calculator (libqalculate): scripts/calc.sh
 cliphist
 wl-clipboard
 wl-clip-persist

@@ -19,6 +19,8 @@ bind(mod .. " + D",      exec("rofi -show drun"),     "Apps: App launcher")
 bind(mod .. " + C",         exec(os.getenv("HOME") .. "/dotfiles/scripts/clipboard.sh"), "Apps: Clipboard history")
 bind(mod .. " + SHIFT + E", exec(os.getenv("HOME") .. "/dotfiles/scripts/emoji.sh"),     "Apps: Emoji picker")
 bind(mod .. " + E",      exec("nautilus --new-window"), "Apps: Files (Nautilus)")
+bind(mod .. " + equal",     exec(os.getenv("HOME") .. "/dotfiles/scripts/calc.sh"),      "Apps: Calculator")
+bind(mod .. " + SHIFT + F", exec(os.getenv("HOME") .. "/dotfiles/scripts/find-file.sh"), "Apps: Find a file in your home folder")
 
 -- Dropdown terminal: a kitty (class "dropterm") living on the special workspace
 -- "dropterm". Launched on first use; afterwards ALT + ` just shows/hides it and the
