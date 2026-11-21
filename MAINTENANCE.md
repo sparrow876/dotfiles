@@ -602,6 +602,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Fastfetch layout (item 11 of the visual tweaks): boxed
+  "System" / "Hardware" sections (custom modules with box-drawing lines in
+  blue, titles in bold ice), fastfetch's built-in Nerd Font icon per line via
+  `{icon}` in the key, hand-padded key names (key.width is ignored for
+  formatted keys), palette dots at the bottom. Widest line 57 columns incl.
+  the logo, like before (half-width kitty re-wrap issue). Checked in a test
+  kitty window. Files: fastfetch/.config/fastfetch/config.jsonc.
+
 - **2026-11-22** — Now-playing card (item 6 of the visual tweaks): new
   popups/MediaCard.qml (PopupFrame "media"): blurred cover backdrop (FastBlur),
   cover, title / artist / album, player name, seek bar (Slider; only when

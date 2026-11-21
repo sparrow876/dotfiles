@@ -1,4 +1,11 @@
 // fastfetch, Blue Ice colours (static file, edit directly).
+// Boxed layout: System + Hardware sections, fastfetch's own Nerd Font icon per
+// line ({icon} in the key), palette dots at the bottom. Colour codes in
+// strings: {#38;2;R;G;B} = colour, {#1;...} = bold, {#} = reset.
+// Lines stay <= ~55 columns incl. the logo: kitty opens full-size, fastfetch
+// prints, then Hyprland tiles the window and kitty re-wraps longer lines
+// (stray letters at the left edge). Key names are padded by hand: fastfetch
+// ignores key.width for formatted keys.
 {
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
     // Small Arch logo in the Blue Ice colours.
@@ -8,32 +15,30 @@
         "padding": { "top": 1, "right": 3 }
     },
     "display": {
-        "separator": "  ",
+        "separator": " ",
         "color": { "keys": "#7fb3ff", "title": "#cfe8ff", "output": "#f4f8ff" },
-        "key": { "width": 10 },
+        "key": { "type": "string" },
         "size": { "binaryPrefix": "iec", "ndigits": 1 },
         "bar": { "char": { "elapsed": "■", "total": "·" } },
         "percent": { "type": 3, "color": { "green": "#7fb3ff", "yellow": "#f2c66d", "red": "#ef6f7a" } }
     },
     "modules": [
-        "break",
-        { "type": "os",       "key": "os",     "format": "{name} {arch}" },
-        { "type": "kernel",   "key": "kernel" },
-        { "type": "wm",       "key": "wm" },
-        { "type": "uptime",   "key": "uptime" },
-        { "type": "packages", "key": "pkgs" },
-        { "type": "shell",    "key": "shell" },
-        // Lines are kept short (<= ~44 chars) so a half-width kitty doesn't
-        // re-wrap them: kitty opens full-size, fastfetch prints, then Hyprland
-        // tiles the window and kitty re-wraps long lines (stray letters at the
-        // left edge, rows pushed down). {name~27} drops "12th Gen Intel(R) Core(TM) ".
-        { "type": "cpu",      "key": "cpu",    "temp": false, "format": "{name~27} ({cores-physical}c/{cores-logical}t) @ {freq-max}" },
+        { "type": "custom", "format": "{#38;2;65;90;119}╭─ {#}{#1;38;2;207;232;255}System{#} {#38;2;65;90;119}────────────────────────{#}" },
+        { "type": "os",       "key": "{#38;2;65;90;119}│{#} {icon}  os     ",      "format": "{name} {arch}" },
+        { "type": "kernel",   "key": "{#38;2;65;90;119}│{#} {icon}  kernel ",  "format": "{release}" },
+        { "type": "wm",       "key": "{#38;2;65;90;119}│{#} {icon}  wm     ",      "format": "{pretty-name}" },
+        { "type": "uptime",   "key": "{#38;2;65;90;119}│{#} {icon}  uptime " },
+        { "type": "packages", "key": "{#38;2;65;90;119}│{#} {icon}  pkgs   " },
+        { "type": "shell",    "key": "{#38;2;65;90;119}│{#} {icon}  shell  " },
+        { "type": "custom", "format": "{#38;2;65;90;119}├─ {#}{#1;38;2;207;232;255}Hardware{#} {#38;2;65;90;119}──────────────────────{#}" },
+        // {name~27} drops "12th Gen Intel(R) Core(TM) "
+        { "type": "cpu",      "key": "{#38;2;65;90;119}│{#} {icon}  cpu    ",     "temp": false, "format": "{name~27} ({cores-logical}t)" },
         // PCI detection lists both GPUs without waking the RTX 3050
-        { "type": "gpu",      "key": "gpu",    "detectionMethod": "pci", "hideType": "none", "format": "{vendor} {name}" },
-        { "type": "memory",   "key": "memory" },
-        { "type": "disk",     "key": "disk",   "folders": "/", "format": "{size-percentage-bar} {size-used} / {size-total} ({size-percentage})" },
-        { "type": "battery",  "key": "battery" },
-        "break",
-        { "type": "colors", "symbol": "circle", "paddingLeft": 0 }
+        { "type": "gpu",      "key": "{#38;2;65;90;119}│{#} {icon}  gpu    ",     "detectionMethod": "pci", "hideType": "none", "format": "{name}" },
+        { "type": "memory",   "key": "{#38;2;65;90;119}│{#} {icon}  memory ",  "format": "{used} / {total} ({percentage})" },
+        { "type": "disk",     "key": "{#38;2;65;90;119}│{#} {icon}  disk   ",    "folders": "/", "format": "{size-used} / {size-total} ({size-percentage})" },
+        { "type": "battery",  "key": "{#38;2;65;90;119}│{#} {icon}  battery", "format": "{capacity} {status}" },
+        { "type": "custom", "format": "{#38;2;65;90;119}╰─────────────────────────────────{#}" },
+        { "type": "colors", "symbol": "circle", "paddingLeft": 2 }
     ]
 }
