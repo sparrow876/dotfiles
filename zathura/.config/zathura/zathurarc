@@ -25,7 +25,11 @@ set window-title-basename   true
 # being typed. Recent files were listed first and pushed those out of view.
 set show-recent             0
 set show-directories        true
-set n-completion-items      20
+# Rows shown while you Tab through them. zathura puts the list in a box capped
+# at 300 px that doesn't scroll to the highlighted row, so more rows than fit
+# (~22 px each at this font size; it shows n+1 rows + the group header) push
+# the highlight out of sight. 10 -> ~266 px. Lower it if you enlarge the font.
+set n-completion-items      10
 
 # SyncTeX: vimtex starts zathura with the right inverse-search command itself.
 set synctex                 true

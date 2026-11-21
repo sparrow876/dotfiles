@@ -603,6 +603,14 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-21** — zathura `:open` Tab completion ran off the visible area
+  with many entries. zathura 2026.10.23 (completion UI now in zathura's
+  girara-gtk/completion.c) puts the rows in a GtkScrolledWindow with
+  `max_content_height` 300 px that doesn't scroll to the selection, and shows
+  n-completion-items + 1 rows + the group header. Our 20 (~486 px) overflowed.
+  Fix: n-completion-items 10 (~266 px at JetBrainsMono 11). Files:
+  zathura/.config/zathura/zathurarc.
+
 - **2026-11-19** — ccmonitor shows official, account-wide limits (incl.
   Claude desktop chats, which share the plan limits but leave no local logs):
   user set `"statusLine": {"type": "command", "command":
