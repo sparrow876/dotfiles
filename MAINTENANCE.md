@@ -603,6 +603,24 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-21** — Stats panel (ALT + S) redesign (user: "looks kinda basic").
+  Same data, polling and behaviour (Esc/outside click, kill confirm, frozen
+  process rows); new look: gradient hero (clock, date, host/uptime/kernel
+  chips, Arch watermark), overview row of four gradient rings (CPU, RAM,
+  GPU, root disk), section headers with icon chip + key number, stat tiles,
+  gradient bars, taller per-core bars, process rows with usage bars + rank,
+  sliding CPU/Memory switch, cards fade/rise in staggered (45 ms each).
+  components/RingGauge.qml: gradient arc (ShapePath.strokeGradient) + glow,
+  `color2`, `labelSize`; components/Graph.qml: Catmull-Rom curve (PathSvg),
+  glow, dot on the newest value, dotted baseline until history fills (only
+  the stats panel uses either). Gotchas hit: a failed hot reload (Behavior on
+  a readonly property) left the running qs failing every later reload with
+  "<inline component> is not a type"; verified in a separate `qs -p <copy>`
+  instance, then restarted qs (qs kill + `hyprctl dispatch exec qs`). The
+  Arch glyph U+F303 had to be inserted by code point. Files:
+  quickshell/.config/quickshell/panel/StatsPanel.qml,
+  components/{RingGauge,Graph}.qml.
+
 - **2026-11-21** — zathura `:open` Tab completion ran off the visible area
   with many entries. zathura 2026.10.23 (completion UI now in zathura's
   girara-gtk/completion.c) puts the rows in a GtkScrolledWindow with
