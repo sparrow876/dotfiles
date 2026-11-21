@@ -39,14 +39,16 @@ PanelWindow {
         id: background
         anchors.fill: parent
         radius: Theme.rounding
-        // Lavender (left) -> the usual blue glass (middle) -> pastel pink (right).
-        // The ends are tinted into the dark glass, not pure pastel, so the white
-        // text and icons stay readable.
+        // Symmetric: dusty rose -> deep lavender -> Blue Ice navy (centre) ->
+        // deep lavender -> dusty rose. Deep and mostly opaque, so the blur
+        // behind can't wash it out and white text stays easy to read.
         gradient: Gradient {
             orientation: Gradient.Horizontal
-            GradientStop { position: 0.0; color: Qt.tint(Theme.glass, Qt.rgba(Theme.lavender.r, Theme.lavender.g, Theme.lavender.b, 0.5)) }
-            GradientStop { position: 0.5; color: Theme.glass }
-            GradientStop { position: 1.0; color: Qt.tint(Theme.glass, Qt.rgba(Theme.pink.r, Theme.pink.g, Theme.pink.b, 0.5)) }
+            GradientStop { position: 0.00; color: Theme.barRose }
+            GradientStop { position: 0.24; color: Theme.barLavender }
+            GradientStop { position: 0.50; color: Theme.barCentre }
+            GradientStop { position: 0.76; color: Theme.barLavender }
+            GradientStop { position: 1.00; color: Theme.barRose }
         }
         border.width: 1
         border.color: Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.12)

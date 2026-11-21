@@ -32,9 +32,7 @@ MouseArea {
         }
         StyledText {
             text: clock.date.toLocaleDateString(root.english, "ddd dd MMM")
-            // soft off-white (ice/text mix), not the muted grey-blue: it sits on
-            // the pink end of the bar gradient, where muted was only 2.6:1
-            color: Qt.tint(Theme.ice, Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.5))
+            color: Theme.muted   // 4.9:1 on the rose end of the bar gradient
         }
     }
 

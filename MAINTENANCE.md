@@ -602,6 +602,16 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Bar gradient redone (user: the pastel version "just looks
+  like a white blur", wanted tasteful + symmetric). Pastel tints at 50% over
+  the translucent glass washed out under the blur. Now deep, mostly opaque
+  tones, mirrored: barRose #66385f@0.88 (ends) → barLavender #403b73@0.85
+  (24% / 76%) → Blue Ice navy @0.82 (centre). Measured left/right ends
+  #5A3155/#593155; white text ≥ 9.8:1, muted ≥ 4.9:1, so the clock's date is
+  back to Theme.muted. Theme.qml: barRose/barLavender/barCentre replace the
+  pastel lavender/pink. Files: quickshell/.config/quickshell/{Theme.qml,
+  bar/Bar.qml,bar/Clock.qml}.
+
 - **2026-11-22** — Bar background gradient (user: lavender · current colour ·
   pastel pink): horizontal gradient, lavender tint (left) → Theme.glass
   (middle) → pastel pink #f5bde6 tint (right), ends = Qt.tint(glass, colour
