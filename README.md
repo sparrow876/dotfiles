@@ -16,7 +16,7 @@ repo and linked into place with GNU Stow; nothing is edited outside it by hand.
 - **Hyprland 0.57** (Lua config) on the Intel iGPU; games and heavy apps on the
   RTX 3050 through `prime-run`. Smooth, no-bounce animations, sensible floating
   rules, tearing for games.
-- **Quickshell bar**: workspaces 一 二 三 四 五 六; music with play/pause (a
+- **Quickshell bar**: workspaces 一 二 三 四 五 六 七 八 九; music with play/pause (a
   cut-off title scrolls smoothly on hover); tray with a drag-to-reorder order
   that's remembered; stay-awake and recording indicators; Wi-Fi / Bluetooth /
   audio menus that really connect, pair and switch devices; a brightness
@@ -164,8 +164,8 @@ Generated from the live Hyprland binds by `scripts/keybinds-to-md.sh README.md`
 
 | Keys | Action |
 |------|--------|
-| `ALT + 1…6` | Go to workspace 1–6 |
-| `ALT + SHIFT + 1…6` | Move window to workspace 1–6 |
+| `ALT + 1…9` | Go to workspace 1–9 |
+| `ALT + SHIFT + 1…9` | Move window to workspace 1–9 |
 
 ### Capture
 

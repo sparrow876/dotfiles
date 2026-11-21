@@ -67,8 +67,8 @@ bind(mod .. " + mouse:272", hl.dsp.window.drag(),   "Windows: Move with mouse (d
 bind(mod .. " + mouse:273", hl.dsp.window.resize(), "Windows: Resize with mouse (drag)", { mouse = true })
 
 -- ---------------------------------------------------------------------------
--- Workspaces 1-6
-for i = 1, 6 do
+-- Workspaces 1-9
+for i = 1, 9 do
     bind(mod .. " + " .. i,             hl.dsp.focus({ workspace = i }),       "Workspaces: Go to workspace " .. i)
     bind(mod .. " + SHIFT + " .. i,     hl.dsp.window.move({ workspace = i }), "Workspaces: Move window to workspace " .. i)
 end

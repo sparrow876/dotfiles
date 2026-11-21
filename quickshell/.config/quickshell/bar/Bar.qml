@@ -2,7 +2,7 @@
 // from the sides. Hyprland blurs everything behind it (layer rule for the
 // "quickshell" namespace in hypr/conf/rules.lua).
 //
-//   left:   workspaces 一 二 三 四 五 六
+//   left:   workspaces 一 二 三 四 五 六 七 八 九
 //   center: music (artist — title, play/pause)
 //   right:  tray (drag to reorder, Pomoclock last) · idle · recording · Wi-Fi ·
 //           Bluetooth · audio · brightness · battery · bell · clock

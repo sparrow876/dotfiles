@@ -3,8 +3,8 @@
 -- Find a layer's namespace with:     hyprctl layers
 
 -- ---------------------------------------------------------------------------
--- Workspaces 1-6 always exist (the bar shows 一 二 三 四 五 六)
-for i = 1, 6 do
+-- Workspaces 1-9 always exist (the bar shows 一 二 三 四 五 六 七 八 九)
+for i = 1, 9 do
     hl.workspace_rule({ workspace = tostring(i), persistent = true })
 end
 

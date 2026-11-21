@@ -1,4 +1,4 @@
-// Workspaces 一..六 (all six always exist; persistent rule in hypr/conf/rules.lua).
+// Workspaces 一..九 (all nine always exist; persistent rule in hypr/conf/rules.lua).
 // - active: light-blue pill that slides between workspaces
 // - occupied (has windows): white, empty: muted
 // - click switches
@@ -12,12 +12,12 @@ Item {
     id: root
     required property ShellScreen screen
 
-    readonly property var names: ["一", "二", "三", "四", "五", "六"]
+    readonly property var names: ["一", "二", "三", "四", "五", "六", "七", "八", "九"]
     readonly property int cellWidth: 36
     readonly property int spacing: 2
     readonly property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
     readonly property int activeId: monitor?.activeWorkspace?.id ?? 1
-    readonly property int activeIndex: Math.max(0, Math.min(5, activeId - 1))
+    readonly property int activeIndex: Math.max(0, Math.min(names.length - 1, activeId - 1))
 
     implicitWidth: names.length * cellWidth + (names.length - 1) * spacing
     implicitHeight: 32
@@ -33,7 +33,7 @@ Item {
         if (ws) ws.activate()
     }
 
-    // Sliding pill behind the active workspace (hidden on special workspaces > 6)
+    // Sliding pill behind the active workspace (hidden on special workspaces and > 9)
     Rectangle {
         id: pill
         y: (root.height - height) / 2
@@ -42,7 +42,7 @@ Item {
         height: 30
         radius: height / 2
         color: Theme.lightBlue
-        opacity: root.activeId >= 1 && root.activeId <= 6 ? 1 : 0
+        opacity: root.activeId >= 1 && root.activeId <= root.names.length ? 1 : 0
         Behavior on x { NumberAnimation { duration: 320; easing.type: Easing.OutQuint } }
         Behavior on opacity { NumberAnimation { duration: 150 } }
     }

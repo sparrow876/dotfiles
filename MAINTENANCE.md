@@ -603,6 +603,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Workspaces 6 → 9 (user request): ALT + 1…9 / ALT + SHIFT +
+  1…9 (keybinds.lua), persistent 1-9 (rules.lua), bar shows 一…九 with the
+  pill limit following the list (bar/Workspaces.qml). README table
+  regenerated. Files: hypr/.config/hypr/conf/{keybinds,rules}.lua,
+  quickshell/.config/quickshell/bar/{Workspaces,Bar}.qml, README.md.
+
 - **2026-11-21** — OPEN (user: "later"): battery lasts ~1 h browsing →
   ~50 W draw from 52.7 Wh, not a dead battery. Suspects: platform_profile
   pinned to performance also on battery (system/units/platform-profile-
