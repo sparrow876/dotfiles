@@ -31,6 +31,10 @@ hl.config({
         rounding_power = 2,
         active_opacity   = 1.0,
         inactive_opacity = 1.0,
+        -- Unfocused windows slightly dimmed so the focused one stands out
+        -- (PiP and call pop-outs are exempt: no_dim in rules.lua)
+        dim_inactive     = true,
+        dim_strength     = 0.07,
 
         shadow = {
             enabled      = true,

@@ -109,6 +109,7 @@ hl.window_rule({
     float = true,
     pin   = true,
     keep_aspect_ratio = true,
+    no_dim = true,   -- a video you watch while working elsewhere stays bright
     size  = { "monitor_w*0.25", "monitor_h*0.25" },
     move  = { "monitor_w-window_w-24", "monitor_h-window_h-24" },
 })
@@ -125,6 +126,7 @@ hl.window_rule({
     match = { class = "^(teams-for-linux|vesktop)$", title = "(?i)^(.*pop-?out.*|.*mini.?view.*|picture.in.picture)$" },
     float = true,
     pin   = true,
+    no_dim = true,
     size  = { "monitor_w*0.25", "monitor_h*0.25" },
     move  = { "monitor_w-window_w-24", "monitor_h-window_h-24" },
 })

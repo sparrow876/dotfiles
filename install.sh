@@ -245,6 +245,7 @@ step_gsettings() {
   info "Applying GNOME/GTK settings"
   local s=org.gnome.desktop.interface
   gsettings set $s color-scheme 'prefer-dark'
+  gsettings set $s accent-color 'teal'   # GTK4/libadwaita accent, matches the bar (Nautilus keeps Nord)
   gsettings set $s gtk-theme 'Adwaita-dark'
   gsettings set $s icon-theme 'Papirus-Dark'
   gsettings set $s cursor-theme 'Bibata-Modern-Ice'
