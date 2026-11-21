@@ -59,9 +59,9 @@ PopupWindow {
         width: parent.width
         height: parent.height
         radius: Theme.rounding
-        color: Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.88)
+        gradient: Theme.surfaceGradient   // steel blue at the top, like the bar above
         border.width: 1
-        border.color: Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.12)
+        border.color: Theme.edge
         opacity: 0
         transform: Translate { id: slide; y: -8 }
         focus: true

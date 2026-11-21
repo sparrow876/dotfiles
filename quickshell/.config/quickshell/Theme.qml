@@ -26,6 +26,27 @@ Singleton {
     readonly property color barMid: Qt.rgba(0.101, 0.223, 0.333, 0.93)    // #1a3955 steel blue
     readonly property color barCentre: Qt.rgba(0.164, 0.206, 0.344, 0.93) // #2a3458 indigo
 
+    // The bar's palette carried into the rest of the shell (2026-11-22):
+    readonly property color cyan: "#7fd6e8"   // accent partner of lightBlue (workspace pill)
+    // faint teal-tinted edge for popups / cards
+    readonly property color edge: Qt.rgba(cyan.r, cyan.g, cyan.b, 0.16)
+    // Popups, notifications, panels: steel blue at the top (as if lit by the
+    // bar) fading into the usual surface glass
+    readonly property Gradient surfaceGradient: Gradient {
+        GradientStop { position: 0.0; color: Qt.rgba(0.101, 0.223, 0.333, 0.94) }   // barMid, a bit more opaque
+        GradientStop { position: 0.38; color: Qt.rgba(0.106, 0.149, 0.231, 0.90) }  // surface
+        GradientStop { position: 1.0; color: Qt.rgba(0.106, 0.149, 0.231, 0.90) }
+    }
+    // Small bar-shaped things (OSD pill): the bar's mirrored gradient
+    readonly property Gradient barGradient: Gradient {
+        orientation: Gradient.Horizontal
+        GradientStop { position: 0.00; color: Qt.rgba(0.000, 0.244, 0.290, 0.93) }
+        GradientStop { position: 0.26; color: Qt.rgba(0.101, 0.223, 0.333, 0.93) }
+        GradientStop { position: 0.50; color: Qt.rgba(0.164, 0.206, 0.344, 0.93) }
+        GradientStop { position: 0.74; color: Qt.rgba(0.101, 0.223, 0.333, 0.93) }
+        GradientStop { position: 1.00; color: Qt.rgba(0.000, 0.244, 0.290, 0.93) }
+    }
+
     // Frosted glass surface (surface color at glassAlpha)
     readonly property real glassAlpha: 0.75
     readonly property color glass: Qt.rgba(surface.r, surface.g, surface.b, glassAlpha)

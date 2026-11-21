@@ -602,6 +602,21 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Beautification batch (user picked 1, 2, 4, 5, 6, 11 of my
+  suggestions). 1: GTK accent-color 'teal' (install.sh gsettings; Nautilus
+  keeps its scoped Nord accent). 2: Hyprland dim_inactive 0.07, `no_dim` on
+  PiP + call pop-outs. 5: Papirus folders nordic → darkcyan (hue 186°, 45%
+  sat, closest to the bar teal; ROOT-STEPS §11, user runs it). 4: the bar's
+  palette in the shell: Theme.qml gains `cyan`, `edge` (teal-tinted border),
+  `surfaceGradient` (steel blue top → surface glass) used by PopupFrame (all
+  popups + notification center), cheat sheet and stats panel; `barGradient`
+  (the bar's mirrored gradient) on the OSD pill; workspace pill cyan →
+  lightBlue. Notification popups: tried the gradient, user asked to remove
+  it → plain glass + edge. Files: install.sh, hypr/.config/hypr/conf/{look,
+  rules}.lua, system/ROOT-STEPS.md, quickshell/.config/quickshell/{Theme.qml,
+  popups/PopupFrame.qml, notifications/NotificationPopups.qml, osd/Osd.qml,
+  cheatsheet/CheatSheet.qml, panel/StatsPanel.qml, bar/Workspaces.qml}.
+
 - **2026-11-22** — Bar gradient: centre looked "goofy", too dark (navy at 13%
   lightness vs 18-23% elsewhere). Equal HSL lightness wasn't enough (blue
   looks darker than teal: rel. luminance still 0.043 → 0.023), so the colours

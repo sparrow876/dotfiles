@@ -91,9 +91,9 @@ PanelWindow {
             width: parent.width
             height: parent.height
             radius: Theme.rounding
-            color: Theme.glass
+            color: Theme.glass   // plain glass (no gradient on notification popups, user choice)
             border.width: 1
-            border.color: card.critical ? Theme.critical : Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.12)
+            border.color: card.critical ? Theme.critical : Theme.edge
             opacity: 1 - Math.min(0.8, x / card.width)
             Behavior on x { enabled: !hover.drag.active; NumberAnimation { duration: 180; easing.type: Easing.OutQuint } }
 
