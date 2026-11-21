@@ -3,9 +3,13 @@
 // by `max` (0..max -> bottom..top). Up to two series: `values` (color) and
 // optional `values2` (color2), e.g. download/upload. New points enter on the
 // right; until the history is full the left part shows a dotted baseline.
-// Motion is continuous: each new point glides in from the right over `glide`
-// ms (the poll interval), the oldest one slides out on the left, the dot
-// follows the curve at the right edge and a changing `max` eases in.
+// No jumps: each new point eases in from the right (~0.45 s, then rest until
+// the next value), the oldest slides out on the left, the dot follows the
+// curve at the right edge and a changing `max` eases in. (A continuous glide
+// over the whole poll interval kept the panel redrawing at 144 Hz.)
+// Cheap on purpose: the curves are built once per new value and the glide
+// only slides the finished shape sideways (a transform, no re-tessellation;
+// rebuilding the paths every frame cost ~70% of a core with the panel open).
 import QtQuick
 import QtQuick.Shapes
 import qs
@@ -19,13 +23,14 @@ Item {
     property color color: Theme.lightBlue
     property color color2: Theme.ice
     property int glide: 1500                  // = SystemStats.interval
+    property bool minimal: false              // sparkline: no grid, baseline, glow or dots
     implicitHeight: 60
 
     // one point's width; capacity - 2 steps across, so at rest the oldest
     // point sits just off the left edge (it slides out instead of popping)
     readonly property real step: width / Math.max(1, capacity - 2)
     property real shift: 0                    // step -> 0 while a new point glides in
-    NumberAnimation { id: glideAnim; target: g; property: "shift"; from: g.step; to: 0; duration: g.glide }
+    NumberAnimation { id: glideAnim; target: g; property: "shift"; from: g.step; to: 0; duration: Math.min(g.glide, 450); easing.type: Easing.OutCubic }
     onValuesChanged: if (values.length > 1) glideAnim.restart()
     // vertical scale eases instead of jumping when max changes
     property real vmax: max
@@ -35,7 +40,7 @@ Item {
         const pts = []
         const n = vals.length
         if (n === 0 || width <= 0) return pts
-        const x0 = width - (n - 1) * step + shift
+        const x0 = width - (n - 1) * step   // resting position; `shift` moves the shape
         for (let i = 0; i < n; i++) {
             const v = Math.max(0, Math.min(1, vals[i] / Math.max(1e-9, vmax)))
             pts.push({ x: x0 + i * step, y: height - 2 - v * (height - 6) })
@@ -61,10 +66,12 @@ Item {
     }
     readonly property var pts1: points(values)
     readonly property var pts2: points(values2)
+    readonly property string curve1: curve(pts1)
+    readonly property string curve2: curve(pts2)
 
     // faint grid lines + dotted baseline where there's no history yet
     Repeater {
-        model: 3
+        model: g.minimal ? 0 : 3
         Rectangle {
             required property int index
             width: g.width; height: 1; y: Math.round(g.height * (index + 1) / 4)
@@ -72,17 +79,22 @@ Item {
         }
     }
     Row {
+        visible: !g.minimal
         y: g.height - 2
         spacing: 4
         Repeater {
-            model: g.pts1.length ? Math.max(0, Math.floor((g.pts1[0].x - 6) / 7)) : Math.floor(g.width / 7)
+            model: g.pts1.length ? Math.max(0, Math.floor((g.pts1[0].x - 6) / 7)) : Math.max(0, Math.floor(g.width / 7))
             Rectangle { width: 3; height: 1; color: Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.18) }
         }
     }
 
-    Shape {
+    Item {
         anchors.fill: parent
         clip: true
+    Shape {
+        width: g.width
+        height: g.height
+        transform: Translate { x: g.shift }
         preferredRendererType: Shape.CurveRenderer
         ShapePath {
             strokeColor: "transparent"; strokeWidth: 0
@@ -94,36 +106,39 @@ Item {
             PathSvg { path: g.area(g.pts1) }
         }
         ShapePath {   // glow
-            strokeColor: Qt.rgba(g.color.r, g.color.g, g.color.b, 0.18); strokeWidth: 5; fillColor: "transparent"
+            strokeColor: g.minimal ? "transparent" : Qt.rgba(g.color.r, g.color.g, g.color.b, 0.18); strokeWidth: 5; fillColor: "transparent"
             joinStyle: ShapePath.RoundJoin; capStyle: ShapePath.RoundCap
-            PathSvg { path: g.curve(g.pts1) }
+            PathSvg { path: g.curve1 }
         }
         ShapePath {
             strokeColor: g.color; strokeWidth: 1.8; fillColor: "transparent"
             joinStyle: ShapePath.RoundJoin; capStyle: ShapePath.RoundCap
-            PathSvg { path: g.curve(g.pts1) }
+            PathSvg { path: g.curve1 }
         }
         ShapePath {
-            strokeColor: g.pts2.length ? Qt.rgba(g.color2.r, g.color2.g, g.color2.b, 0.16) : "transparent"
+            strokeColor: g.pts2.length && !g.minimal ? Qt.rgba(g.color2.r, g.color2.g, g.color2.b, 0.16) : "transparent"
             strokeWidth: 5; fillColor: "transparent"
             joinStyle: ShapePath.RoundJoin; capStyle: ShapePath.RoundCap
-            PathSvg { path: g.curve(g.pts2) }
+            PathSvg { path: g.curve2 }
         }
         ShapePath {
             strokeColor: g.pts2.length ? g.color2 : "transparent"; strokeWidth: 1.5; fillColor: "transparent"
             joinStyle: ShapePath.RoundJoin; capStyle: ShapePath.RoundCap
-            PathSvg { path: g.curve(g.pts2) }
+            PathSvg { path: g.curve2 }
         }
+    }
     }
 
     // where the curve crosses the right edge (the newest point is still
     // gliding in from beyond it): linear between the last two points
+    // (points are at rest positions; on screen they're `shift` further right)
     function head(pts) {
         const n = pts.length
         if (n === 0) return null
-        if (n === 1 || pts[n - 1].x <= width) return { x: Math.min(width, pts[n - 1].x), y: pts[n - 1].y }
+        const bx = pts[n - 1].x + shift
+        if (n === 1 || bx <= width) return { x: Math.min(width, bx), y: pts[n - 1].y }
         const a = pts[n - 2], b = pts[n - 1]
-        const t = Math.max(0, Math.min(1, (width - a.x) / Math.max(1e-6, b.x - a.x)))
+        const t = Math.max(0, Math.min(1, (width - (a.x + shift)) / Math.max(1e-6, b.x - a.x)))
         return { x: width, y: a.y + (b.y - a.y) * t }
     }
     // dot on the newest value (+ halo)
@@ -136,6 +151,6 @@ Item {
         Rectangle { anchors.fill: parent; radius: 6; color: Qt.rgba(parent.tint.r, parent.tint.g, parent.tint.b, 0.22) }
         Rectangle { anchors.centerIn: parent; width: 6; height: 6; radius: 3; color: parent.tint }
     }
-    Dot { pt: g.head(g.pts1); tint: g.color }
-    Dot { pt: g.head(g.pts2); tint: g.color2 }
+    Dot { pt: g.minimal ? null : g.head(g.pts1); tint: g.color }
+    Dot { pt: g.minimal ? null : g.head(g.pts2); tint: g.color2 }
 }

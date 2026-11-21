@@ -603,6 +603,27 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-21** — Stats panel v2 (user: v1 = tag `stats-panel-v1`, then "add
+  all kinds of bells and whistles"). Added: greeting, live clock with seconds
+  + seconds line, static soft glows, health pill (most serious issue first,
+  pulses only on warn/critical), rings with ticks, count-up and alert pulse,
+  sparklines behind the CPU tiles + thermometer, hover a thread → its own
+  60 s graph, network peaks + pulsing arrows while traffic flows, charging
+  shimmer, process app icons (DesktopEntries, cached) / letter badges,
+  collapsible sections saved in `~/.local/state/quickshell/by-shell/<id>/
+  stats-panel.json`, card hover glow, skeleton placeholders, "Live" footer.
+  Performance (CPU of qs with the panel open, 15-20 s average): first v2
+  69%, v1 62%; after fixes 29%, closed 0%. Fixes: graphs build their curve
+  once per value and slide it with a Translate (no per-frame path rebuild),
+  eased 0.45 s slide instead of a continuous glide, no looping animations
+  while all is normal (they force 144 Hz redraws), no tween on the seconds
+  line, icon lookups cached. Incident: a multi-file install wedged the hot
+  reload; my restart used `hyprctl dispatch exec qs`, which fails in Lua mode
+  (output was silenced), so the bar was down ~2 min until restarted with
+  `hyprctl dispatch 'hl.dsp.exec_cmd("qs")'`. Files:
+  quickshell/.config/quickshell/panel/StatsPanel.qml,
+  components/{RingGauge,Graph}.qml.
+
 - **2026-11-21** — Stats panel graphs glide instead of jumping every poll:
   Graph.qml animates a horizontal `shift` (one step -> 0 over `glide` =
   SystemStats.interval, linear) so each new point slides in from the right
