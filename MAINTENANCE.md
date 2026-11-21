@@ -603,6 +603,18 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Layout toggle made smooth (user). Bar: the layer surface no
+  longer changes size (full width × 52, exclusionMode Normal, exclusiveZone
+  52 spaced / 36 compact, `mask: Region { item: background }` so the empty
+  margin is click-through; ignore_alpha keeps it unblurred); one animated
+  `spaced` value (0..1, 320 ms OutQuint) drives the strip's x/y/width/height,
+  radius and border alpha. Hyprland: layout-mode.sh applies the mode live with
+  `hyprctl eval "hl.config(...)"` instead of `hyprctl reload`: gaps change
+  once (windowsMove glides the tiles, 0.3 s), rounding steps 14 ↔ 0 in six
+  50 ms steps (not animatable), shadows switch where least visible. ~0.36 s
+  per switch; frame captures show the bar and windows moving gradually.
+  Files: scripts/layout-mode.sh, quickshell/.config/quickshell/bar/Bar.qml.
+
 - **2026-11-22** — Calculator, file finder, layout toggle (user request).
   ALT + = scripts/calc.sh: rofi-calc (libqalculate; package added, user
   installs), Enter copies the result. ALT + SHIFT + F scripts/find-file.sh:

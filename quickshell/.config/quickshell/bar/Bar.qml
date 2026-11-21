@@ -25,14 +25,22 @@ PanelWindow {
     WlrLayershell.namespace: "quickshell-bar"
     WlrLayershell.layer: WlrLayer.Top
 
+    // The window itself never changes: full width, 52 px (8 margin + 44 bar).
+    // The visible strip inside animates between the two layout modes, and
+    // only it takes clicks (mask); resizing the layer surface every frame
+    // would jank. Space reserved for windows: 52 (spaced) or 36 (compact);
+    // Hyprland glides the windows to it (windowsMove animation).
     anchors { top: true; left: true; right: true }
-    margins {
-        top: LayoutMode.compact ? 0 : 8
-        left: LayoutMode.compact ? 0 : 12
-        right: LayoutMode.compact ? 0 : 12
-    }
-    implicitHeight: LayoutMode.compact ? 36 : 44
+    implicitHeight: 52
+    exclusionMode: ExclusionMode.Normal
+    exclusiveZone: LayoutMode.compact ? 36 : 52
+    mask: Region { item: background }
     color: "transparent"
+
+    // 1 = spaced (floating, rounded), 0 = compact (flush, square), animated;
+    // matches Hyprland's 0.3 s window glide
+    property real spaced: LayoutMode.compact ? 0 : 1
+    Behavior on spaced { NumberAnimation { duration: 320; easing.type: Easing.OutQuint } }
 
     // The Wayland idle inhibitor, attached to this bar's surface (hypridle obeys it)
     IdleInhibitor {
@@ -42,8 +50,11 @@ PanelWindow {
 
     Rectangle {
         id: background
-        anchors.fill: parent
-        radius: LayoutMode.compact ? 0 : Theme.rounding
+        x: 12 * bar.spaced
+        y: 8 * bar.spaced
+        width: bar.width - 24 * bar.spaced
+        height: 36 + 8 * bar.spaced
+        radius: Theme.rounding * bar.spaced
         // "Deep glacier", mirrored: teal -> steel blue -> navy (centre) ->
         // steel blue -> teal (colours in Theme.qml).
         gradient: Gradient {
@@ -54,8 +65,8 @@ PanelWindow {
             GradientStop { position: 0.74; color: Theme.barMid }
             GradientStop { position: 1.00; color: Theme.barEdge }
         }
-        border.width: LayoutMode.compact ? 0 : 1
-        border.color: Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.12)
+        border.width: 1
+        border.color: Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.12 * bar.spaced)
 
         Workspaces {
             id: workspaces
