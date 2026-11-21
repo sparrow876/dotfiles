@@ -39,16 +39,15 @@ PanelWindow {
         id: background
         anchors.fill: parent
         radius: Theme.rounding
-        // Symmetric: dusty rose -> deep lavender -> Blue Ice navy (centre) ->
-        // deep lavender -> dusty rose. Deep and mostly opaque, so the blur
-        // behind can't wash it out and white text stays easy to read.
+        // "Deep glacier", mirrored: teal -> steel blue -> navy (centre) ->
+        // steel blue -> teal (colours in Theme.qml).
         gradient: Gradient {
             orientation: Gradient.Horizontal
-            GradientStop { position: 0.00; color: Theme.barRose }
-            GradientStop { position: 0.24; color: Theme.barLavender }
+            GradientStop { position: 0.00; color: Theme.barEdge }
+            GradientStop { position: 0.26; color: Theme.barMid }
             GradientStop { position: 0.50; color: Theme.barCentre }
-            GradientStop { position: 0.76; color: Theme.barLavender }
-            GradientStop { position: 1.00; color: Theme.barRose }
+            GradientStop { position: 0.74; color: Theme.barMid }
+            GradientStop { position: 1.00; color: Theme.barEdge }
         }
         border.width: 1
         border.color: Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.12)

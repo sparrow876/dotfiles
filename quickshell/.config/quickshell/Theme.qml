@@ -16,14 +16,13 @@ Singleton {
     readonly property color muted: "#9fb3c8"
     readonly property color warn: "#f2c66d"
     readonly property color critical: "#ef6f7a"
-    // Bar gradient (symmetric): rose ends -> lavender -> navy centre. Deep,
-    // mostly opaque tones: pastels went whitish under the blur.
-    readonly property color barRose: Qt.rgba(0.50, 0.18, 0.44, 0.95)      // #802e70 rose
-    readonly property color barLavender: Qt.rgba(0.30, 0.25, 0.62, 0.93)  // #4d409e lavender
-    readonly property color barCentre: Qt.rgba(surface.r, surface.g, surface.b, 0.85)
-    // Muted text on the bar: a bit brighter than `muted`, so dim text stays
-    // readable (>= 5.2:1) on the rose/lavender ends
-    readonly property color barMuted: Qt.tint(muted, Qt.rgba(ice.r, ice.g, ice.b, 0.4))
+    // Bar gradient, "deep glacier" (symmetric): deep teal ends -> steel blue
+    // -> navy centre. Neighbouring hues (~190 -> 213 -> 222 deg) of the Blue
+    // Ice family, moderate saturation, low lightness, nearly opaque (the blur
+    // washed out lighter/translucent tones).
+    readonly property color barEdge: Qt.rgba(0.07, 0.26, 0.31, 0.93)      // #12424f deep teal
+    readonly property color barMid: Qt.rgba(0.12, 0.23, 0.38, 0.92)       // #1f3a61 steel blue
+    readonly property color barCentre: Qt.rgba(0.08, 0.11, 0.19, 0.90)    // #141d30 navy
 
     // Frosted glass surface (surface color at glassAlpha)
     readonly property real glassAlpha: 0.75

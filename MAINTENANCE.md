@@ -602,6 +602,16 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Bar gradient redesigned, pink/lavender dropped (user:
+  "choose the colors yourself … make something good"). "Deep glacier",
+  mirrored: barEdge #12424f@0.93 (deep teal) → barMid #1f3a61@0.92 (steel
+  blue, 26% / 74%) → barCentre #141d30@0.90 (navy). Measured: hue 193 → 215
+  → 224°, sat 64 → 53 → 42%, lightness 18-23% (centre 13%), both halves
+  identical; white text 11-16:1, Theme.muted 5.5:1, so barMuted was removed
+  and the date / empty workspaces use Theme.muted again. Files:
+  quickshell/.config/quickshell/{Theme.qml,bar/Bar.qml,bar/Clock.qml,
+  bar/Workspaces.qml}.
+
 - **2026-11-22** — Bar gradient more vivid (user: "too washed out"): barRose
   #802e70@0.95, barLavender #4d409e@0.93, centre navy @0.85 (measured ends
   #772C6B, quarters #463A91, symmetric). White text 8.4:1; Theme.muted fell

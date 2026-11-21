@@ -77,7 +77,7 @@ Item {
                     font.family: Theme.fontCjk
                     font.pixelSize: 17
                     font.weight: cell.active ? Font.Bold : Font.Medium
-                    color: cell.active ? Theme.base : (cell.occupied ? Theme.text : Theme.barMuted)
+                    color: cell.active ? Theme.base : (cell.occupied ? Theme.text : Theme.muted)
                     Behavior on color { ColorAnimation { duration: 200 } }
                 }
             }

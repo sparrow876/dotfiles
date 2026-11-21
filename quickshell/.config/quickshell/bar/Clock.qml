@@ -32,7 +32,7 @@ MouseArea {
         }
         StyledText {
             text: clock.date.toLocaleDateString(root.english, "ddd dd MMM")
-            color: Theme.barMuted   // readable on the rose end of the bar gradient
+            color: Theme.muted
         }
     }
 
