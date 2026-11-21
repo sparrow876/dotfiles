@@ -7,10 +7,9 @@
 // Qt redraw the whole panel at 144 Hz); motion happens in short bursts after
 // each poll. Measured ~70% of a core with continuous motion, see MAINTENANCE.
 //
-//  hero: greeting, live clock + seconds line, drifting glows, health pill,
-//        host/uptime/kernel chips
+//  hero: greeting, live clock + seconds line, soft glows, host/uptime/kernel chips
 //  overview: CPU · RAM · GPU · disk rings (ticks, count-up, pulse on alert)
-//  processor: tiles with sparklines + thermometer, per-thread heat map
+//  processor: tiles (freq, temp + thermometer, load avg), per-thread heat map
 //             (hover a thread: its own 60 s graph), 60 s graph
 //  memory · graphics · storage · network (peaks, pulsing arrows) · battery
 //  (charging shimmer) · processes (app icons, usage bars, CPU/Memory switch)
@@ -100,26 +99,8 @@ PanelWindow {
     readonly property real temp: s?.temp ?? 0
     readonly property string tempLevel: temp >= 90 ? "critical" : temp >= 80 ? "warn" : "normal"
 
-    // One-line health summary for the hero pill: the most serious thing first
-    readonly property var health: {
-        if (!s) return { level: "normal", text: "Reading…" }
-        const bat = Power.display, onBat = UPower.onBattery, bp = bat?.percentage ?? 1
-        const checks = [
-            [tempLevel, `CPU hot · ${Math.round(temp)} °C`],
-            [SystemStats.level(SystemStats.cpu, 0.85, 0.95), `CPU busy · ${pct(SystemStats.cpu)}`],
-            [SystemStats.level(SystemStats.mem, 0.85, 0.95), `Memory pressure · ${pct(SystemStats.mem)}`],
-            [SystemStats.level(rootUse, 0.9, 0.95), `Disk almost full · ${pct(rootUse)}`],
-            [onBat && bp < 0.1 ? "critical" : onBat && bp < 0.2 ? "warn" : "normal", `Battery low · ${pct(bp)}`],
-        ]
-        for (const lvl of ["critical", "warn"])
-            for (const c of checks) if (c[0] === lvl) return { level: lvl, text: c[1] }
-        return { level: "normal", text: "All systems normal" }
-    }
 
-    // --- panel-local histories (sparklines, per-thread graphs) ---------------
-    property var tempHistory: []
-    property var freqHistory: []
-    property var loadHistory: []
+    // --- panel-local histories (per-thread graphs, network peaks) ------------
     property var coreHistory: []
     property real rxPeak: 0
     property real txPeak: 0
@@ -128,14 +109,7 @@ PanelWindow {
         target: SystemStats
         function onSnapChanged() {
             const s = SystemStats.snap
-            if (!s) {
-                panel.tempHistory = []; panel.freqHistory = []; panel.loadHistory = []
-                panel.coreHistory = []; panel.rxPeak = 0; panel.txPeak = 0
-                return
-            }
-            if (s.temp != null) panel.tempHistory = SystemStats.push(panel.tempHistory, s.temp)
-            if (s.freq) panel.freqHistory = SystemStats.push(panel.freqHistory, s.freq[0])
-            panel.loadHistory = SystemStats.push(panel.loadHistory, s.load[0])
+            if (!s) { panel.coreHistory = []; panel.rxPeak = 0; panel.txPeak = 0 }
         }
         function onCpuHistoryChanged() {
             const c = SystemStats.cores
@@ -292,44 +266,6 @@ PanelWindow {
                             text: Qt.formatDate(clock.date, "dddd, d MMMM")
                             color: Theme.muted
                         }
-                        // health pill
-                        Rectangle {
-                            id: pill
-                            readonly property color tint: panel.tone(panel.health.level)
-                            Layout.topMargin: 8
-                            implicitWidth: pillRow.implicitWidth + 20
-                            implicitHeight: 26
-                            radius: 13
-                            color: Qt.rgba(tint.r, tint.g, tint.b, 0.14)
-                            border.width: 1
-                            border.color: Qt.rgba(tint.r, tint.g, tint.b, 0.35)
-                            Behavior on color { ColorAnimation { duration: 300 } }
-                            Row {
-                                id: pillRow
-                                anchors.centerIn: parent
-                                spacing: 7
-                                Rectangle {
-                                    id: pillDot
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    width: 8; height: 8; radius: 4
-                                    color: pill.tint
-                                    // pulses only when something needs attention
-                                    SequentialAnimation on opacity {
-                                        running: panel.open && panel.health.level !== "normal"; loops: Animation.Infinite
-                                        onStopped: pillDot.opacity = 1
-                                        NumberAnimation { to: 0.35; duration: 900; easing.type: Easing.InOutSine }
-                                        NumberAnimation { to: 1; duration: 900; easing.type: Easing.InOutSine }
-                                    }
-                                }
-                                StyledText {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    text: panel.health.text
-                                    color: pill.tint
-                                    font.pixelSize: Theme.fontSizeSmall - 1
-                                    font.weight: Font.Bold
-                                }
-                            }
-                        }
                         Flow {
                             Layout.fillWidth: true
                             Layout.topMargin: 8
@@ -408,24 +344,20 @@ PanelWindow {
                             caption: "Frequency"
                             value: panel.s?.freq ? `${(panel.s.freq[0] / 1000).toFixed(2)} GHz` : "–"
                             sub: panel.s?.freq ? `max ${(panel.s.freq[1] / 1000).toFixed(2)}` : ""
-                            spark: panel.freqHistory
-                            sparkMax: panel.s?.freq?.[1] ?? 1
                         }
                         Tile {
                             caption: "Temperature"
                             value: panel.s?.temp != null ? `${Math.round(panel.s.temp)} °C` : "–"
                             valueColor: panel.tempLevel === "normal" ? Theme.text : panel.tone(panel.tempLevel)
-                            spark: panel.tempHistory
-                            sparkMax: 100
-                            sparkColor: panel.tempLevel === "normal" ? Theme.ice : panel.tone(panel.tempLevel)
                             thermo: panel.s?.temp != null ? Math.min(1, Math.max(0, (panel.temp - 30) / 70)) : -1
                         }
                         Tile {
-                            caption: "Load"
+                            // load average: tasks running or waiting for the CPU, averaged
+                            // over 1 / 5 / 15 min; below the thread count = keeping up
+                            caption: "Load avg (1 min)"
                             value: panel.s ? panel.s.load[0].toFixed(2) : "–"
-                            sub: panel.s ? `${panel.s.load[1].toFixed(2)} · ${panel.s.load[2].toFixed(2)}` : ""
-                            spark: panel.loadHistory
-                            sparkMax: Math.max(1, SystemStats.cores.length, ...panel.loadHistory)
+                            valueColor: panel.s && panel.s.load[0] > SystemStats.cores.length ? Theme.warn : Theme.text
+                            sub: panel.s ? `5m ${panel.s.load[1].toFixed(2)}  15m ${panel.s.load[2].toFixed(2)}` : ""
                         }
                     }
                     // Per-thread heat map: one tile per thread, brighter = busier
@@ -1082,7 +1014,7 @@ PanelWindow {
         }
     }
     // Small stat tile: optional glyph (pulses while `pulse`), caption, value,
-    // sub line, optional sparkline behind and a thermometer bar
+    // sub line and an optional thermometer bar
     component Tile: Rectangle {
         id: tile
         property string glyph
@@ -1090,9 +1022,6 @@ PanelWindow {
         property string value
         property string sub
         property color valueColor: Theme.text
-        property var spark: []
-        property real sparkMax: 1
-        property color sparkColor: Theme.lightBlue
         property real thermo: -1
         property bool pulse: false
         property bool live: true
@@ -1102,20 +1031,6 @@ PanelWindow {
         radius: 10
         color: Qt.rgba(Theme.base.r, Theme.base.g, Theme.base.b, 0.35)
         clip: true
-        Graph {
-            visible: tile.spark.length > 1
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            height: parent.height * 0.55
-            minimal: true
-            opacity: 0.55
-            values: tile.spark
-            max: tile.sparkMax
-            capacity: SystemStats.historyLength
-            glide: SystemStats.interval
-            color: tile.sparkColor
-        }
         ColumnLayout {
             id: tcol
             anchors.left: parent.left

@@ -603,6 +603,13 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-21** — Stats panel v2 trimmed (user): removed the sparklines
+  behind the Frequency / Temperature / Load tiles (and their histories) and
+  the "All systems normal" health pill (+ the health summary). Load tile now
+  says what it is: "Load avg (1 min)", sub "5m … 15m …", value turns warn
+  colour above the thread count. Thermometer under Temperature kept. Files:
+  quickshell/.config/quickshell/panel/StatsPanel.qml.
+
 - **2026-11-21** — Stats panel v2 (user: v1 = tag `stats-panel-v1`, then "add
   all kinds of bells and whistles"). Added: greeting, live clock with seconds
   + seconds line, static soft glows, health pill (most serious issue first,
