@@ -603,6 +603,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-21** — Battery health baseline (user asked; no change made):
+  BAT0 (HP "Primary", Li-ion) energy_full 52.65 Wh / energy_full_design
+  70.07 Wh = 75.1%, cycle_count 49 (`/sys/class/power_supply/BAT0`, same as
+  `upower -i`). High wear for 49 cycles → calendar/heat ageing at 100% on AC
+  (or a mis-learned full value). No charge_control_end_threshold in sysfs on
+  this model; advised: one full calibration cycle, HP BIOS "Adaptive Battery
+  Optimizer", HP F2 Battery Test if under warranty. Recheck these numbers
+  later to see the trend.
+
 - **2026-11-21** — Stats panel v2 trimmed (user): removed the sparklines
   behind the Frequency / Temperature / Load tiles (and their histories) and
   the "All systems normal" health pill (+ the health summary). Load tile now
