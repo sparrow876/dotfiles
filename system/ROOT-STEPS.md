@@ -393,8 +393,9 @@ Undo: `sudo systemctl disable sddm.service`, `sudo rm -r /usr/share/sddm/themes/
 ## 11. Files, Google Drive, folder colors (build step 16)
 
 ```sh
-# Folder icons in Nord blue to match Nautilus (changes Papirus' folders system-wide)
-sudo papirus-folders -C nordic --theme Papirus-Dark
+# Folder icons in a muted dark cyan to match the bar's teal (changes Papirus'
+# folders system-wide; was "nordic" until 2026-11-22)
+sudo papirus-folders -C darkcyan --theme Papirus-Dark
 
 # Google Drive: sign in once (no sudo, see system/APPS.md for the prompts),
 # then mount it at every login
