@@ -35,7 +35,7 @@ Singleton {
 
     // Skipping keeps the play/pause state. MPRIS has no "skip but stay
     // paused" and players start the new track on Next/Previous, so:
-    // - a burst of skips (scrolling several notches) counts as one: the state
+    // - a burst of skips (clicking next/previous quickly) counts as one: the state
     //   is taken at the FIRST skip and kept until 2.5 s after the last one
     //   (re-reading it mid-burst saw the auto-started track as "playing")
     // - pause is sent right after each skip (MPD runs commands in order, so
