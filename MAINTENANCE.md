@@ -604,6 +604,16 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Now-playing card lagged / hung on some tracks (user:
+  Robert Miles "Children" → "$edji & baby.murcielaga — STATE OF AFFAIRS").
+  That album's cover is a 3000×3000 JPEG (5.2 MB, written by mpd-mpris to
+  /tmp/mpd_mpris/artwork_*). The blurred backdrop Image had no sourceSize, so
+  it decoded the full 9-megapixel image and FastBlur (radius 56) ran on it.
+  Fix: backdrop sourceSize 64×64 (it's blurred anyway), FastBlur cached +
+  radius 40; the cover thumbnail already decoded at 176×176. Tested on that
+  track: card opens normally, qs 0.8% of a core while open, RSS unchanged.
+  Files: quickshell/.config/quickshell/popups/MediaCard.qml.
+
 - **2026-11-22** — Clicking a window in the overview didn't switch to it.
   activate() called Toplevel.activate() while the overview still held
   exclusive keyboard focus (close() only starts the fade), so Hyprland

@@ -63,10 +63,14 @@ PopupFrame {
             anchors.fill: parent
             radius: 12
             color: Qt.rgba(Theme.base.r, Theme.base.g, Theme.base.b, 0.45)
+            // The backdrop is blurred anyway: decode the cover tiny. Without a
+            // sourceSize a 3000x3000 cover (5 MB) was decoded full size and
+            // blurred as a 9-megapixel texture: the card lagged and hung.
             Image {
                 id: artBg
                 width: card.contentWidth; height: 112
                 source: card.art
+                sourceSize: Qt.size(64, 64)
                 fillMode: Image.PreserveAspectCrop
                 asynchronous: true
                 visible: false
@@ -74,7 +78,8 @@ PopupFrame {
             FastBlur {
                 width: card.contentWidth; height: 112
                 source: artBg
-                radius: 56
+                cached: true          // re-blurred only when the cover changes
+                radius: 40
                 opacity: 0.55
                 visible: artBg.status === Image.Ready
             }
