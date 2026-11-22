@@ -604,6 +604,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — mpdris2-rs switch verified (user installed it, disabled
+  mpd-mpris, removed the package). Running as `mpdris2-rs --host
+  127.0.0.1:6600 --no-notification` (override applied), bus name
+  org.mpris.MediaPlayer2.mpd, covers in $XDG_RUNTIME_DIR/mpd/album_art/, MPD's
+  socket intact. Test: jumped MPD to "STATE OF AFFAIRS" (play + pause in one
+  command list) → MPRIS reported it, with the 3000×3000 / 5.2 MB cover, after
+  0.7 s (mpd-mpris: 7.5 s+ and stuck); then restored the user's song and
+  position. Files: none (verification).
+
 - **2026-11-22** — Bar music / now-playing card froze on "STATE OF AFFAIRS"
   ($edji & baby.murcielaga): user's screen recording showed MPD (rmpc) on
   that song while the bar kept "Robert Miles — Children", and Next clicks
