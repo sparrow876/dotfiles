@@ -604,6 +604,27 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Bar music / now-playing card froze on "STATE OF AFFAIRS"
+  ($edji & baby.murcielaga): user's screen recording showed MPD (rmpc) on
+  that song while the bar kept "Robert Miles — Children", and Next clicks
+  lagging. Root cause: mpd-mpris 0.4.4 (latest) rebuilds the current song on
+  each change and re-downloads its embedded cover with `readpicture` in MPD's
+  default 8 KB chunks (never sends `binarylimit`): that cover is a 3000×3000
+  JPEG, 5.2 MB → 637 round trips, measured 7.5 s (1 MB chunks: 5 trips,
+  0.06 s); meanwhile no track updates and queued commands. Fix: replace
+  mpd-mpris with mpdris2-rs (AUR, reviewed: maintainer = upstream author,
+  sha512-pinned v1.1.2 tag, cargo --locked, sandboxed user service), which
+  sends `binarylimit 131072/524288` and is async. Our drop-in
+  (systemd/.config/systemd/user/mpdris2-rs.service.d/override.conf, NO_FOLD):
+  `--host 127.0.0.1:6600` (localhost → ::1 first, MPD is IPv4-only),
+  `--no-notification`, `RuntimeDirectoryPreserve=yes` (its unit declares
+  RuntimeDirectory=mpd, the same $XDG_RUNTIME_DIR/mpd that holds MPD's socket;
+  without it a restart would delete MPD's socket folder). Covers now in
+  $XDG_RUNTIME_DIR/mpd/album_art/. User installs + switches the services
+  (ROOT-STEPS §16). Files: packages/{pacman,aur}.txt, system/ROOT-STEPS.md,
+  install.sh, mpd/.config/mpd/mpd.conf, systemd/.config/systemd/user/
+  mpdris2-rs.service.d/override.conf.
+
 - **2026-11-22** — Media card backdrop decode 64×64 → 384×384 (user: more
   detail, still fast). ≈ the card width (380 px), so no detail lost; JPEG
   decodes directly at 1/8 scale, so big covers are never decoded full size;

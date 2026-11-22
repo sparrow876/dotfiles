@@ -201,7 +201,6 @@ python-mutagen       # yt-dlp writes title/artist tags + cover art into download
 python-pandas        # yours (2026-11-20): Python data analysis library
 mpd                  # music server for rmpc (user service, mpd/.config/mpd/mpd.conf)
 rmpc                 # terminal music player for MPD (rmpc/.config/rmpc)
-mpd-mpris            # shows MPD in the bar's music widget + media keys
 cava
 cmatrix
 

@@ -491,14 +491,22 @@ Undo: `sudo cp /etc/fstab.before-trash-mounts /etc/fstab && sudo systemctl daemo
 ## 16. Music: MPD + rmpc (no sudo except the install)
 
 `rmpc` is a terminal music player; it plays through **MPD**, a small music
-server that runs as your user and reads `~/Music`. `mpd-mpris` makes MPD show
-up in the bar's music widget and react to the media keys.
+server that runs as your user and reads `~/Music`. `mpdris2-rs` (AUR) makes
+MPD show up in the bar's music widget and react to the media keys.
 
 ```sh
-sudo pacman -S --needed mpd rmpc mpd-mpris
+sudo pacman -S --needed mpd rmpc
+yay -S mpdris2-rs
 cd ~/dotfiles && ./install.sh --only dirs && ./install.sh --only stow
-systemctl --user enable --now mpd.service mpd-mpris.service
+systemctl --user daemon-reload
+systemctl --user enable --now mpd.service mpdris2-rs.service
 ```
+(`mpdris2-rs` replaced `mpd-mpris` on 2026-11-22: mpd-mpris downloaded big
+embedded covers in 8 KB pieces and froze the bar's music on those songs. If
+you had it: `systemctl --user disable --now mpd-mpris.service`, then
+`sudo pacman -Rns mpd-mpris`.) Our override for it, in
+`systemd/.config/systemd/user/mpdris2-rs.service.d/`, connects to 127.0.0.1,
+turns off its song-change notifications and keeps MPD's runtime folder.
 
 - Config: `mpd/.config/mpd/mpd.conf` (music from `~/Music`, database/state in
   `~/.local/share/mpd` and `~/.local/state/mpd`, only reachable from this
@@ -510,6 +518,6 @@ systemctl --user enable --now mpd.service mpd-mpris.service
 - Album covers as a grid (optional): `yay -S euphonica` (AUR, reviewed in
   packages/aur.txt; compiles from source, several minutes), then
   `./install.sh --only gsettings` (uses this MPD on 127.0.0.1, turns off its
-  own MPRIS since mpd-mpris already shows MPD in the bar).
+  own MPRIS since mpdris2-rs already shows MPD in the bar).
 - Check: `systemctl --user status mpd` · logs: `journalctl --user -u mpd`.
-- **Undo:** `systemctl --user disable --now mpd.service mpd-mpris.service`.
+- **Undo:** `systemctl --user disable --now mpd.service mpdris2-rs.service`.
