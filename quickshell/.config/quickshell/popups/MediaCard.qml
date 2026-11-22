@@ -63,14 +63,16 @@ PopupFrame {
             anchors.fill: parent
             radius: 12
             color: Qt.rgba(Theme.base.r, Theme.base.g, Theme.base.b, 0.45)
-            // The backdrop is blurred anyway: decode the cover tiny. Without a
-            // sourceSize a 3000x3000 cover (5 MB) was decoded full size and
-            // blurred as a 9-megapixel texture: the card lagged and hung.
+            // Decode the cover at about the card's width (380 px): full detail
+            // for the backdrop, and fast (JPEG decodes straight at 1/8 scale,
+            // so a 3000x3000 cover is never decoded full size). Without a
+            // sourceSize that 5 MB cover was decoded and blurred as a
+            // 9-megapixel texture: the card lagged and hung.
             Image {
                 id: artBg
                 width: card.contentWidth; height: 112
                 source: card.art
-                sourceSize: Qt.size(64, 64)
+                sourceSize: Qt.size(384, 384)
                 fillMode: Image.PreserveAspectCrop
                 asynchronous: true
                 visible: false

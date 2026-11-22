@@ -604,6 +604,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Media card backdrop decode 64×64 → 384×384 (user: more
+  detail, still fast). ≈ the card width (380 px), so no detail lost; JPEG
+  decodes directly at 1/8 scale, so big covers are never decoded full size;
+  the blur's cost follows the item size, not the source. qs 1.4% of a core
+  with the card open. Files: quickshell/.config/quickshell/popups/MediaCard.qml.
+
 - **2026-11-22** — Now-playing card lagged / hung on some tracks (user:
   Robert Miles "Children" → "$edji & baby.murcielaga — STATE OF AFFAIRS").
   That album's cover is a 3000×3000 JPEG (5.2 MB, written by mpd-mpris to
