@@ -25,7 +25,8 @@ config lives in this repo and is linked into place with GNU Stow.
   indigo in the middle, all at the same perceived brightness, so text stays
   easy to read everywhere.
 - **Windows** get a soft aurora border (light blue → ice → cyan → a hint of
-  lavender) that sweeps once when focus changes, and is still otherwise.
+  lavender) that slowly drifts round once when a window opens or gets focus,
+  and is still otherwise.
   Unfocused windows are dimmed slightly.
 - **Two layouts**, switched with an animation: *spaced* (floating rounded
   bar, gaps, rounded windows, shadows) or *compact* (i3-style: no gaps, square
