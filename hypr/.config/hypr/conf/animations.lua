@@ -8,6 +8,7 @@ hl.curve("easeOutQuint",   { type = "bezier", points = { {0.23, 1},    {0.32, 1}
 hl.curve("easeInOutCubic", { type = "bezier", points = { {0.65, 0.05}, {0.36, 1} } })
 hl.curve("quick",          { type = "bezier", points = { {0.15, 0},    {0.1, 1}  } })
 hl.curve("linear",         { type = "bezier", points = { {0, 0},       {1, 1}    } })
+hl.curve("easeInOutSine",  { type = "bezier", points = { {0.37, 0},    {0.63, 1} } })
 
 local function anim(leaf, speed, curve, style)
     hl.animation({ leaf = leaf, enabled = true, speed = speed, bezier = curve, style = style })
@@ -25,11 +26,14 @@ anim("fadeSwitch",  1.8, "quick")
 anim("fadeShadow",  1.8, "quick")
 anim("fadeDim",     1.8, "quick")
 
--- Borders: smooth color change. On focus change the gradient makes one slow,
--- eased sweep (~1.4 s) and then stays still: noticed now and then, never busy.
--- (A constant "loop" would redraw the screen non-stop and keep the GPU awake.)
+-- Borders: smooth color change. When a window opens or gets focus (so also on
+-- every workspace switch) the gradient turns once, a full 360°, and then stays
+-- still. The turn must be slow: at 1.4 s with easeInOutCubic it peaked at
+-- ~700°/s, so the 5-colour aurora flashed past each corner several times a
+-- second and read as flicker. 5 s with a sine ease peaks at ~115°/s: a drift
+-- you notice now and then. (A constant "loop" would redraw non-stop.)
 anim("border",      2.5, "easeOutQuint")
-anim("borderangle", 14.0, "easeInOutCubic", "once")
+anim("borderangle", 50.0, "easeInOutSine", "once")
 
 -- Layers (rofi etc.): fade + small pop-in. Quickshell layers opt out (rules.lua).
 anim("layersIn",      2.2, "easeOutQuint",   "popin 92%")

@@ -604,6 +604,15 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-22** — Window border flickered on workspace switch and on opening a
+  window. Cause (Hyprland 0.57.2 source, AnimatedDecorationGradient.cpp): the
+  `borderangle` "once" turn (a full 360°) starts on window map and on every
+  focus change, and a workspace switch focuses that workspace's window. At
+  1.4 s with easeInOutCubic it peaked at ~700°/s, so the 5-colour aurora
+  (added today) flashed past each corner several times a second. Fix: same
+  turn over 5 s with a new easeInOutSine curve (peak ~115°/s), so it drifts
+  instead. Colours unchanged. Files: hypr/conf/animations.lua, look.lua (comment).
+
 - **2026-11-22** — mpdris2-rs switch verified (user installed it, disabled
   mpd-mpris, removed the package). Running as `mpdris2-rs --host
   127.0.0.1:6600 --no-notification` (override applied), bus name

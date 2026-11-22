@@ -22,8 +22,8 @@ hl.config({
         col = {
             -- Focused window: a soft Blue Ice "aurora" (light blue -> ice ->
             -- cyan -> a hint of lavender -> back), slightly see-through so it
-            -- never glares. It sweeps once when focus changes (borderangle in
-            -- animations.lua) and is still otherwise: no constant redraws.
+            -- never glares. It drifts round once when a window opens or gets
+            -- focus (borderangle in animations.lua), still otherwise.
             active_border   = {
                 colors = {
                     c.rgba("lightblue", "ee"), c.rgba("ice", "d9"), c.rgba("cyan", "d9"),
