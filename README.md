@@ -62,7 +62,9 @@ config lives in this repo and is linked into place with GNU Stow.
 - **System stats (ALT + S)**: CPU/RAM/GPU/disk gauges, a per-thread heat map
   (hover a thread for its own graph), smooth graphs, GPUs, storage, network,
   battery health, and top processes with app icons (end one with a confirm).
-- Power menu, wallpaper reel (slanted cards, angled transition), keybind cheat
+- Power menu, wallpaper reel (looping slanted cards over a blurred preview;
+  the chosen card grows to fill the screen, then a slanted wipe reveals the
+  desktop), keybind cheat
   sheet (**ALT + /**, searchable), idle screen.
 
 **Lock, login and idle**
@@ -163,7 +165,8 @@ commit), and the two Python tools install only checksum-pinned packages (their
 - **ALT + G** (or the bar button left of the coffee cup) switches between the
   spaced and compact layouts. The choice is remembered.
 - **ALT + W** picks a wallpaper (put images in `~/Pictures/Wallpapers`; they're
-  listed in natural order: w1, w2, …, w10).
+  listed in natural order: w1, w2, …, w10, and the reel loops round). ←/→,
+  scroll or click to move, Enter to apply, Esc to close.
 - **Bar**: drag tray icons to reorder them; scroll on the sun for brightness;
   middle-click the music for the now-playing card.
 - **`update`** in a terminal updates the system safely: Arch news first (it

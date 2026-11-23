@@ -3,6 +3,11 @@
 # ~/Pictures/Wallpapers/current.
 #   wallpaper.sh apply <file>   set it with a slanted wipe (matches the reel's
 #                               card angle) and remember it
+#   wallpaper.sh apply <file> --cover <output>
+#                               used by the reel: on <output> the picture is
+#                               already full screen (the reel's card grew to
+#                               fill it), so switch there instantly, hidden
+#                               behind it; other monitors still get the wipe
 #   wallpaper.sh restore        at login: show the remembered wallpaper
 #   wallpaper.sh thumbs         (re)build thumbnails in ~/.cache/wallpaper-thumbs,
 #                               only for new/changed files; removes stale ones;
@@ -27,10 +32,18 @@ case "${1:-}" in
     [[ -f $file ]] || { echo "no such file: $file" >&2; exit 1; }
     fail() { notify-send -a Wallpaper -i dialog-error "Wallpaper not changed" "$1"; exit 1; }
     wait_daemon || fail "The wallpaper daemon (awww-daemon) isn't running."
-    awww img "$file" --resize crop \
-      --transition-type wipe --transition-angle "$WIPE_ANGLE" \
-      --transition-duration 1.1 --transition-fps 60 --transition-bezier .23,1,.32,1 \
-      || fail "awww couldn't show ${file##*/}."
+    wipe=(--transition-type wipe --transition-angle "$WIPE_ANGLE"
+          --transition-duration 1.1 --transition-fps 60 --transition-bezier .23,1,.32,1)
+    if [[ ${3:-} == --cover && -n ${4:-} ]]; then
+      cover=$4
+      awww img "$file" -o "$cover" --resize crop --transition-type none \
+        || fail "awww couldn't show ${file##*/}."
+      # `awww query` lines: "<namespace>: <output>: 1920x1080, ..."
+      others=$(awww query | awk -F': ' -v c="$cover" 'NF > 2 && $2 != c { print $2 }' | paste -sd, -)
+      [[ -z $others ]] || awww img "$file" -o "$others" --resize crop "${wipe[@]}" || true
+    else
+      awww img "$file" --resize crop "${wipe[@]}" || fail "awww couldn't show ${file##*/}."
+    fi
     ln -sfn "$file" "$dir/current" ;;
 
   restore)
@@ -66,5 +79,5 @@ case "${1:-}" in
     done
     echo "changed=$changed" ;;
 
-  *) echo "usage: $0 apply <file> | restore | thumbs" >&2; exit 2 ;;
+  *) echo "usage: $0 apply <file> [--cover <output>] | restore | thumbs" >&2; exit 2 ;;
 esac

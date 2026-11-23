@@ -422,6 +422,18 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   the reel's cards. Measured from mid-transition screenshots.
 - The `.23,1,.32,1` bezier front-loads movement: capture at ~0.1–0.2 s.
 - Thumbnails: `~/.cache/wallpaper-thumbs`, only rebuilt for new/changed files.
+- Reel apply (WallpaperReel.qml): the focused card grows to full screen with the
+  picture decoded at screen size (same centre crop as `awww --resize crop`),
+  `wallpaper.sh apply <file> --cover <output>` switches that output instantly
+  (`-t none`) behind it (other outputs get the wipe), and the wipe starts only
+  when the grow is done, the sharp picture is decoded and awww has exited
+  (4 s safety timer). The wipe is an 18°-sheared `clip` Item with counter-
+  sheared content; clip is on only while applying.
+- The reel loops only with 5+ wallpapers (fewer would show the wrap seam);
+  with fewer, moving past the end glides back to the start.
+- A hot reload that adds an inline component (`component X: ...`) failed with
+  "X is not a type" in a qs that had been running ~2 days; a fresh `qs` loaded
+  the same file and later reloads were fine.
 
 ### 4.7 GTK / rofi / misc
 
@@ -603,6 +615,19 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-23** — Wallpaper reel reworked (asked for: cooler look, looping, a
+  cooler way for the new wallpaper to appear). Reel: loops (5+ wallpapers);
+  backdrop = the focused wallpaper blurred + vignette, crossfading as you move;
+  cards fly in staggered on open; neighbours shorter; pictures slide inside the
+  cards (parallax); soft glow + one glint on the focused card; name, n / total
+  and position pips. Apply: the card straightens and grows to fill the screen,
+  awww switches the real wallpaper hidden behind it, then an 18° wipe with a
+  glowing edge reveals the desktop. Every animation runs once (nothing loops
+  while it sits open). Tested in a separate qs instance with an opaque stand-in
+  for the desktop (frames captured at each stage), then live. Files:
+  wallpaper/WallpaperReel.qml, services/Wallpapers.qml (url()),
+  scripts/wallpaper.sh (`apply <file> --cover <output>`), README + screenshot.
 
 - **2026-11-22** — Window border flickered on workspace switch and on opening a
   window. Cause (Hyprland 0.57.2 source, AnimatedDecorationGradient.cpp): the

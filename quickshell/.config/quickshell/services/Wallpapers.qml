@@ -23,6 +23,8 @@ Singleton {
         return `file://${path}?v=${thumbsVersion}`
     }
     function path(name) { return `${dir}/${name}` }
+    // The picture itself as a URL (the reel decodes it at screen size to grow it)
+    function url(name) { return "file://" + path(name).split("/").map(encodeURIComponent).join("/") }
 
     // List files + current wallpaper (fast), then refresh thumbnails in the background
     function refresh() {
