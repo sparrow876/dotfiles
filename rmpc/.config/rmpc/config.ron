@@ -59,7 +59,9 @@
             "z":          ToggleRepeat,
             "x":          ToggleRandom,
             "c":          ToggleConsume,
-            "v":          ToggleSingle,
+            // on/off only: plain ToggleSingle cycles off -> oneshot -> on, and
+            // mpdris2-rs 1.1.2 (the bar's MPRIS bridge) breaks on "single: oneshot"
+            "v":          ToggleSingleOnOff,
             "p":          TogglePause,
             "s":          Stop,
             ">":          NextTrack,

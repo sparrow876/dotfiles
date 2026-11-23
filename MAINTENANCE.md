@@ -538,6 +538,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 ## 6. Known limitations / open items
 
+- **mpdris2-rs 1.1.2 breaks on MPD `single: oneshot`** (2026-11-23): drops its
+  MPD connection on every event while single=oneshot, so the bar stops
+  updating. Avoided by rmpc `v` = ToggleSingleOnOff; any other client setting
+  oneshot (e.g. `mpc single oneshot`) brings it back. Real fix = treat
+  "oneshot" as single on in `MpdLoopState::from_mpd` (src/mpd/types.rs); not
+  reported upstream (szclsya/mpdris2-rs) yet. Check new releases for it.
 - **Built-in webcam absent: hardware** (user confirmed, 2026-11-16). Never on
   the USB bus in any boot since install; most likely its connector/cable after
   a hinge repair. Internal digital mic works. Don't debug drivers for it; once
@@ -615,6 +621,19 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-23** — Bar music widget glitched again; the now-playing card's loop
+  button disagreed with rmpc. Cause: rmpc's `v` (ToggleSingle) cycles single
+  off -> **oneshot** -> on, and mpdris2-rs 1.1.2 only parses single as 0/1
+  (src/mpd/types.rs `mpd_num_to_bool`): every MPD event while single=oneshot
+  failed with "invalid field single: expect 0/1, got oneshot" and it dropped the
+  connection, so the bar got no track or loop updates. Fix: `v` ->
+  ToggleSingleOnOff (rmpc's own on/off action, skips oneshot); MPD's state moved
+  from repeat 1 + single oneshot to repeat 1 + single 1 (same: loops the song).
+  Checked both ways: MPD repeat/single changes -> MPRIS LoopStatus
+  (Playlist/None/Track) and LoopStatus set over MPRIS -> MPD, no errors.
+  Consume oneshot (`c`) is harmless (the bridge doesn't read consume).
+  Upstream bug not reported yet (see §6). Files: rmpc/.config/rmpc/config.ron.
 
 - **2026-11-23** — Stats panel CPU temperature jumped between ~40 and ~80 °C.
   Not a faulty sensor: sampled every 10 ms from the uncached x86_pkg_temp zone,
