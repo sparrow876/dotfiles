@@ -637,6 +637,10 @@ root cause, fix, files.
   Checked both ways: MPD repeat/single changes -> MPRIS LoopStatus
   (Playlist/None/Track) and LoopStatus set over MPRIS -> MPD, no errors.
   Consume oneshot (`c`) is harmless (the bridge doesn't read consume).
+  It also broke headphone auto-pause (ACCENTUM Plus off/on -> AVRCP key ->
+  `playerctl play-pause`): the bridge's PlayPause sends "play" when its cached
+  state is Stopped, and with every status parse failing that state was stale.
+  Logged after the fix: each off/on = one PlayPause, MPD paused/resumed.
   Upstream: szclsya/mpdris2-rs#34 (see §6). Files: rmpc/.config/rmpc/config.ron.
 
 - **2026-11-23** — Stats panel CPU temperature jumped between ~40 and ~80 °C.
