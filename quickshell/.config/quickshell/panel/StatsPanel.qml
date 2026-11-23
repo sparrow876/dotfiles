@@ -96,7 +96,9 @@ PanelWindow {
     readonly property real gpuValue: nvActive ? s.nv.util / 100 : (s?.igpu?.max ? s.igpu.cur / s.igpu.max : 0)
     readonly property var rootDisk: (s?.disks ?? []).find(d => d.mount === "/") ?? (s?.disks?.[0] ?? null)
     readonly property real rootUse: rootDisk && rootDisk.size > 0 ? rootDisk.used / rootDisk.size : 0
-    readonly property real temp: s?.temp ?? 0
+    // averaged (SystemStats.cpuTemp); the snapshot's single reading only until the first average arrives
+    readonly property bool hasTemp: isFinite(SystemStats.cpuTemp) || s?.temp != null
+    readonly property real temp: isFinite(SystemStats.cpuTemp) ? SystemStats.cpuTemp : (s?.temp ?? 0)
     readonly property string tempLevel: temp >= 90 ? "critical" : temp >= 80 ? "warn" : "normal"
 
 
@@ -298,7 +300,7 @@ PanelWindow {
                         OverviewRing {
                             caption: "CPU"
                             value: SystemStats.cpu
-                            detail: panel.s?.temp != null ? `${Math.round(panel.s.temp)} °C` : ""
+                            detail: panel.hasTemp ? `${Math.round(panel.temp)} °C` : ""
                             level: SystemStats.level(SystemStats.cpu, 0.85, 0.95)
                             live: panel.open
                         }
@@ -347,9 +349,12 @@ PanelWindow {
                         }
                         Tile {
                             caption: "Temperature"
-                            value: panel.s?.temp != null ? `${Math.round(panel.s.temp)} °C` : "–"
+                            // average of the last 1.5 s; the sensor itself spikes for
+                            // a split second on every burst, shown as the minute's peak
+                            value: panel.hasTemp ? `${Math.round(panel.temp)} °C` : "–"
                             valueColor: panel.tempLevel === "normal" ? Theme.text : panel.tone(panel.tempLevel)
-                            thermo: panel.s?.temp != null ? Math.min(1, Math.max(0, (panel.temp - 30) / 70)) : -1
+                            thermo: panel.hasTemp ? Math.min(1, Math.max(0, (panel.temp - 30) / 70)) : -1
+                            sub: isFinite(SystemStats.cpuTempPeak) ? `1-min peak ${Math.round(SystemStats.cpuTempPeak)}` : ""
                         }
                         Tile {
                             // load average: tasks running or waiting for the CPU, averaged

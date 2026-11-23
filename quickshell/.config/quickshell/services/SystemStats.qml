@@ -28,6 +28,12 @@ Singleton {
     property var txHistory: []
     property real readRate: 0                         // bytes/s
     property real writeRate: 0
+    // CPU package temperature, averaged by services/cputemp.sh (100 ms samples):
+    // the sensor swings ~40 -> 80 °C within a fraction of a second on short
+    // bursts, so one reading per refresh jumped around at random
+    property real cpuTemp: NaN                        // °C, mean of the last 1.5 s
+    property real cpuTempPeak: NaN                    // °C, highest sample in the last minute
+    property var tempPeaks: []
 
     property var prev: null                           // previous snapshot, for rates
     property real prevTime: 0
@@ -44,6 +50,21 @@ Singleton {
             prev = null; snap = null; cpu = 0; cores = []; mem = 0; swap = 0
             rxRate = 0; txRate = 0; readRate = 0; writeRate = 0
             cpuHistory = []; memHistory = []; rxHistory = []; txHistory = []
+            cpuTemp = NaN; cpuTempPeak = NaN; tempPeaks = []
+        }
+    }
+    Process {
+        id: tempProc
+        running: root.active
+        command: [Quickshell.shellPath("services/cputemp.sh")]
+        stdout: SplitParser {
+            onRead: line => {
+                const v = line.trim().split(" ").map(Number)
+                if (!root.active || v.length < 2 || !isFinite(v[0]) || !isFinite(v[1])) return
+                root.cpuTemp = v[0]
+                root.tempPeaks = root.push(root.tempPeaks, v[1])   // 40 windows x 1.5 s = 1 min
+                root.cpuTempPeak = Math.max(...root.tempPeaks)
+            }
         }
     }
     Timer {

@@ -89,7 +89,7 @@ AUR helper: **yay** (not paru).
 | `hypr/.config/hypr/hypridle.conf` | idle chain (hyprlang format, not Lua) |
 | `quickshell/.config/quickshell/shell.qml` | entry: one `Variants` per screen for Bar, OSD, StatsPanel, PowerMenu, WallpaperReel, IdleScreen, CheatSheet, NotificationPopups; `popups` IPC |
 | `quickshell/…/Theme.qml` | generated singleton: colors, fonts, sizes |
-| `quickshell/…/services/` | singletons: Audio, Bluetooth, Brightness, IdleInhibit, Keybinds, Media, Network, Notifications, Overlays (IPC for the per-monitor overlays), Popups, Power (battery + low-battery warnings), Recorder, SystemStats (+`sysstats.sh`), Wallpapers |
+| `quickshell/…/services/` | singletons: Audio, Bluetooth, Brightness, IdleInhibit, Keybinds, Media, Network, Notifications, Overlays (IPC for the per-monitor overlays), Popups, Power (battery + low-battery warnings), Recorder, SystemStats (+`sysstats.sh`, `cputemp.sh`), Wallpapers |
 | `quickshell/…/bar/` | Bar + modules (`*Icon.qml`, Workspaces, MediaModule, Battery, Clock, Tray, TrayMenu, Bell) |
 | `quickshell/…/popups/` | `PopupFrame` (shared) + Network/Bluetooth/Audio menus, Calendar |
 | `quickshell/…/notifications/` | popups + center |
@@ -615,6 +615,20 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-23** — Stats panel CPU temperature jumped between ~40 and ~80 °C.
+  Not a faulty sensor: sampled every 10 ms from the uncached x86_pkg_temp zone,
+  the package temperature went 45 -> 73 °C in ~60 ms on a short burst and back
+  to 44 in ~250 ms (87 °C peak in 8 s of near-idle): the sensor is in the die,
+  whose hot spot has almost no thermal mass, while the copper cooler stays at
+  ~40. The panel showed one snapshot per 1.5 s refresh (coretemp's hwmon value,
+  cached up to 1 s), so it landed on spikes at random. Fix: new
+  services/cputemp.sh samples x86_pkg_temp every 100 ms (bash builtins only, so
+  sampling doesn't cause bursts) and prints mean + max per 1.5 s window; it runs
+  only while the panel is open (checked: gone after closing). The panel shows
+  the mean (warn colours use it too) and "1-min peak" under it. Files:
+  services/cputemp.sh (new), SystemStats.qml, panel/StatsPanel.qml,
+  sysstats.sh (comment).
 
 - **2026-11-23** — Wallpaper reel reworked (asked for: cooler look, looping, a
   cooler way for the new wallpaper to appear). Reel: loops (5+ wallpapers);

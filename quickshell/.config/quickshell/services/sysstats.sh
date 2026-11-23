@@ -20,7 +20,9 @@ cpu=$(awk '/^cpu/ { busy=$2+$3+$4+$7+$8+$9; total=busy+$5+$6; printf "%s[%d,%d]"
 freq=$(cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq 2>/dev/null |
        awk '{ s+=$1; if ($1>m) m=$1; n++ } END { if (n) printf "[%d,%d]", s/n/1000, m/1000; else printf "null" }')
 
-# CPU package temperature from the coretemp hwmon (found by name; numbers change)
+# CPU package temperature from the coretemp hwmon (found by name; numbers change).
+# Only shown until services/cputemp.sh's first average arrives: a single reading
+# is a random snapshot of a sensor that spikes for split seconds.
 temp=null
 for h in /sys/class/hwmon/hwmon*; do
   if [[ $(cat "$h/name" 2>/dev/null) == coretemp ]]; then
