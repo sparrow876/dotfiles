@@ -544,7 +544,10 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   oneshot (e.g. `mpc single oneshot`) brings it back. Real fix = treat
   "oneshot" as single on in `MpdLoopState::from_mpd` (src/mpd/types.rs).
   Reported 2026-11-23: https://github.com/szclsya/mpdris2-rs/issues/34 — once
-  a release fixes it, remove this item (rmpc `v` can stay on/off).
+  a release fixes it, remove this item (rmpc `v` can stay on/off). Upstream is
+  slow but alive (last release 1.1.2 on 2026-06-30, issues closed up to
+  2026-08-16). If #34 has no reply by ~2027-02, compare other MPRIS bridges
+  (mpd-mpris froze on big embedded covers, see 2026-11-22).
 - **Built-in webcam absent: hardware** (user confirmed, 2026-11-16). Never on
   the USB bus in any boot since install; most likely its connector/cable after
   a hinge repair. Internal digital mic works. Don't debug drivers for it; once
