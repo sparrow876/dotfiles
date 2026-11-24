@@ -91,7 +91,7 @@ AUR helper: **yay** (not paru).
 | `hypr/.config/hypr/hypridle.conf` | idle chain (hyprlang format, not Lua) |
 | `quickshell/.config/quickshell/shell.qml` | entry: one `Variants` per screen for Bar, OSD, StatsPanel, PowerMenu, WallpaperReel, IdleScreen, CheatSheet, Overview, NotificationPopups; `popups` IPC |
 | `quickshell/…/Theme.qml` | singleton: colors, fonts, sizes (plain file) |
-| `quickshell/…/services/` | singletons: Audio, Bluetooth, Brightness, IdleInhibit, Keybinds, LayoutMode (spaced/compact), Media, Network, Notifications, Overlays (IPC for the per-monitor overlays), Popups, Power (battery + low-battery warnings), Recorder, SystemStats (+`sysstats.sh`, `cputemp.sh`), Wallpapers |
+| `quickshell/…/services/` | singletons: Audio, Bluetooth, Brightness, IdleInhibit, Keybinds, LayoutMode (spaced/compact), Media, Network, Notifications, Overlays (IPC for the per-monitor overlays), Popups, Power (battery + low-battery warnings), Recorder, SystemStats (+`sysstats.sh`, `cputemp.sh`), Wallpapers; `tray-rescue.sh` (run by bar/Tray.qml) |
 | `quickshell/…/bar/` | Bar + modules (`*Icon.qml`, Workspaces, MediaModule, Battery, Clock, Tray, TrayMenu, Bell) |
 | `quickshell/…/popups/` | `PopupFrame` (shared) + Network/Bluetooth/Audio/Brightness menus, Calendar, MediaCard (now playing) |
 | `quickshell/…/notifications/` | popups + center |
@@ -633,6 +633,19 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-24** — ProtonVPN tray icon missing although the app ran. Cause:
+  Quickshell hosts the tray registry (org.kde.StatusNotifierWatcher); after a
+  Quickshell restart every tray app must register again. Pomoclock and Claude
+  do, ProtonVPN's app (protonvpn-app) doesn't, so its icon stayed gone until
+  the app restarted (its item was still on the bus as
+  org.kde.StatusNotifierItem-proton.vpn.app.gtk-<pid>). Fix: new
+  services/tray-rescue.sh, run by bar/Tray.qml 3 s after start: registers
+  every org.kde.StatusNotifierItem-* name not yet registered (by name or by its
+  owner's connection id, so no duplicates). Reproduced with a qs restart:
+  1.5 s after start only Pomoclock + Claude; at 5 s the rescue registered
+  ProtonVPN and its icon showed. Re-running registers nothing. Files:
+  services/tray-rescue.sh (new), bar/Tray.qml.
 
 - **2026-11-24** — Overview: drag-to-workspace removed at the user's request
   ("very finnicky"). Gone: the DragHandler, the tile drop highlight, `moveTo()`

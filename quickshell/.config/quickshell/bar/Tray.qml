@@ -21,6 +21,16 @@ Row {
     visible: SystemTray.items.values.length > 0
 
     readonly property string pinnedLast: "io.github.pomoclock.Pomoclock"
+
+    // Some apps (ProtonVPN) don't register their tray icon again after
+    // Quickshell restarts; services/tray-rescue.sh does it for them. Once,
+    // shortly after start, so the apps that do re-register come first.
+    Timer { running: true; interval: 3000; onTriggered: rescue.running = true }
+    Process {
+        id: rescue
+        command: [Quickshell.shellPath("services/tray-rescue.sh")]
+        stdout: SplitParser { onRead: line => console.info("tray:", line) }
+    }
     function key(item) { return item ? (item.id || item.title || "") : "" }
 
     // Items in display order: saved order first, new apps after (in the order
