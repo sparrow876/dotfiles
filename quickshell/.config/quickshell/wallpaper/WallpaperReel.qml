@@ -125,7 +125,9 @@ PanelWindow {
     function moveToIndex(i) { move(Math.round(dist(i, target))) }
 
     function apply() {
-        if (count === 0 || applying || !open) return
+        // also not while the previous change is still running (the safety timer
+        // can reveal before a slow awww finishes): a second run would be ignored
+        if (count === 0 || applying || !open || applier.running) return
         const name = focusedFile
         applying = true
         open = false                                  // keyboard back to the apps now
@@ -149,6 +151,7 @@ PanelWindow {
         revealDelay.restart()
     }
 
+    onFullReadyChanged: maybeReveal()   // the sharp picture can be the last thing to arrive
     onTargetChanged: {
         fullWanted = false
         fullReady = false

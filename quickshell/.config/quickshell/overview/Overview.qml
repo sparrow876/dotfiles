@@ -32,6 +32,7 @@ PanelWindow {
     property string query: ""
     property int hoverWs: 0               // workspace of the window under the mouse
     property int sel: 0                   // keyboard-selected card
+    property bool selByUser: false        // arrows / typing moved it: stop following the active window
     property int dropWs: 0                // tile under a dragged window
 
     WlrLayershell.namespace: "quickshell-overview"
@@ -60,6 +61,7 @@ PanelWindow {
     }
     // workspace tile to light up: the hovered window's, else the keyboard-selected one's
     readonly property int litWs: hoverWs || (shown[sel]?.workspace?.id ?? 0)
+    onShownChanged: if (open && !selByUser) sel = Math.max(0, shown.findIndex(t => t.activated))
 
     // app icon, looked up once per app id (the fuzzy lookup isn't free)
     property var iconCache: ({})
@@ -81,7 +83,9 @@ PanelWindow {
         search.text = ""
         hoverWs = 0
         pending = ""
-        // keyboard selection starts on the window you're in
+        // keyboard selection starts on the window you're in (and follows it
+        // while refreshToplevels() re-sorts the list, until you move it)
+        selByUser = false
         sel = Math.max(0, shown.findIndex(t => t.activated))
         open = true
         hideAnim.stop()
@@ -173,6 +177,9 @@ PanelWindow {
             width: 440
             height: 42
             radius: 21
+            // the whole pill focuses the search (clicks around the text line
+            // used to fall through to the backdrop and close the overview)
+            MouseArea { anchors.fill: parent; cursorShape: Qt.IBeamCursor; onClicked: search.forceActiveFocus() }
             color: Theme.glass
             border.width: 1
             border.color: search.activeFocus ? Qt.rgba(Theme.lightBlue.r, Theme.lightBlue.g, Theme.lightBlue.b, 0.5)
@@ -195,17 +202,17 @@ PanelWindow {
                         font.pixelSize: Theme.fontSize
                         selectionColor: Theme.blue
                         clip: true
-                        onTextChanged: { ov.query = text; ov.sel = 0; ov.hoverWs = 0 }
+                        onTextChanged: { if (text) ov.selByUser = true; ov.query = text; ov.sel = 0; ov.hoverWs = 0 }
                         Keys.onPressed: event => {
                             const n = ov.shown.length, cols = ov.grid.cols
                             if (event.key === Qt.Key_Escape) {
                                 if (text !== "") text = ""; else ov.close()
                             } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                                 if (n > 0) ov.activate(ov.shown[Math.min(ov.sel, n - 1)])
-                            } else if (event.key === Qt.Key_Right) { if (n) ov.sel = (ov.sel + 1) % n }
-                            else if (event.key === Qt.Key_Left) { if (n) ov.sel = (ov.sel - 1 + n) % n }
-                            else if (event.key === Qt.Key_Down) { if (n) ov.sel = Math.min(n - 1, ov.sel + cols) }
-                            else if (event.key === Qt.Key_Up) { if (n) ov.sel = Math.max(0, ov.sel - cols) }
+                            } else if (event.key === Qt.Key_Right) { if (n) { ov.selByUser = true; ov.sel = (ov.sel + 1) % n } }
+                            else if (event.key === Qt.Key_Left) { if (n) { ov.selByUser = true; ov.sel = (ov.sel - 1 + n) % n } }
+                            else if (event.key === Qt.Key_Down) { if (n) { ov.selByUser = true; ov.sel = Math.min(n - 1, ov.sel + cols) } }
+                            else if (event.key === Qt.Key_Up) { if (n) { ov.selByUser = true; ov.sel = Math.max(0, ov.sel - cols) } }
                             else return
                             event.accepted = true
                         }
@@ -259,12 +266,19 @@ PanelWindow {
                             delegate: Rectangle {
                                 required property var modelData
                                 readonly property var o: modelData.lastIpcObject ?? ({})
-                                readonly property real sx: mini.width / Math.max(1, ov.screen.width)
-                                readonly property real sy: mini.height / Math.max(1, ov.screen.height)
-                                x: ((o.at?.[0] ?? 0) - ov.screen.x) * sx
-                                y: ((o.at?.[1] ?? 0) - ov.screen.y) * sy
-                                width: Math.max(6, (o.size?.[0] ?? ov.screen.width) * sx)
-                                height: Math.max(6, (o.size?.[1] ?? ov.screen.height) * sy)
+                                // the window's own monitor (logical size), not the overview's:
+                                // workspaces on another monitor map correctly too
+                                readonly property var m: modelData.monitor
+                                readonly property real mx: m ? m.x : ov.screen.x
+                                readonly property real my: m ? m.y : ov.screen.y
+                                readonly property real mw: m ? m.width / (m.scale || 1) : ov.screen.width
+                                readonly property real mh: m ? m.height / (m.scale || 1) : ov.screen.height
+                                readonly property real sx: mini.width / Math.max(1, mw)
+                                readonly property real sy: mini.height / Math.max(1, mh)
+                                x: ((o.at?.[0] ?? 0) - mx) * sx
+                                y: ((o.at?.[1] ?? 0) - my) * sy
+                                width: Math.max(6, (o.size?.[0] ?? mw) * sx)
+                                height: Math.max(6, (o.size?.[1] ?? mh) * sy)
                                 radius: 3
                                 color: Qt.rgba(Theme.overlay.r, Theme.overlay.g, Theme.overlay.b, 0.95)
                                 border.width: 1
@@ -466,7 +480,10 @@ PanelWindow {
                         id: drag
                         target: null
                         onActiveTranslationChanged: {
-                            const p = card.mapToItem(strip, card.width / 2 + activeTranslation.x, ov.grid.ch / 2 + activeTranslation.y)
+                            // the tile under the cursor (mapping the card's centre counted the
+                            // drag twice: the card already moves with it via its Translate)
+                            const sp = centroid.scenePosition
+                            const p = strip.mapFromItem(null, sp.x, sp.y)
                             let ws = 0
                             if (strip.visible) for (let i = 0; i < strip.children.length; i++) {
                                 const c = strip.children[i]

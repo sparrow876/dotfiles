@@ -21,21 +21,26 @@ Singleton {
 
     // Set brightness (0..1). Never fully black: at least 1%. Calls while a
     // slider is dragged are merged, so brightnessctl runs at most every 40 ms.
+    // `pending` stays until the backlight reports that level (or 600 ms pass),
+    // so a dragged slider doesn't jump back between sending and the device's
+    // change event, and quick wheel steps add up instead of merging.
     property real pending: -1
     function set(v) {
         pending = Math.max(0.01, Math.min(1, v))
         if (!setTimer.running) setTimer.start()
+        settleTimer.restart()
     }
-    function step(n) { set(Math.round(value * 20 + n) / 20) }   // n x 5%, snapped to 5% steps
+    function step(n) { set(Math.round((pending >= 0 ? pending : value) * 20 + n) / 20) }   // n x 5%, snapped to 5% steps
+    onValueChanged: if (pending >= 0 && !setTimer.running && Math.abs(value - pending) < 0.015) pending = -1
     Timer {
         id: setTimer
         interval: 40
         onTriggered: {
             if (root.pending < 0) return
             Quickshell.execDetached(["brightnessctl", "-q", "-n2", "set", Math.round(root.pending * 100) + "%"])
-            root.pending = -1
         }
     }
+    Timer { id: settleTimer; interval: 600; onTriggered: root.pending = -1 }
 
     // Find the backlight device once (intel_backlight on this laptop)
     Process {

@@ -60,7 +60,13 @@ Singleton {
     readonly property string artist: player?.trackArtist ?? ""
     readonly property string label: artist && title ? `${artist} — ${title}` : (title || artist)
 
-    function toggle() { if (player?.canTogglePlaying) player.togglePlaying() }
+    // An explicit play/pause ends a skip burst, so the guard above doesn't
+    // pause a track you just started
+    function toggle() {
+        burstTimer.stop()
+        root.burstActive = false
+        if (player?.canTogglePlaying) player.togglePlaying()
+    }
     function next() { if (player?.canGoNext) skip(() => player.next()) }
     function previous() { if (player?.canGoPrevious) skip(() => player.previous()) }
 }

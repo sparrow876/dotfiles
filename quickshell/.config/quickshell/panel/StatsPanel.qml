@@ -576,11 +576,11 @@ PanelWindow {
                         spacing: 8
                         Tile {
                             glyph: "󰇚"; caption: "Read"; value: SystemStats.rate(SystemStats.readRate)
-                            pulse: SystemStats.readRate > 64 * 1024; live: panel.open
+                            pulse: SystemStats.readRate > 64 * 1024; live: panel.open && !store.collapsed.includes("Storage")
                         }
                         Tile {
                             glyph: "󰕒"; caption: "Write"; value: SystemStats.rate(SystemStats.writeRate); valueColor: Theme.ice
-                            pulse: SystemStats.writeRate > 64 * 1024; live: panel.open
+                            pulse: SystemStats.writeRate > 64 * 1024; live: panel.open && !store.collapsed.includes("Storage")
                         }
                     }
                 }
@@ -602,12 +602,12 @@ PanelWindow {
                         Tile {
                             glyph: "󰇚"; caption: "Download"; value: SystemStats.rate(SystemStats.rxRate); valueColor: Theme.lightBlue
                             sub: panel.rxPeak > 0 ? "peak " + SystemStats.rate(panel.rxPeak) : ""
-                            pulse: SystemStats.rxRate > 32 * 1024; live: panel.open
+                            pulse: SystemStats.rxRate > 32 * 1024; live: panel.open && !store.collapsed.includes("Network")
                         }
                         Tile {
                             glyph: "󰕒"; caption: "Upload"; value: SystemStats.rate(SystemStats.txRate); valueColor: Theme.ice
                             sub: panel.txPeak > 0 ? "peak " + SystemStats.rate(panel.txPeak) : ""
-                            pulse: SystemStats.txRate > 32 * 1024; live: panel.open
+                            pulse: SystemStats.txRate > 32 * 1024; live: panel.open && !store.collapsed.includes("Network")
                         }
                     }
                     Graph {
@@ -646,7 +646,7 @@ PanelWindow {
                         value: batterySection.frac
                         level: batterySection.lvl
                         shimmer: batterySection.charging
-                        live: panel.open
+                        live: panel.open && !batterySection.collapsed   // no shimmer while folded
                     }
                     RowLayout {
                         Layout.fillWidth: true

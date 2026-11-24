@@ -49,7 +49,8 @@ Singleton {
             // forget everything, so reopening shows "Reading…" instead of old values
             prev = null; snap = null; cpu = 0; cores = []; mem = 0; swap = 0
             rxRate = 0; txRate = 0; readRate = 0; writeRate = 0
-            cpuHistory = []; memHistory = []; rxHistory = []; txHistory = []
+            // rx/tx first: the panel recomputes its peaks when cpuHistory changes
+            rxHistory = []; txHistory = []; cpuHistory = []; memHistory = []
             cpuTemp = NaN; cpuTempPeak = NaN; tempPeaks = []
         }
     }

@@ -36,6 +36,12 @@ PopupFrame {
 
     onOpened: card.p?.positionChanged()
     Timer {
+        id: seekTimer
+        property real target: 0
+        interval: 120
+        onTriggered: if (card.canSeek) card.p.position = target
+    }
+    Timer {
         interval: 1000
         repeat: true
         running: card.visible && Media.isPlaying && (card.p?.positionSupported ?? false)
@@ -164,8 +170,10 @@ PopupFrame {
         Slider {
             Layout.fillWidth: true
             enabled: card.canSeek
-            value: card.length > 0 ? Math.min(1, (card.p?.position ?? 0) / card.length) : 0
-            onMoved: v => { if (card.canSeek) card.p.position = v * card.length }
+            // while a seek waits to be sent, show where it's dragged to
+            value: card.length > 0 ? Math.min(1, (seekTimer.running ? seekTimer.target : (card.p?.position ?? 0)) / card.length) : 0
+            // dragging sends one seek per 120 ms at most, not one per mouse move
+            onMoved: v => { if (card.canSeek) { seekTimer.target = v * card.length; if (!seekTimer.running) seekTimer.start() } }
         }
         RowLayout {
             Layout.fillWidth: true
