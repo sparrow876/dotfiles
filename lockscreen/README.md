@@ -11,8 +11,10 @@ The lock screen itself (session lock + PAM) and the winter theme come from
   `sddm.sh` (login screen), then `system/root-steps/4-login.sh`
   (ROOT-STEPS.md §10 has what each script does).
 - The lock command is `scripts/lock.sh` (SUPER + L, the power menu, hypridle
-  and before suspend), which starts qylock's
-  `~/.local/share/quickshell-lockscreen/lock.sh` unless already locked.
+  and before suspend). Unless already locked, it runs qylock's
+  `lock_shell.qml` from `~/.local/share/quickshell-lockscreen` itself, with
+  theme winter (or `lock.sh <name>` / `LOCK_THEME`); qylock's own lock.sh is
+  not used (it ignores its theme setting).
 - **Fixes:** `patches/qylock-lockscreen.patch` (GPL-3.0, derived from qylock;
   this repo's MIT license doesn't cover it) fixes the lock screen's login
   code: Enter on an empty password box used to start a password check that

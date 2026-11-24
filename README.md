@@ -147,7 +147,9 @@ Short version:
 8. Laptop lid (lock when plugged in, suspend on battery): ROOT-STEPS §14.
 9. Move to Trash in Downloads / Recordings / .cache / Steam:
    `bash system/root-steps/5-trash-mounts.sh` (ROOT-STEPS §15).
-10. Optional: Google Drive and folder colours (§11), work/chat apps (§12),
+10. Music (rmpc on MPD, the bar's music widget, media keys): install
+    `mpdris2-rs` from the AUR and enable the two user services (ROOT-STEPS §16).
+11. Optional: Google Drive and folder colours (§11), work/chat apps (§12),
     gaming (§13 + [system/GAMING.md](system/GAMING.md)), Rust
     (`./install.sh --only rust` after `rustup`), LaTeX OCR
     (`scripts/latex-ocr/setup.sh`), ccmonitor (`scripts/ccmonitor/setup.sh`).

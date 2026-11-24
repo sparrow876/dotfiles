@@ -83,8 +83,8 @@ FPS (red < 30, yellow < 60), frame time + frame-time graph (a flat line = smooth
 spikes = stutters).
 
 - **Left Shift + F12** shows / hides it.
-- Config: `mangohud/.config/MangoHud/MangoHud.conf`, generated from
-  `mangohud/.config/MangoHud/MangoHud.conf` (edit it directly).
+- Config: `mangohud/.config/MangoHud/MangoHud.conf` (plain file, edit it
+  directly).
 - Only the RTX 3050's stats are shown (`pci_dev`), the name line still tells
   you which GPU the game uses.
 

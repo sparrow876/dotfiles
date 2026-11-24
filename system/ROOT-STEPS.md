@@ -10,8 +10,8 @@ Conventions:
 
 **Scripts:** the same commands as scripts in `system/root-steps/`, one per stretch
 between reboots. Each calls `sudo` itself, skips what's already done, and is safe
-to re-run. 2-nvidia.sh and 3-system.sh save their full output to
-`~/.local/state/dotfiles/logs/`, so you can tell Claude "done" instead of pasting.
+to re-run. 2-nvidia.sh, 3-system.sh, 4-login.sh and 5-trash-mounts.sh save
+their full output to `~/.local/state/dotfiles/logs/`, so you can tell Claude "done" instead of pasting.
 The sections below explain what each command does and how to undo it.
 
 | Run | Covers | When |

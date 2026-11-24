@@ -21,22 +21,23 @@ Contents:
 ## 1. Snapshot
 
 Recorded 2026-11-09 (build complete, steps 1–21; per-game setup waits for the games);
-updated 2026-11-10 after the 82-package upgrade.
+updated 2026-11-10 after the 82-package upgrade; kernel, NVIDIA, Mesa, rofi,
+kitty rows refreshed 2026-11-24.
 BIOS F.28, Intel ME 16.1.32.2418, SSD (Micron MTFDKBA512TFH) firmware HPS0043.
 After an update, compare with `pacman -Q <pkg>` and update this table.
 
 | Component | Version |
 |-----------|---------|
-| Kernel | linux 7.2.15-arch1-1 |
+| Kernel | linux 7.3.5-arch1-1 |
 | Hyprland | 0.57.2 (Lua config) |
 | Quickshell | 0.3.2 |
-| NVIDIA | nvidia-open 615.78.08-6 / nvidia-utils 615.78.08-2 |
-| Mesa | 26.2.6 |
+| NVIDIA | nvidia-open 620.73.04-1 / nvidia-utils 620.73.04-1 |
+| Mesa | 26.3.1 |
 | PipeWire / WirePlumber | 1.6.11 / 0.5.19 |
 | awww (ex-swww) | 0.12.1 |
 | hypridle | 0.1.8 |
-| rofi | 2.0.0 (native Wayland) |
-| kitty | 0.50.0 |
+| rofi | 2.1.1 (native Wayland) |
+| kitty | 0.51.0 |
 | gpu-screen-recorder | 6.1.7 |
 | Steam / MangoHud / GameMode | 1.0.0.87 / 0.8.4 / 1.8.2 (gamescope 3.17.0) |
 | SDDM | 0.21.0 (X11 greeter) |
@@ -62,8 +63,9 @@ AUR helper: **yay** (not paru).
    uncommented after their PKGBUILD was read; notes inline).
 2. **Root steps**: `system/ROOT-STEPS.md` (every sudo/`/etc` action, with undo)
    and `system/root-steps/*.sh` (the same as scripts, one per stretch between
-   reboots; they log to `~/.local/state/dotfiles/logs/`, so read the newest log
-   instead of asking for pasted output). Claude never runs these.
+   reboots; 2-nvidia, 3-system, 4-login and 5-trash-mounts log to
+   `~/.local/state/dotfiles/logs/`, so read the newest log instead of asking
+   for pasted output). Claude never runs these.
 3. **`install.sh`** (user level): dirs, default wallpaper, pinned clones
    (Oh My Zsh + 2 plugins, qylock), GNU Stow, Qt config, gsettings.
    `./install.sh --packages` installs packages (user runs it).
@@ -85,20 +87,20 @@ AUR helper: **yay** (not paru).
 | Path | Role |
 |------|------|
 | `hypr/.config/hypr/hyprland.lua` | only `require("conf.x")` lines |
-| `hypr/.config/hypr/conf/` | `env` `monitors` `input` `look` `animations` `rules` `games` `keybinds` `autostart` (Lua) + `colors.lua` (generated) |
+| `hypr/.config/hypr/conf/` | `env` `monitors` `input` `look` `animations` `rules` `games` `keybinds` `autostart` (Lua) + `colors.lua` (Blue Ice colours, plain file) |
 | `hypr/.config/hypr/hypridle.conf` | idle chain (hyprlang format, not Lua) |
-| `quickshell/.config/quickshell/shell.qml` | entry: one `Variants` per screen for Bar, OSD, StatsPanel, PowerMenu, WallpaperReel, IdleScreen, CheatSheet, NotificationPopups; `popups` IPC |
-| `quickshell/…/Theme.qml` | generated singleton: colors, fonts, sizes |
-| `quickshell/…/services/` | singletons: Audio, Bluetooth, Brightness, IdleInhibit, Keybinds, Media, Network, Notifications, Overlays (IPC for the per-monitor overlays), Popups, Power (battery + low-battery warnings), Recorder, SystemStats (+`sysstats.sh`, `cputemp.sh`), Wallpapers |
+| `quickshell/.config/quickshell/shell.qml` | entry: one `Variants` per screen for Bar, OSD, StatsPanel, PowerMenu, WallpaperReel, IdleScreen, CheatSheet, Overview, NotificationPopups; `popups` IPC |
+| `quickshell/…/Theme.qml` | singleton: colors, fonts, sizes (plain file) |
+| `quickshell/…/services/` | singletons: Audio, Bluetooth, Brightness, IdleInhibit, Keybinds, LayoutMode (spaced/compact), Media, Network, Notifications, Overlays (IPC for the per-monitor overlays), Popups, Power (battery + low-battery warnings), Recorder, SystemStats (+`sysstats.sh`, `cputemp.sh`), Wallpapers |
 | `quickshell/…/bar/` | Bar + modules (`*Icon.qml`, Workspaces, MediaModule, Battery, Clock, Tray, TrayMenu, Bell) |
-| `quickshell/…/popups/` | `PopupFrame` (shared) + Network/Bluetooth/Audio menus, Calendar |
+| `quickshell/…/popups/` | `PopupFrame` (shared) + Network/Bluetooth/Audio/Brightness menus, Calendar, MediaCard (now playing) |
 | `quickshell/…/notifications/` | popups + center |
 | `quickshell/…/components/` | StyledText, Icon, Glyphs (all glyphs), Tooltip, Toggle, Slider, IconButton, TextButton, Card, Spinner, Separator, LevelBar, Graph, RingGauge, WheelSteps (scroll → whole steps) |
-| `quickshell/…/{osd,panel,powermenu,wallpaper,idle,cheatsheet}/` | one overlay each |
-| `scripts/` | shell helpers (update, wifi-enterprise, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, lid, wallpaper, record, notify-file, qt-config, qimgv-theme, view-all-images, latex-ocr/, ccmonitor/, keybinds-to-md.sh + keybinds.jq, theme-colors.sh) |
+| `quickshell/…/{osd,panel,powermenu,wallpaper,idle,cheatsheet,overview}/` | one overlay each |
+| `scripts/` | shell helpers (update, wifi-enterprise, screenshot, ocr, colorpick, clipboard, emoji, lock, logout, idle-dim, idle-suspend, lid, wallpaper, record, notify-file, qt-config, qimgv-theme, view-all-images, calc, find-file, layout-mode, lockdir + lockdir-gui, latex-ocr/, ccmonitor/, keybinds-to-md.sh + keybinds.jq, theme-colors.sh) |
 | `system/` | ROOT-STEPS.md, root-steps scripts, units (platform profile, paccache), etc (reflector.conf, logind.conf.d/10-lid.conf) |
-| `systemd/` | `environment.d/10-rice.conf` (env before Hyprland starts), `systemd/user/rclone-gdrive.service` |
-| `applications/` | `.desktop` files: Outlook web app, nvim in kitty |
+| `systemd/` | `environment.d/10-rice.conf` (env before Hyprland starts), `systemd/user/rclone-gdrive.service`, drop-ins `mpd.service.d/runtime-dir.conf` and `mpdris2-rs.service.d/override.conf` |
+| `applications/` | `.desktop` files: Outlook web app, nvim in kitty, rmpc |
 | `xdg/` | `hyprland-mimeapps.list` (default apps) |
 | `qt/` | qt5ct/qt6ct colour files (Blue Ice) |
 | `vesktop/` | Vesktop theme `rice.theme.css` (Blue Ice) |
@@ -108,13 +110,18 @@ AUR helper: **yay** (not paru).
 | `mangohud/` | MangoHud.conf (Blue Ice colours) |
 | `gamemode/` | `gamemode.ini` (renice, screensaver inhibit) |
 | `thumbnailers/` | `pdf.thumbnailer` (PDF thumbnails in Nautilus via pdftoppm) |
+| `nautilus/` | nautilus-python extensions: Copy as Path, View All Images, Lock Folder |
+| `bin/` | `~/.local/bin` commands: ccmonitor, lockdir / unlockdir, view-all-images, zathura-glass |
+| `mpd/`, `rmpc/` | MPD config (`~/Music`, 127.0.0.1:6600) and rmpc (config + `rice.ron` theme) |
+| `makepkg/` | `~/.config/pacman/makepkg.conf` (no -debug packages) |
+| `qimgv/` | qimgv theme (applied by `scripts/qimgv-theme.sh`) |
 | `system/GAMING.md` | Steam setup, launch options, controller, per-game notes |
 
 ### 2.3 Quickshell IPC targets (`qs ipc call <target> <fn>`)
 
 | Target | Functions | Used by |
 |--------|-----------|---------|
-| `popups` | `toggle <network\|bluetooth\|audio\|calendar\|notifications\|recording>`, `close` | ALT+N |
+| `popups` | `toggle <network\|bluetooth\|audio\|brightness\|calendar\|notifications\|recording\|media>`, `close` | ALT+N |
 | `panel` | `toggle` | ALT+S |
 | `powermenu` | `toggle` | ALT+Escape |
 | `wallpaper` | `toggle` | ALT+W |
@@ -132,7 +139,7 @@ AUR helper: **yay** (not paru).
 All in `hypr/.config/hypr/conf/keybinds.lua`, each with a
 `description = "Category: Action"` (this replaces the brief's `bindd`; visible
 in `hyprctl binds -j`). `scripts/keybinds.jq` turns that JSON into grouped,
-readable rows (merges alternatives, collapses `1…6`); it feeds BOTH the cheat
+readable rows (merges alternatives, collapses `1…9`); it feeds BOTH the cheat
 sheet (ALT+/, `services/Keybinds.qml`) and `scripts/keybinds-to-md.sh README.md`
 (table between `<!-- keybinds:start/end -->`). New binds appear in both
 automatically; only `prettykey` in keybinds.jq may need a new key name. Modifier ALT; SUPER only for
@@ -178,10 +185,10 @@ units, `fwupdmgr get-updates`. `update --check` = everything but the upgrade
 
 | Timer | Does | Set up in |
 |-------|------|-----------|
-| `snapper-timeline` / `snapper-cleanup` | hourly/daily home + root snapshots, pruned by limits | ROOT-STEPS §1 |
+| `snapper-timeline` / `snapper-cleanup` | hourly/daily home snapshots (root has TIMELINE_CREATE=no); cleanup prunes home + root by limits | ROOT-STEPS §1 |
 | snap-pac (pacman hook, not a timer) | pre/post snapshot around every pacman transaction | ROOT-STEPS §1 |
 | `paccache.timer` | weekly, keeps the last 2 versions of each package | ROOT-STEPS §6 |
-| `reflector.timer` | weekly, 20 fastest HTTPS mirrors (IN, SG, BD) | ROOT-STEPS §6 |
+| `reflector.timer` | weekly: the 20 most recently synced HTTPS mirrors (IN, SG, BD), sorted by speed | ROOT-STEPS §6 |
 | `archlinux-keyring-wkd-sync.timer` | keyring refresh (Arch default) | — |
 | (no fstrim.timer) | not needed: btrfs mounts with `discard=async` | — |
 
@@ -275,7 +282,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - **Restart**: `pkill -x qs; hyprctl dispatch 'hl.dsp.exec_cmd("qs")'`.
   Never `qs kill` (stops one instance only → duplicates stack up). Restart for visual/CPU checks (hot reload keeps stale
   layer sizes). A restart clears notification history and stops replay mode.
-- **Hot reload** (any .qml save, every theme switch) recreates all singletons
+- **Hot reload** (any .qml save) recreates all singletons
   and does NOT stop child processes: state that must survive goes in
   `PersistentProperties { reloadableId }` (coffee cup, DND); long-running
   children are stopped in `Component.onDestruction` and started via
@@ -310,8 +317,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 - Soft glows: `Shape` + `RadialGradient` on a `PathRectangle`; a rounded
   `Rectangle` with a gradient has a hard edge.
 - Icon theme for Quickshell: `//@ pragma IconTheme Papirus-Dark` in shell.qml
-  (read at startup only; it overrides the `QS_ICON_THEME` env var). All themes
-  are dark, so it never changes.
+  (read at startup only; it overrides the `QS_ICON_THEME` env var). The theme
+  is dark, so it never changes.
 - Touchpads send many small wheel events: use `WheelSteps` (120 units = one
   step); never step once per `onWheel`.
 - Hover on a card with buttons: `HoverHandler` on the card (a sibling
@@ -414,7 +421,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   here), even under `prime-run`. ~10 % CPU at 1080p60; dGPU stays asleep.
 - `cliphist decode` needs the whole `id<TAB>content` line, not just the id.
 - Screen freeze while selecting: `hyprpicker -r -z &` then `slurp`, then kill it.
-- slurp colors come from the generated `scripts/theme-colors.sh`.
+- slurp colors come from `scripts/theme-colors.sh`.
 
 ### 4.6 Wallpaper (awww)
 
@@ -491,9 +498,9 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 ### 4.8 qylock
 
 - Pinned at c2933f2 in `~/.local/src/qylock` (GPL-3.0, not copied into this
-  repo). `lock.sh` exports `QS_THEME` from `~/.config/qylock/theme`, runs
-  `quickshell -p lock_shell.qml` (WlSessionLock + PAM). Its `hyprctl keyword`
-  call is harmless in Lua mode (`allow_session_lock_restore` is set in look.lua).
+  repo). `scripts/lock.sh` sets QML2_IMPORT_PATH / QS_THEME / QS_THEME_PATH
+  itself and runs `quickshell -p lock_shell.qml` (WlSessionLock + PAM); theme =
+  `$1`, `LOCK_THEME` or winter (`allow_session_lock_restore` is set in look.lua).
 - SDDM's Arch PAM file already has `pam_gnome_keyring` (auth + session).
 - **Patched** (GPL patch `lockscreen/patches/qylock-lockscreen.patch`, applied
   by `lockscreen/apply-patches.sh`, also run by install.sh step clones): the
@@ -501,8 +508,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   before bumping the pinned commit. The lock screen uses PAM service `login`
   → system-auth → pam_faillock (defaults: 3 failures in 15 min → 10 min lock,
   `faillock --user $USER --reset` clears it; needs root).
-- qylock's `lock.sh` ignores `~/.config/qylock/theme` (always "winter" unless a
-  theme is passed as the first argument; `scripts/lock.sh` passes "$@").
+- qylock's own `lock.sh` is not used: it ignores `~/.config/qylock/theme`
+  (always "winter" unless a theme is passed as the first argument).
 
 ---
 
@@ -520,7 +527,7 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 | Theme | Blue Ice only, plain per-app colour files; the palette generator + ALT+T switcher (4 themes) were removed 2026-11-22 (brief §4 `theme/render.sh` no longer applies) | user request: only ever used Blue Ice |
 | Replay toggled only from bar menu | ALT+Ctrl+R turns it on / saves; ALT+Ctrl+Shift+R toggles | indicator is hidden when idle |
 | Bluetooth PIN confirm dialog | blueman-applet is the pairing agent (no tray icon): code confirmations arrive as notifications with Confirm/Deny, PIN entry as a small dialog | Quickshell has no agent API |
-| Bar right side order | tray (drag to reorder, Pomoclock pinned last) · idle · recording · Wi-Fi · Bluetooth · audio · **brightness** · battery · bell · clock | user request 2026-11-13; brief had tray · recording · idle · … (no brightness) |
+| Bar right side order | tray (drag to reorder, Pomoclock pinned last) · layout button · idle · recording · Wi-Fi · Bluetooth · audio · **brightness** · battery · bell · clock | user request 2026-11-13; brief had tray · recording · idle · … (no brightness) |
 | Music position | centred when it fits, else slid into the gap between workspaces and tray, using all of it (max 420 px title) | the wide Pomoclock pill left only ~160 px around the centre |
 | Dim to ~30 % | 30 % of the *current* brightness | user usually at ~18 % |
 | Wallpapers never created | default palette gradient only if folder empty | no blank screen on fresh install |
