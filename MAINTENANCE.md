@@ -104,7 +104,7 @@ AUR helper: **yay** (not paru).
 | `vesktop/` | Vesktop theme `rice.theme.css` (Blue Ice) |
 | `zsh/`, `kitty/`, `starship/`, `fastfetch/`, `lazygit/`, `bat/`, `rofi/`, `gtk/` | app configs (stowed) |
 | `nvim/` | Neovim (Nord): `init.lua`, `lua/{options,keymaps,autocmds}.lua`, `lua/plugins/*.lua` (one file per topic), `lazy-lock.json`; `CHEATSHEET.md` (not stowed) |
-| `zathura/` | zathurarc (Nord, SyncTeX, recolor on Ctrl+R) |
+| `zathura/` | zathurarc (Nord, SyncTeX, recolor on Ctrl+R, glass on Ctrl+G: glass-on/off.conf + git-ignored glass.conf link, bin/.local/bin/zathura-glass) |
 | `mangohud/` | MangoHud.conf (Blue Ice colours) |
 | `gamemode/` | `gamemode.ini` (renice, screensaver inhibit) |
 | `thumbnailers/` | `pdf.thumbnailer` (PDF thumbnails in Nautilus via pdftoppm) |
@@ -625,6 +625,22 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-24** — zathura glass (asked for: slight translucency, toggleable).
+  Ctrl+G toggles slightly see-through backgrounds (default-bg 0.82, bars 0.86,
+  dark-mode page 0.90; normal pages stay solid); Hyprland blurs behind it as
+  for kitty. The choice is the link ~/.config/zathura/glass.conf ->
+  glass-on.conf / glass-off.conf (git-ignored; zathurarc includes
+  glass-off.conf then glass.conf). zathura's `include` can't use ~ or reach
+  ~/.local/state (relative paths go through the stow symlink), hence the link
+  in the package. bin/.local/bin/zathura-glass flips the link and applies the
+  `set` lines to every open window over D-Bus (ExecuteCommand); Ctrl+G =
+  `feedkeys ":exec zathura-glass<Return>"`. ExecuteCommand returns true even
+  for unknown options, so checks used `:dump <file>` (JSON): link off/on +
+  SourceConfig and `exec zathura-glass` twice gave the expected values.
+  install.sh creates the default link (on). Files: zathurarc, glass-on.conf,
+  glass-off.conf, bin/.local/bin/zathura-glass, install.sh, .gitignore,
+  nvim/CHEATSHEET.md.
 
 - **2026-11-23** — Bar music widget glitched again; the now-playing card's loop
   button disagreed with rmpc. Cause: rmpc's `v` (ToggleSingle) cycles single

@@ -134,7 +134,8 @@ Gutter signs: green bar = added, blue = changed, red = deleted.
 
 Zathura keys: `j/k` scroll, `J/K` page, `+/-` zoom, `s` fit width, `a` fit page,
 `d` two pages side by side, `Tab` outline, `/` search, **`Ctrl + r` dark mode
-for the page**, `q` quit.
+for the page**, **`Ctrl + g` glass** (see-through background on/off,
+remembered for new windows), `q` quit.
 
 Bibliographies with `biblatex` need `biber` (`sudo pacman -S biber`); plain
 `\bibliography{}` with BibTeX works out of the box.

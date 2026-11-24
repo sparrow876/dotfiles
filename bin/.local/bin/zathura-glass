@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# zathura glass (slightly see-through backgrounds) on / off.
+#   zathura-glass [toggle|on|off|get]      (no argument = toggle)
+# In zathura: Ctrl+G (zathurarc maps it to `:exec zathura-glass`).
+#
+# The choice is the symlink ~/.config/zathura/glass.conf -> glass-on.conf or
+# glass-off.conf. zathurarc includes it, so new windows open that way (the
+# link is git-ignored; zathura's `include` can't reach ~/.local/state). The
+# change is applied at once to every open zathura window over D-Bus
+# (org.pwmt.zathura ExecuteCommand "set ...").
+set -u
+dir="${XDG_CONFIG_HOME:-$HOME/.config}/zathura"
+link="$dir/glass.conf"
+[[ $(readlink "$link" 2>/dev/null) == glass-off.conf ]] && current=off || current=on
+
+case "${1:-toggle}" in
+  get)    echo "$current"; exit 0 ;;
+  on)     new=on ;;
+  off)    new=off ;;
+  toggle) [[ $current == on ]] && new=off || new=on ;;
+  *)      echo "usage: zathura-glass [toggle|on|off|get]" >&2; exit 2 ;;
+esac
+
+ln -sfn "glass-$new.conf" "$link"
+
+mapfile -t cmds < <(grep -E '^[[:space:]]*set[[:space:]]' "$dir/glass-$new.conf" | sed 's/^[[:space:]]*//')
+busctl --user list --no-legend 2>/dev/null | awk '$1 ~ /^org\.pwmt\.zathura\./ { print $1 }' |
+while read -r bus; do
+  for c in "${cmds[@]}"; do
+    busctl --user call "$bus" /org/pwmt/zathura org.pwmt.zathura ExecuteCommand s "$c" >/dev/null 2>&1
+  done
+done
+echo "$new"

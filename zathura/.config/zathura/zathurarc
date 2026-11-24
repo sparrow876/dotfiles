@@ -2,7 +2,7 @@
 # Colours: Nord (like Neovim and Nautilus), on purpose not the rice palette.
 # Options reference: `man zathurarc`.
 #
-# Handy keys: j/k scroll, J/K next/prev page, / search, Ctrl+R recolor
+# Handy keys: j/k scroll, J/K next/prev page, / search, Ctrl+G glass, Ctrl+R recolor
 # (dark mode for the page itself), R reload, d two-page view, Tab outline,
 # + / - zoom, a fit page, s fit width, q quit.
 # Ctrl + left click on the PDF jumps to that line in Neovim (SyncTeX).
@@ -42,15 +42,12 @@ set synctex-edit-modifier   ctrl
 set recolor                 false
 set recolor-keephue         true
 set recolor-reverse-video   false
-set recolor-lightcolor      "#2E3440"
 set recolor-darkcolor       "#ECEFF4"
+# (recolor-lightcolor, the dark page background, is in glass-on/off.conf)
 
-# Interface colours
-set default-bg              "#2E3440"
+# Interface colours (backgrounds: glass-on/off.conf, below)
 set default-fg              "#D8DEE9"
-set statusbar-bg            "#3B4252"
 set statusbar-fg            "#D8DEE9"
-set inputbar-bg             "#2E3440"
 set inputbar-fg             "#ECEFF4"
 set notification-bg         "#3B4252"
 set notification-fg         "#ECEFF4"
@@ -58,18 +55,22 @@ set notification-error-bg   "#BF616A"
 set notification-error-fg   "#2E3440"
 set notification-warning-bg "#EBCB8B"
 set notification-warning-fg "#2E3440"
-set completion-bg           "#3B4252"
 set completion-fg           "#D8DEE9"
-set completion-group-bg     "#2E3440"
 set completion-group-fg     "#81A1C1"
 set completion-highlight-bg "#5E81AC"
 set completion-highlight-fg "#ECEFF4"
-set index-bg                "#2E3440"
 set index-fg                "#D8DEE9"
 set index-active-bg         "#434C5E"
 set index-active-fg         "#88C0D0"
-set render-loading-bg       "#2E3440"
 set render-loading-fg       "#4C566A"
 set highlight-color         "rgba(136,192,208,0.35)"
 set highlight-active-color  "rgba(235,203,139,0.5)"
 set highlight-fg            "#2E3440"
+
+# Glass (Ctrl+G): slightly see-through backgrounds, blurred by Hyprland.
+# glass-off.conf = solid backgrounds; glass.conf = the current choice, a
+# git-ignored link to glass-on.conf or glass-off.conf made by zathura-glass
+# (bin/.local/bin), which also applies the change to every open window.
+include glass-off.conf
+include glass.conf
+map <C-g> feedkeys ":exec zathura-glass<Return>"

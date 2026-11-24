@@ -116,6 +116,9 @@ step_dirs() {
            "$HOME/.local/state/rice"
   # window layout mode (scripts/layout-mode.sh): Hyprland + the bar read it
   [[ -f $HOME/.local/state/rice/layout ]] || echo spaced > "$HOME/.local/state/rice/layout"
+  # zathura glass (Ctrl+G, bin/.local/bin/zathura-glass): on by default. The
+  # choice is a git-ignored link inside the zathura package, which zathurarc includes.
+  [[ -L $REPO/zathura/.config/zathura/glass.conf ]] || ln -s glass-on.conf "$REPO/zathura/.config/zathura/glass.conf"
   # Drive-style icon for the Google Drive folder (after it exists)
   command -v gio >/dev/null && gio set -t string "$HOME/GoogleDrive" metadata::custom-icon-name folder-google-drive 2>/dev/null || true
 }

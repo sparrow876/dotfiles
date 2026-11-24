@@ -44,3 +44,6 @@ lazygit/.config/lazygit/state.yml
 !applications/**/*.png
 !docs/screenshots/*.png
 !docs/screenshots/*.jpg
+
+# zathura glass choice (runtime link made by bin/.local/bin/zathura-glass)
+zathura/.config/zathura/glass.conf
