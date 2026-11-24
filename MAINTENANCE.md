@@ -583,7 +583,8 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
   not installed yet (GAMING.md §7).
 - Open items: rclone sign-in (`rclone config`), Teams/Vesktop call pop-out
   titles for the `call-popouts` rule, Vesktop theme visual check, one
-  suspend/resume test with NVIDIA, docked lid-close test (scripts/lid.sh).
+  suspend/resume test with NVIDIA. (Docked lid-close test dropped: the user
+  never docks, 2026-11-24; scripts/lid.sh's docked branch stays, untested.)
 - Notification history is capped at 100 (oldest dropped).
 
 ---
@@ -677,8 +678,8 @@ root cause, fix, files.
     maps, versions, timers, root-step logs, theme-generator leftovers.
   Not fixed: tray-order.json / stats-panel.json are read once per monitor
   (two monitors could overwrite each other's order); watchChanges + reload
-  risks a write/reload loop with `onAdapterUpdated: writeAdapter()`; revisit
-  if docked use is common.
+  risks a write/reload loop with `onAdapterUpdated: writeAdapter()`. Won't
+  fix: the user never docks (laptop screen only, 2026-11-24).
 
 - **2026-11-24** — zathura glass, part 2 (user: "even the text should be see
   through"). zathura can only make backgrounds transparent (dark-mode colours
