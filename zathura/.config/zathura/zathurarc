@@ -67,7 +67,8 @@ set highlight-color         "rgba(136,192,208,0.35)"
 set highlight-active-color  "rgba(235,203,139,0.5)"
 set highlight-fg            "#2E3440"
 
-# Glass (Ctrl+G): slightly see-through backgrounds, blurred by Hyprland.
+# Glass (Ctrl+G): the whole window slightly see-through, text included
+# (Hyprland rule "zathura-glass" draws it at 90%), backgrounds a bit more.
 # glass-off.conf = solid backgrounds; glass.conf = the current choice, a
 # git-ignored link to glass-on.conf or glass-off.conf made by zathura-glass
 # (bin/.local/bin), which also applies the change to every open window.

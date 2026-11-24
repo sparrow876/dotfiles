@@ -104,7 +104,7 @@ AUR helper: **yay** (not paru).
 | `vesktop/` | Vesktop theme `rice.theme.css` (Blue Ice) |
 | `zsh/`, `kitty/`, `starship/`, `fastfetch/`, `lazygit/`, `bat/`, `rofi/`, `gtk/` | app configs (stowed) |
 | `nvim/` | Neovim (Nord): `init.lua`, `lua/{options,keymaps,autocmds}.lua`, `lua/plugins/*.lua` (one file per topic), `lazy-lock.json`; `CHEATSHEET.md` (not stowed) |
-| `zathura/` | zathurarc (Nord, SyncTeX, recolor on Ctrl+R, glass on Ctrl+G: glass-on/off.conf + git-ignored glass.conf link, bin/.local/bin/zathura-glass) |
+| `zathura/` | zathurarc (Nord, SyncTeX, recolor on Ctrl+R, glass on Ctrl+G: glass-on/off.conf + git-ignored glass.conf link, bin/.local/bin/zathura-glass, Hyprland rule "zathura-glass" in hypr/conf/rules.lua) |
 | `mangohud/` | MangoHud.conf (Blue Ice colours) |
 | `gamemode/` | `gamemode.ini` (renice, screensaver inhibit) |
 | `thumbnailers/` | `pdf.thumbnailer` (PDF thumbnails in Nautilus via pdftoppm) |
@@ -625,6 +625,20 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
+
+- **2026-11-24** — zathura glass, part 2 (user: "even the text should be see
+  through"). zathura can only make backgrounds transparent (dark-mode colours
+  take alpha; a normal page is a solid image), so the whole window is now drawn
+  at 90% by a named Hyprland rule "zathura-glass" (rules.lua; enabled at config
+  load unless glass.conf's first line says "glass OFF"). zathura-glass flips it
+  live: `hyprctl eval 'hl.window_rule({ name = "zathura-glass", enabled = ... })'`
+  (re-calling a named rule updates it and refreshes window states, so open
+  windows follow). glass-on.conf backgrounds raised (0.90 / 0.94 / 0.97, dark
+  page 0.95) so with the 90% window they end near kitty's 0.80. Checked with
+  `hyprctl getprop <addr> opacity|opacity_inactive`: on 0.9/0.9, off 1/1,
+  toggling both ways; the rules.lua check run in lua against both files.
+  Files: hypr/conf/rules.lua, glass-on/off.conf, zathura-glass, zathurarc,
+  nvim/CHEATSHEET.md.
 
 - **2026-11-24** — zathura glass (asked for: slight translucency, toggleable).
   Ctrl+G toggles slightly see-through backgrounds (default-bg 0.82, bars 0.86,

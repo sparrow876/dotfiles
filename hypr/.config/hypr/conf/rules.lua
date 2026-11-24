@@ -102,6 +102,28 @@ hl.window_rule({
 })
 
 -- ---------------------------------------------------------------------------
+-- zathura glass (Ctrl+G in zathura -> bin/.local/bin/zathura-glass): the whole
+-- window slightly see-through, pages and text included (zathura itself can
+-- only make its backgrounds transparent, never a page in normal mode); blurred
+-- behind like kitty. The choice is ~/.config/zathura/glass.conf, a link to
+-- glass-on.conf or glass-off.conf that zathura also includes; zathura-glass
+-- flips this rule live (hyprctl eval, enabled = true/false).
+local function zathura_glass_on()
+    local cfg = os.getenv("XDG_CONFIG_HOME") or ((os.getenv("HOME") or "") .. "/.config")
+    local f = io.open(cfg .. "/zathura/glass.conf", "r")
+    if not f then return true end   -- no choice yet: on (install.sh's default)
+    local first = f:read("*l") or ""
+    f:close()
+    return not first:find("glass OFF", 1, true)
+end
+hl.window_rule({
+    name    = "zathura-glass",
+    enabled = zathura_glass_on(),
+    match   = { class = "^(org\\.pwmt\\.zathura)$" },
+    opacity = "0.90 0.90",   -- focused, unfocused
+})
+
+-- ---------------------------------------------------------------------------
 -- Picture-in-Picture (Zen): small, pinned, bottom-right with a 24px margin
 hl.window_rule({
     name  = "pip",

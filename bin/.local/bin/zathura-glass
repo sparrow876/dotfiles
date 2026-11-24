@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# zathura glass (slightly see-through backgrounds) on / off.
+# zathura glass (the whole window slightly see-through, text included) on / off.
 #   zathura-glass [toggle|on|off|get]      (no argument = toggle)
 # In zathura: Ctrl+G (zathurarc maps it to `:exec zathura-glass`).
 #
@@ -7,7 +7,9 @@
 # glass-off.conf. zathurarc includes it, so new windows open that way (the
 # link is git-ignored; zathura's `include` can't reach ~/.local/state). The
 # change is applied at once to every open zathura window over D-Bus
-# (org.pwmt.zathura ExecuteCommand "set ...").
+# (org.pwmt.zathura ExecuteCommand "set ...") for the backgrounds, and by
+# switching Hyprland's "zathura-glass" rule (hypr/conf/rules.lua: the whole
+# window at 90%, text included) on or off.
 set -u
 dir="${XDG_CONFIG_HOME:-$HOME/.config}/zathura"
 link="$dir/glass.conf"
@@ -30,4 +32,6 @@ while read -r bus; do
     busctl --user call "$bus" /org/pwmt/zathura org.pwmt.zathura ExecuteCommand s "$c" >/dev/null 2>&1
   done
 done
+[[ $new == on ]] && enabled=true || enabled=false
+hyprctl eval "hl.window_rule({ name = \"zathura-glass\", enabled = $enabled })" >/dev/null 2>&1 || true
 echo "$new"
