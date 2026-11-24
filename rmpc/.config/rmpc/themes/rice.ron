@@ -306,7 +306,7 @@
         bar_width: 2,
         bar_spacing: 1,
         orientation: Bottom,
-        // fixed colours (don't follow ALT+T): pink -> purple -> cyan
+        // fixed colours: pink -> purple -> cyan
         bar_color: Gradient({
               0: "#ff3d8b",
              50: "#b07cff",

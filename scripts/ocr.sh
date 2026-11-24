@@ -2,7 +2,7 @@
 # OCR (ALT + O): freeze the screen, select a region, read its text with
 # tesseract (English), copy it to the clipboard, notify with the first 80 chars.
 set -u
-source "$(dirname "$0")/theme-colors.sh"   # generated: theme colors for slurp
+source "$(dirname "$0")/theme-colors.sh"   # theme colors for slurp
 hyprpicker -r -z >/dev/null 2>&1 & freeze=$!
 sleep 0.15
 geom=$(slurp -d "${SLURP_ARGS[@]}")

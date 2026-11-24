@@ -18,7 +18,7 @@ fi
 ocr=("$py" -I "$here/latex-ocr/latex_ocr.py")
 "${ocr[@]}" --warm 2>/dev/null   # start loading now (returns at once)
 
-source "$here/theme-colors.sh"   # generated: theme colors for slurp
+source "$here/theme-colors.sh"   # theme colors for slurp
 hyprpicker -r -z >/dev/null 2>&1 & freeze=$!
 sleep 0.15
 geom=$(slurp -d "${SLURP_ARGS[@]}")

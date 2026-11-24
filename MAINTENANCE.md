@@ -633,6 +633,53 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-24** — Review of everything since 2026-11-10 (6b40997..HEAD, ~6000
+  lines): 4 parallel read-only reviewers (QML, scripts, configs, docs vs code),
+  each finding re-checked here before fixing. Fixed:
+  - **ALT+= calculator never opened**: calc.sh tested `/usr/lib/rofi/calc.so`;
+    Arch's rofi-calc installs `libcalc.so` (now a glob).
+  - **install.sh `prepare_targets`** compared `readlink -f ~/x` with the
+    unresolved repo path, so symlinks inside packages were "backed up" on every
+    run (bin/lockdir, view-all-images: backup dirs since 11-16) and the
+    git-ignored zathura glass.conf would have been moved out of the repo
+    (folded dir). Now compares both resolved paths (dry run: only the untracked
+    ~/.zprofile is still flagged, as intended).
+  - **PATH**: only an untracked ~/.zprofile put ~/.local/bin on PATH (bin/
+    commands, zathura Ctrl+G). New stowed `zsh/.zprofile` (SDDM's session runs
+    zsh --login); the next install.sh run swaps the old file for the link.
+  - install.sh: `rustup default stable` before yay (mpdris2-rs builds with
+    cargo; rustup has no toolchain on a fresh install); blueman gsettings only
+    if its schema exists.
+  - **lockdir**: refuses mount points / btrfs subvolumes (Downloads etc. would
+    be emptied but not removable); refuses to delete if anything in the folder
+    changed after packing started (`find -newerct @start`; `tar -d` only checks
+    archived files); ERR trap so failures always say why, and the Nautilus
+    dialog shows the tool message too; unlock takes the single folder in the
+    archive, so a renamed .locked file works. Tested in the scratchpad (lock,
+    renamed unlock, wrong password, file added mid-lock, unreadable file).
+  - layout-mode.sh: flock (two quick toggles could leave spaced w/o shadows).
+  - view-all-images: skips rclone mounts; notification bodies escaped.
+  - **Overview drag-to-workspace** mapped the card centre, which already moves
+    with the drag, then added the drag again: drops landed on the wrong tile or
+    none. Now uses the cursor (`centroid.scenePosition`). Selection follows the
+    active window until you move it (refreshToplevels re-sorts after show());
+    clicks on the search pill focus it (fell through and closed); mini-maps use
+    each window's own monitor.
+  - Media: play/pause ends a skip burst (a play right after a skip that began
+    paused was paused again).
+  - Wallpaper reel: reveal also waits on `fullReady` (could sit until the 4 s
+    safety timer); no new apply while the last one runs.
+  - Stats panel: rx/tx peaks reset before cpuHistory (old peaks reappeared);
+    folded Storage/Network/Battery stop their loop animations.
+  - Brightness: `pending` kept until the device reports it (slider flicker,
+    merged wheel steps). Media card: seeks coalesced to one per 120 ms.
+  - Docs: lock.sh description, README install gets the music step (§16), file
+    maps, versions, timers, root-step logs, theme-generator leftovers.
+  Not fixed: tray-order.json / stats-panel.json are read once per monitor
+  (two monitors could overwrite each other's order); watchChanges + reload
+  risks a write/reload loop with `onAdapterUpdated: writeAdapter()`; revisit
+  if docked use is common.
+
 - **2026-11-24** — zathura glass, part 2 (user: "even the text should be see
   through"). zathura can only make backgrounds transparent (dark-mode colours
   take alpha; a normal page is a solid image), so the whole window is now drawn

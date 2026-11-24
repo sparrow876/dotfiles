@@ -38,12 +38,12 @@ STOW_PACKAGES=(
   vesktop     # step 17: palette theme for Discord (Vencord themes folder)
   nvim        # step 18: Neovim (lazy.nvim installs plugins on first start)
   zathura     # step 18: PDF viewer, Nord colours, SyncTeX
-  mangohud    # step 19: in-game overlay (generated from the theme)
+  mangohud    # step 19: in-game overlay (Blue Ice colours)
   gamemode    # step 19: gamemoderun settings
   thumbnailers  # PDF thumbnails in Nautilus (pdftoppm)
   bin         # commands on PATH (~/.local/bin): lockdir, unlockdir
   mpd         # music server config (for rmpc)
-  rmpc        # terminal music player (theme generated from the palette)
+  rmpc        # terminal music player (+ rice.ron theme)
   nautilus    # Nautilus right-click "Copy as Path" (nautilus-python extension)
   makepkg     # ~/.config/pacman/makepkg.conf: no -debug packages from AUR builds
 )
@@ -92,6 +92,12 @@ step_packages() {
   mapfile -t aur < <(read_list "$REPO/packages/aur.txt")
   if ((${#aur[@]})); then
     command -v yay >/dev/null || die "yay not found; install it first (ROOT-STEPS.md)"
+    # Some AUR packages build with cargo (mpdris2-rs). rustup (pacman.txt)
+    # provides cargo but has no toolchain until one is chosen: choose it now.
+    if command -v rustup >/dev/null && ! rustup default >/dev/null 2>&1; then
+      info "Rust: stable toolchain (some AUR packages are built with cargo)"
+      rustup default stable
+    fi
     info "Installing ${#aur[@]} AUR packages (review each PKGBUILD diff yay shows)"
     yay -S --needed "${aur[@]}"
   fi
@@ -214,7 +220,11 @@ prepare_targets() {
         fi
       fi
     fi
-    if [[ -e $HOME/$rel || -L $HOME/$rel ]] && [[ $(readlink -f "$HOME/$rel") != "$REPO/$pkg/$rel" ]]; then
+    # Compare where both point: a package file can itself be a symlink
+    # (bin/.local/bin/lockdir, the git-ignored zathura glass.conf), and moving
+    # that "conflict" through a folded dir took it out of the repo.
+    if [[ -e $HOME/$rel || -L $HOME/$rel ]] &&
+       [[ $(readlink -f "$HOME/$rel") != "$(readlink -f "$REPO/$pkg/$rel")" ]]; then
       [[ -d $HOME/$rel && ! -L $HOME/$rel ]] && continue  # stow descends into real dirs
       backup "$rel"
     fi
@@ -237,7 +247,7 @@ step_stow() {
     stow --dir="$REPO" --target="$HOME" --ignore='\.gitkeep' --restow "$pkg"
     info "linked $pkg"
   done
-  # bat reads custom themes from a cache; rebuild it so the generated "rice" theme is found
+  # bat reads custom themes from a cache; rebuild it so the "rice" theme is found
   if command -v bat >/dev/null && [[ -d $HOME/.config/bat/themes ]]; then
     if bat cache --build >/dev/null; then info "rebuilt bat theme cache"; else warn "bat cache --build failed (bat falls back to its default theme)"; fi
   fi
@@ -262,8 +272,11 @@ step_gsettings() {
   gsettings set $s monospace-font-name 'JetBrainsMono Nerd Font 11.25'
   # blueman-applet runs only as the Bluetooth pairing agent (autostart.lua):
   # no tray icon (the bar has one), no "connected" pop-ups
-  gsettings set org.blueman.general plugin-list \
-    "['!StatusIcon', '!StatusNotifierItem', '!ShowConnected', '!ConnectionNotifier']"
+  # (only if blueman is installed: a missing schema would stop install.sh)
+  if gsettings list-keys org.blueman.general >/dev/null 2>&1; then
+    gsettings set org.blueman.general plugin-list \
+      "['!StatusIcon', '!StatusNotifierItem', '!ShowConnected', '!ConnectionNotifier']"
+  fi
   # Euphonica (MPD album browser): mpdris2-rs already reports MPD to the bar and
   # media keys, so its own MPRIS would show the same music twice; and MPD
   # listens on IPv4 127.0.0.1 ("localhost" resolves to ::1 first)

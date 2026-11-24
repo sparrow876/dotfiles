@@ -1,6 +1,6 @@
 //@ pragma IconTheme Papirus-Dark
 // Quickshell entry point. Each feature lives in its own folder and is imported
-// with `import qs.<folder>`. Theme colors/fonts: Theme.qml (generated from the palette).
+// with `import qs.<folder>`. Theme colors/fonts: Theme.qml.
 import QtQuick
 import Quickshell
 import Quickshell.Io

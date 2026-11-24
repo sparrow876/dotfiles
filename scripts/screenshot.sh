@@ -6,7 +6,7 @@
 #   screenshot.sh full     SHIFT + Print            (the focused monitor)
 #   screenshot.sh window   ALT + Print              (the active window)
 set -u
-source "$(dirname "$0")/theme-colors.sh"   # generated: theme colors for slurp
+source "$(dirname "$0")/theme-colors.sh"   # theme colors for slurp
 dir="$HOME/Pictures/Screenshots"
 mkdir -p "$dir"
 base="$dir/$(date +%Y-%m-%d_%H-%M-%S)"

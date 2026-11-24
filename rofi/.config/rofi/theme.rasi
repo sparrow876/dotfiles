@@ -1,7 +1,7 @@
 /* Shared look for the launcher, clipboard and emoji pickers.
  * Centered, ~35% wide, ~10 rows, frosted (Hyprland blurs the "rofi" layer),
  * rounded window and search field, light-blue rounded selection.
- * Colors: colors.rasi (generated from the palette). */
+ * Colors: colors.rasi (Blue Ice). */
 @import "colors.rasi"
 
 * {
