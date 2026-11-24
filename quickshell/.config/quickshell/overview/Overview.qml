@@ -8,7 +8,6 @@
 //           WM has only a window or two per workspace, so no per-workspace
 //           view); typing filters them
 //   click a window: focus it (switches workspace) · middle-click / ✕: close it
-//   drag a window onto a workspace tile: move it there (you stay put)
 //   click a tile: go to that workspace
 //   arrows + Enter: pick a window (starts on the one you're in) · Esc: clear
 //   the search, then close
@@ -33,7 +32,6 @@ PanelWindow {
     property int hoverWs: 0               // workspace of the window under the mouse
     property int sel: 0                   // keyboard-selected card
     property bool selByUser: false        // arrows / typing moved it: stop following the active window
-    property int dropWs: 0                // tile under a dragged window
 
     WlrLayershell.namespace: "quickshell-overview"
     WlrLayershell.layer: WlrLayer.Overlay
@@ -112,12 +110,7 @@ PanelWindow {
         close()
     }
     function dispatch(lua) { Quickshell.execDetached(["hyprctl", "dispatch", lua]) }
-    function moveTo(t, ws) {
-        dispatch(`hl.dsp.window.move({ workspace = ${ws}, window = "address:${addressOf(t)}", follow = false })`)
-        refreshTimer.restart()
-    }
     function goTo(ws) { pending = `hl.dsp.focus({ workspace = ${ws} })`; close() }
-    Timer { id: refreshTimer; interval: 150; onTriggered: Hyprland.refreshToplevels() }
 
     Connections {
         target: Overlays
@@ -243,7 +236,6 @@ PanelWindow {
                     readonly property int wsId: index + 1
                     readonly property var tileWins: ov.wsWins(wsId)
                     readonly property bool selected: ov.litWs === wsId
-                    readonly property bool dropping: ov.dropWs === wsId
                     spacing: 5
 
                     Rectangle {
@@ -253,12 +245,9 @@ PanelWindow {
                         radius: 8
                         clip: true
                         color: Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.85)
-                        border.width: tile.dropping || tile.selected ? 2 : 1
-                        border.color: tile.dropping ? Theme.ice
-                                    : tile.selected ? Theme.lightBlue
+                        border.width: tile.selected ? 2 : 1
+                        border.color: tile.selected ? Theme.lightBlue
                                     : Qt.rgba(Theme.ice.r, Theme.ice.g, Theme.ice.b, 0.14)
-                        scale: tile.dropping ? 1.08 : 1
-                        Behavior on scale { NumberAnimation { duration: 160; easing.type: Easing.OutQuint } }
 
                         // each window where it sits on the screen, with its icon
                         Repeater {
@@ -349,13 +338,8 @@ PanelWindow {
                     y: ov.cardY(index)
                     width: ov.grid.cw
                     height: ov.grid.ch + ov.labelH
-                    z: drag.active ? 10 : 0
-                    Behavior on x { enabled: !drag.active; NumberAnimation { duration: 260; easing.type: Easing.OutQuint } }
-                    Behavior on y { enabled: !drag.active; NumberAnimation { duration: 260; easing.type: Easing.OutQuint } }
-                    transform: Translate {
-                        x: drag.active ? drag.activeTranslation.x : 0
-                        y: drag.active ? drag.activeTranslation.y : 0
-                    }
+                    Behavior on x { NumberAnimation { duration: 260; easing.type: Easing.OutQuint } }
+                    Behavior on y { NumberAnimation { duration: 260; easing.type: Easing.OutQuint } }
 
                     // thumbnail box (the capture keeps the window's own shape)
                     Item {
@@ -365,7 +349,7 @@ PanelWindow {
                         readonly property real srcW: shot.hasContent ? shot.sourceSize.width : 16
                         readonly property real srcH: shot.hasContent ? shot.sourceSize.height : 10
                         readonly property real fit: Math.min(width / Math.max(1, srcW), height / Math.max(1, srcH))
-                        scale: hover.hovered && !drag.active ? 1.03 : 1
+                        scale: hover.hovered ? 1.03 : 1
                         Behavior on scale { NumberAnimation { duration: 160; easing.type: Easing.OutQuint } }
 
                         ClippingRectangle {
@@ -402,7 +386,7 @@ PanelWindow {
                         }
                         // close button on hover
                         Rectangle {
-                            visible: hover.hovered && !drag.active
+                            visible: hover.hovered
                             x: frame.x + frame.width - width / 2 - 6
                             y: frame.y - height / 2 + 6
                             width: 26; height: 26; radius: 13
@@ -474,27 +458,6 @@ PanelWindow {
                     TapHandler {
                         acceptedButtons: Qt.MiddleButton
                         onTapped: card.modelData.wayland?.close()
-                    }
-                    // drag onto a workspace tile to move the window there
-                    DragHandler {
-                        id: drag
-                        target: null
-                        onActiveTranslationChanged: {
-                            // the tile under the cursor (mapping the card's centre counted the
-                            // drag twice: the card already moves with it via its Translate)
-                            const sp = centroid.scenePosition
-                            const p = strip.mapFromItem(null, sp.x, sp.y)
-                            let ws = 0
-                            if (strip.visible) for (let i = 0; i < strip.children.length; i++) {
-                                const c = strip.children[i]
-                                if (c.wsId && p.x >= c.x && p.x <= c.x + c.width && p.y >= c.y && p.y <= c.y + c.height) ws = c.wsId
-                            }
-                            ov.dropWs = ws
-                        }
-                        onActiveChanged: if (!active) {
-                            if (ov.dropWs && ov.dropWs !== (card.modelData.workspace?.id ?? 0)) ov.moveTo(card.modelData, ov.dropWs)
-                            ov.dropWs = 0
-                        }
                     }
                 }
             }

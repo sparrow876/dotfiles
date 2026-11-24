@@ -634,6 +634,12 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-24** — Overview: drag-to-workspace removed at the user's request
+  ("very finnicky"). Gone: the DragHandler, the tile drop highlight, `moveTo()`
+  and its refresh timer. Click a window to focus it and click a tile to go to a
+  workspace still work; to move a window use ALT + SHIFT + 1…9. Files:
+  overview/Overview.qml, README.
+
 - **2026-11-24** — Review of everything since 2026-11-10 (6b40997..HEAD, ~6000
   lines): 4 parallel read-only reviewers (QML, scripts, configs, docs vs code),
   each finding re-checked here before fixing. Fixed:
