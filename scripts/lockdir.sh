@@ -21,9 +21,11 @@
 # - Removing files on an SSD/btrfs doesn't overwrite them, so the old data may
 #   stay recoverable on the disk for a while. Fine against people opening your
 #   files; not a defense against forensic disk analysis.
-set -euo pipefail
+set -Eeuo pipefail
 
 die() { printf 'lockdir: %s\n' "$*" >&2; exit 1; }
+# Any other failure (tar, gpg, mv) says where, so the Nautilus dialog isn't blank
+trap 'die "stopped by an error at line $LINENO"' ERR
 usage() { sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
 
 PASSWORD_STDIN=0
@@ -48,10 +50,15 @@ ask_password() {   # ask_password VAR [confirm]
 }
 
 lock() {
-  local dir parent name out pw
+  local dir parent name out pw start changed
   [[ -d $1 && ! -L $1 ]] || die "not a folder: $1"
   dir="$(realpath -- "$1")"
   [[ $dir != / && $dir != "$HOME" ]] || die "refusing to lock $dir"
+  # Mount points and btrfs subvolumes (Downloads, Recordings, .cache are their
+  # own subvolumes) can be emptied but not removed or replaced: refuse them.
+  ! mountpoint -q -- "$dir" || die "refusing: ${dir/#$HOME/\~} is a mount point; lock a folder inside it"
+  [[ $(stat -f -c %T -- "$dir") != btrfs || $(stat -c %i -- "$dir") != 256 ]] ||
+    die "refusing: ${dir/#$HOME/\~} is a btrfs subvolume; lock a folder inside it"
   parent="$(dirname -- "$dir")" name="$(basename -- "$dir")"
   out="$parent/$name.locked"
   [[ ! -e $out ]] || die "already exists: $out"
@@ -62,6 +69,7 @@ lock() {
 
   tmp="$(mktemp -p "$parent" ".$name.locked.XXXXXX")"
   trap 'rm -f "$tmp"' EXIT
+  start=$(date +%s.%N)   # anything changed in the folder after this is not in the archive
   tar -C "$parent" --zstd -cf - -- "$name" |
     "${GPG[@]}" --symmetric --cipher-algo AES256 --s2k-mode 3 \
       --s2k-digest-algo SHA512 --s2k-count 65011712 --yes -o "$tmp" 3<<<"$pw"
@@ -69,6 +77,11 @@ lock() {
   echo "Checking the locked file against the folder..."
   "${GPG[@]}" --decrypt "$tmp" 3<<<"$pw" | tar -C "$parent" --zstd -df - >/dev/null ||
     die "check failed: the folder was NOT removed (nothing changed)"
+  # The check above only compares what's IN the archive: a file saved or moved
+  # into the folder while it was being packed would be deleted unseen.
+  changed=$(find "$dir" -newerct "@$start" -print -quit)
+  [[ -z $changed ]] ||
+    die "the folder changed while it was being locked (${changed/#$HOME/\~}); nothing was removed, try again"
   chmod 600 "$tmp"
   mv -- "$tmp" "$out"
   trap - EXIT
@@ -80,7 +93,7 @@ lock() {
 }
 
 unlock() {
-  local file parent name dest pw
+  local file parent name dest pw items
   [[ -f $1 ]] || die "no such file: $1"
   file="$(realpath -- "$1")"
   [[ $file == *.locked ]] || die "expected a .locked file: $1"
@@ -93,9 +106,14 @@ unlock() {
   # file leaves nothing half-extracted behind.
   tmp="$(mktemp -d -p "$parent" ".$name.unlock.XXXXXX")"
   trap 'rm -rf "$tmp"' EXIT
-  "${GPG[@]}" --decrypt "$file" 3<<<"$pw" 2>/dev/null | tar -C "$tmp" --zstd -xf - 2>/dev/null &&
-    [[ -d $tmp/$name ]] || die "wrong password (or damaged file); nothing changed"
-  mv -- "$tmp/$name" "$dest"
+  "${GPG[@]}" --decrypt "$file" 3<<<"$pw" 2>/dev/null | tar -C "$tmp" --zstd -xf - 2>/dev/null ||
+    die "wrong password (or damaged file); nothing changed"
+  # The archive holds the folder under its original name; the .locked file may
+  # have been renamed since (F2, "Secret (Copy).locked"): take the one folder
+  # inside and give it the .locked file's name.
+  shopt -s nullglob dotglob; items=("$tmp"/*); shopt -u nullglob dotglob
+  [[ ${#items[@]} -eq 1 && -d ${items[0]} ]] || die "wrong password (or damaged file); nothing changed"
+  mv -- "${items[0]}" "$dest"
   rm -f -- "$file"
   echo "Unlocked: ${dest/#$HOME/\~}  (the .locked file was removed; lock it again when done)"
 }

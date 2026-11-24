@@ -10,6 +10,13 @@
 # (hyprctl eval), animated, without reloading Hyprland.
 set -u
 state="${XDG_STATE_HOME:-$HOME/.local/state}/rice/layout"
+mkdir -p "$(dirname "$state")"
+# One switch at a time: two quick presses (key + bar button) used to run
+# together, and the first one's last step (shadows off) could land after the
+# second one's, leaving "spaced" without shadows. The second waits, then reads
+# the new state and toggles back.
+exec 9>"$state.lock"
+flock 9
 current=$(cat "$state" 2>/dev/null || echo spaced)
 [[ $current == compact ]] || current=spaced
 
@@ -21,7 +28,6 @@ case "${1:-toggle}" in
   *)       echo "usage: $0 [toggle|spaced|compact|get]" >&2; exit 2 ;;
 esac
 
-mkdir -p "$(dirname "$state")"
 printf '%s\n' "$new" > "$state"   # the bar starts its 0.32 s animation now
 [[ $new == "$current" ]] && { echo "$new"; exit 0; }
 

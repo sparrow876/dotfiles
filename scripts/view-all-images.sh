@@ -12,9 +12,10 @@
 set -euo pipefail
 
 src=$(realpath -- "${1:-.}")
-note() {
+note() {   # note SUMMARY BODY (the body is shown as markup: escape & < >)
   echo "$*" >&2
-  command -v notify-send >/dev/null && notify-send -a "Image viewer" -i image-x-generic "$@" || true
+  local b=${2//&/&amp;}; b=${b//</&lt;}; b=${b//>/&gt;}
+  command -v notify-send >/dev/null && notify-send -a "Image viewer" -i image-x-generic "$1" "$b" || true
 }
 [[ -d $src ]] || { note "Not a folder" "$src"; exit 1; }
 
@@ -29,7 +30,9 @@ while IFS= read -r -d '' f; do
   rel=${f#"$src"/}
   name=${rel//\// › }
   ln -s -- "$f" "$out/$name" 2>/dev/null && count=$((count + 1))
-done < <(find "$src" -mindepth 1 \( -name '.*' -prune \) -o -type f -iregex \
+# (skips hidden folders and network mounts: Google Drive via rclone would be
+# walked and every image downloaded for thumbnails)
+done < <(find "$src" -mindepth 1 \( -name '.*' -o -fstype fuse.rclone \) -prune -o -type f -iregex \
   '.*\.\(jpe?g\|jfif\|png\|gif\|webp\|bmp\|tiff?\|svgz?\|avif\|heic\|heif\|jxl\|ico\|tga\|qoi\|psd\|xcf\|exr\|hdr\)' \
   -print0 | sort -zV)
 

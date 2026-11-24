@@ -15,7 +15,15 @@ mode=${1:-} target=${2:-}
 name=$(basename -- "$target")
 
 error() { zenity --error --title "$TITLE" --width 380 --text "$1" 2>/dev/null; }
-esc() { local s=${1//&/&amp;}; s=${s//</&lt;}; printf '%s' "${s//>/&gt;}"; }   # for zenity's markup
+esc() { local s=${1//&/&amp;}; s=${s//</&lt;}; printf '%s' "${s//>/&gt;}"; }   # zenity + notification markup
+# Why lockdir.sh stopped: its own last "lockdir:" line, plus the tool message
+# behind it (tar/gpg/...), e.g. "tar: Big: file changed as we read it"
+reason() {
+  local why detail
+  why=$(grep '^lockdir:' <<<"$out" | tail -1 | sed 's/^lockdir: //')
+  detail=$(grep -E '^(tar|gpg|mv|rm|find|mktemp): ' <<<"$out" | grep -v 'Exiting with failure' | tail -1)
+  printf '%s%s' "$(esc "$why")" "${detail:+$'\n'$(esc "$detail")}"
+}
 
 # run "progress text" PASSWORD ARGS...: lockdir.sh with a pulsing progress
 # dialog; leaves its output in $out and returns its exit status
@@ -46,10 +54,10 @@ The folder becomes one encrypted file, $(esc "$name").locked.
   done
   if run "Locking “$(esc "$name")”…" "$pw" "$target"; then
     notify-send -a "$TITLE" -i changes-prevent "Locked $name" \
-      "Now $name.locked. Right-click it → Unlock to open it again."
+      "Now $(esc "$name").locked. Right-click it → Unlock to open it again."
   else
     error "Couldn't lock “$(esc "$name")”:
-$(esc "$(grep '^lockdir:' <<<"$out" | tail -1 | sed 's/^lockdir: //')")"
+$(reason)"
     exit 1
   fi
 else
@@ -67,7 +75,7 @@ else
       error "Wrong password. Try again."
     else
       error "Couldn't unlock “$(esc "$name")”:
-$(esc "$msg")"
+$(reason)"
       exit 1
     fi
   done

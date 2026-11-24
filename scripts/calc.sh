@@ -5,7 +5,7 @@
 #   5 usd to inr   (currency rates are downloaded by libqalculate when used)
 # Enter copies the result to the clipboard. Esc closes.
 set -u
-if [[ ! -e /usr/lib/rofi/calc.so ]]; then
+if ! compgen -G "/usr/lib/rofi/*calc.so" >/dev/null; then   # Arch: /usr/lib/rofi/libcalc.so
   notify-send -a Calculator -i dialog-warning "Calculator not installed" "sudo pacman -S rofi-calc"
   exit 1
 fi
