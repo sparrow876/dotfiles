@@ -204,7 +204,13 @@ rmpc                 # terminal music player for MPD (rmpc/.config/rmpc)
 cava
 cmatrix
 
+## Maths and computing (yours, 2026-11-24)
+singular             # computer algebra system (polynomials)
+cadical              # SAT solver
+python-pytorch-cuda  # PyTorch with CUDA (pulls cuda + cudnn; Blender's Cycles uses that CUDA too)
+
 ## Apps
+blender              # 3D suite; Cycles renders on the RTX 3050 (CUDA / OptiX)
 gtk4-layer-shell     # yours (2026-11-11): GTK4 panels/overlays library; nothing in this repo needs it
 chromium             # only for web apps (Outlook, Teams fallback)
 proton-vpn-gtk-app
