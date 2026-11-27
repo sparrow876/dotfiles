@@ -110,6 +110,8 @@ config lives in this repo and is linked into place with GNU Stow.
   shown in the bar and on the media keys.
 - Zen, Outlook web app, Teams, Vesktop, Claude desktop, LocalSend; Steam +
   MangoHud + GameMode (GE-Proton where a game needs it).
+- **Blender**: draws on the RTX 3050 by itself (Vulkan), and Cycles renders on
+  it with OptiX or CUDA; its Preferences / file browser / render windows float.
 
 **Safety net**
 - btrfs snapshots before and after every package change (snapper + snap-pac),

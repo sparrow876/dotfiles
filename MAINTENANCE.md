@@ -634,6 +634,20 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-28** — Blender 5.3.0 added (extra repo; packages/pacman.txt, with
+  singular, cadical, python-pytorch-cuda that were installed 2026-11-24 but
+  unlisted). Checked by starting it on a hidden special workspace
+  (`hl.dsp.exec_cmd(cmd, { workspace = "special:x silent" })`; note: its extra
+  windows ignore that rule and open on the active workspace): native Wayland,
+  class `blender`; Vulkan backend, and it picks the RTX 3050 by itself with or
+  without prime-run (gpu.platform.renderer_get), so no prime-run launcher
+  override; Cycles lists the 3050 for OptiX and CUDA (cuda is installed via
+  python-pytorch-cuda). Preferences opened tiled at half the screen: rules
+  "float-blender-dialogs" (Preferences|Drivers|Blender File View, 60x70 %,
+  centred) and "float-blender-render" (Blender Render, 75x85 %); titles from a
+  live run + the binary's strings. Verified Preferences floats 1152x756 centred.
+  Files: hypr/conf/rules.lua, packages/pacman.txt, README.
+
 - **2026-11-24** — ProtonVPN tray icon missing although the app ran. Cause:
   Quickshell hosts the tray registry (org.kde.StatusNotifierWatcher); after a
   Quickshell restart every tray app must register again. Pomoclock and Claude

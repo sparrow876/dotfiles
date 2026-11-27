@@ -64,6 +64,25 @@ hl.window_rule({
     center = true,
 })
 
+-- Blender's extra windows (all class "blender"; titles seen 2026-11-28, 5.3):
+-- Preferences, the Drivers editor and the file browser float centred instead
+-- of tiling beside the main window; the render window (F12) gets more room.
+-- The main window ("file — Blender 5.3.0") tiles as usual.
+hl.window_rule({
+    name   = "float-blender-dialogs",
+    match  = { class = "^(blender)$", title = "^(Preferences|Drivers|Blender File View)$" },
+    float  = true,
+    size   = { "monitor_w*0.6", "monitor_h*0.7" },
+    center = true,
+})
+hl.window_rule({
+    name   = "float-blender-render",
+    match  = { class = "^(blender)$", title = "^(Blender Render)$" },
+    float  = true,
+    size   = { "monitor_w*0.75", "monitor_h*0.85" },
+    center = true,
+})
+
 -- Small dialogs from scripts (zenity: lock-folder passwords, progress, errors)
 hl.window_rule({
     name   = "float-zenity",
