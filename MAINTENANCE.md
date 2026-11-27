@@ -634,6 +634,17 @@ log entry (§9), update README/cheat sheets/ROOT-STEPS if they describe it.
 Newest first. Format: date — what broke / what changed, after which update,
 root cause, fix, files.
 
+- **2026-11-28** — Blender set to render on the RTX 3050 (user request), outside
+  the repo (Blender's own binary files in ~/.config/blender/5.3/config/, not
+  stowed): userpref.blend = Cycles compute device OPTIX with only the RTX 3050
+  ticked (CPU off); startup.blend = new files use Cycles + GPU Compute (existing
+  .blend files keep their own engine/device). Done with Blender closed (it
+  writes its prefs on quit) via `blender -b --python` setting
+  `prefs.addons["cycles"].preferences` (compute_device_type, get_devices(),
+  d.use) + wm.save_userpref(), then scene.render.engine / scene.cycles.device +
+  wm.save_homefile(); read back in a fresh `blender -b`. Redo the same way after
+  a Blender major version (new 5.x config folder) or a fresh install.
+
 - **2026-11-28** — Blender 5.3.0 added (extra repo; packages/pacman.txt, with
   singular, cadical, python-pytorch-cuda that were installed 2026-11-24 but
   unlisted). Checked by starting it on a hidden special workspace
